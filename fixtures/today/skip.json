@@ -1,0 +1,4 @@
+{
+  "mode": "skip",
+  "description": "Uses the default Radar fixtures with a quality threshold of 100 and must return a counted skip."
+}

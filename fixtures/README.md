@@ -82,6 +82,7 @@ node -e 'console.log("src_"+require("crypto").createHash("sha256").update(proces
 | `connection` | `unreachable` | Provider network failure |
 | `fingerprint` | `default` | A qualitative voice fingerprint for the demo samples |
 | `fingerprint` | `malformed` | Preamble plus broken JSON, for the repair path |
+| `persona-import` | `default` | A self-profile converted into additive Brain changes |
 | `test-voice` | `default` | Three posts that match the demo fingerprint and score 100 |
 | `test-voice` | `off-voice` | Three posts that break it, so the deviation UI has something to show |
 | `search` | `default` | Three sources: one secondary outlet, one paper, one forum thread |
@@ -99,6 +100,19 @@ node -e 'console.log("src_"+require("crypto").createHash("sha256").update(proces
 | `critique` | `default` | One warn and one note, recommendation `accept` |
 | `similarity` | `default` | An empty L3 judgement |
 | `reasoning` | `default` | The first-person reasoning block |
+| `radar-hacker-news` | `default` | A Hacker News candidate |
+| `radar-reddit` | `default` | A Reddit candidate that duplicates the HN story by title |
+| `radar-arxiv` | `default` | An arXiv primary-source candidate |
+| `radar-github` | `default` | A public GitHub repository candidate |
+| `radar-dev-community` | `default` | A DEV Community article candidate |
+| `radar-lobsters` | `default` | A Lobsters discussion candidate |
+| `radar-openalex` | `default` | An OpenAlex academic-work candidate |
+| `radar-rss` | `default` | An RSS candidate that duplicates the same story |
+| `radar-evergreen` | `default` | Evergreen topics and angles, never post text |
+| `radar-fast-score` | `default` | Persona fit and inverted claim-risk scores |
+| `radar-strong-score` | `default` | Usefulness and angle strength for the top five only |
+| `today` | `success` | The complete cached daily loop ending in an accepted recommendation |
+| `today` | `skip` | A threshold-driven skip with real candidate counts |
 
 The Studio fixtures are internally consistent: `research` cites the source ids
 that `search` produces, and `drafts` cites the same ones. `src/domain/studio/

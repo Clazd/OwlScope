@@ -1,0 +1,32 @@
+{
+  "id": "1786304338543-eanwci",
+  "kind": "studio",
+  "personaVersion": 1,
+  "status": "done",
+  "startedAt": "2026-08-09T19:38:58.543Z",
+  "finishedAt": "2026-08-09T19:39:02.092Z",
+  "totalTokensIn": 265,
+  "totalTokensOut": 189,
+  "totalCost": 0.00363,
+  "sandbox": false,
+  "idempotencyKey": "radar-explore-1786304338533-5t1hxg-1786304338541",
+  "stages": [
+    {
+      "stage": "boundary",
+      "model": "deepseek-v4-flash",
+      "prompt": "Decide whether a topic falls inside a writer's stated no-go areas.\nThis is a classification task. Do not write anything about the topic.\nNO-GO AREAS\n  Politics\n  Religion\n  Celebrity gossip\nTOPIC\ntest 123\nSummary: A user seed to research and expand into angles.\nA topic is blocked only when writing about it would require taking a position inside a no-go area.\nA topic that merely mentions one in passing, or discusses it as a technical or business subject, is not blocked.\nFor example, with politics as a no-go area: an election result is blocked; how a government procures software is not.\nReply with JSON: {\"blocked\":true|false,\"boundaryValues\":[\"…\"],\"explanation\":\"one plain sentence\"}\n\nReply with a single JSON value matching BoundaryCheck. No prose, no code fence, no commentary.",
+      "rawResponse": "{\"blocked\":false,\"boundaryValues\":[],\"explanation\":\"The topic is a test string and does not concern politics, religion, or celebrity gossip.\"}",
+      "parsed": {
+        "blocked": false,
+        "boundaryValues": [],
+        "explanation": "The topic is a test string and does not concern politics, religion, or celebrity gossip."
+      },
+      "validationError": null,
+      "latencyMs": 3517,
+      "tokensIn": 265,
+      "tokensOut": 189,
+      "status": "done",
+      "errorCategory": null
+    }
+  ]
+}

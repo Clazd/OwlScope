@@ -1,0 +1,30 @@
+{
+  "id": "1786304216686-iuhjo8",
+  "title": "When to Build an Agent Instead of a Workflow",
+  "summary": "Autonomous agents are trendy, but deterministic workflows are often more reliable. The real skill is knowing when autonomy genuinely solves a user problem.",
+  "sourceType": "radar",
+  "pillarId": "1786303705119-cg0m20",
+  "freshness": "evergreen",
+  "status": "used",
+  "context": "",
+  "scoreComponents": {
+    "personaRelevance": 50,
+    "novelty": 100,
+    "freshness": 0,
+    "sourceQuality": 70,
+    "usefulness": 55,
+    "angleStrength": 60,
+    "claimRisk": 85,
+    "diversityContribution": 50
+  },
+  "scoreTotal": 68,
+  "scoreLabel": "Moderate",
+  "radarKind": "evergreen",
+  "angle": "A decision framework based on task variability, error tolerance, and user trust; case studies of agent vs. workflow in real products.",
+  "fitReason": "It overlaps with the subjects and beliefs in your persona.",
+  "bankedAt": null,
+  "bankedUntil": null,
+  "dismissedAt": null,
+  "createdAt": "2026-08-09T19:35:07.074Z",
+  "updatedAt": "2026-08-09T20:07:54.546Z"
+}

@@ -1,0 +1,508 @@
+{
+  "id": "1786305582421-mpyub2",
+  "topicId": "1786304216668-np600v",
+  "stage": "critique",
+  "stageStates": {
+    "topic": "done",
+    "research": "done",
+    "angles": "done",
+    "drafts": "done",
+    "critique": "failed",
+    "final": "pending"
+  },
+  "boundary": {
+    "blocked": false,
+    "boundaryIds": [],
+    "explanation": ""
+  },
+  "research": {
+    "facts": [
+      {
+        "claim": "On August 6, 2026, OpenAI, Amazon (AWS), Microsoft, Cursor (Anysphere), and Vercel simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for AI agent skills and MCP servers.",
+        "sourceIds": [
+          "src_015e99",
+          "src_9b2e35",
+          "src_8ec6de",
+          "src_8e93fe",
+          "src_39171b",
+          "src_317cb2"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Google joined as a core maintainer of Agent Plugins on the same day, August 6, 2026.",
+        "sourceIds": [
+          "src_9b2e35",
+          "src_317cb2"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The standard is already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro.",
+        "sourceIds": [
+          "src_9b2e35"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The steering committee for Agent Plugins spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator.",
+        "sourceIds": [
+          "src_8ec6de"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Agent Plugins wraps MCP (Model Context Protocol) servers and Agent Skills into a single portable directory with a plugin.json manifest.",
+        "sourceIds": [
+          "src_8ec6de",
+          "src_8e93fe",
+          "src_39171b",
+          "src_317cb2"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The standard defines two core components: Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs).",
+        "sourceIds": [
+          "src_8e93fe"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The 1.0 specification deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust models to each client platform.",
+        "sourceIds": [
+          "src_9b2e35",
+          "src_39171b",
+          "src_317cb2"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Anthropic was notably absent from the adopting companies.",
+        "sourceIds": [
+          "src_9b2e35"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The standard is positioned as an industry move that outpaced the IETF DAWN working group's governance debates.",
+        "sourceIds": [
+          "src_9b2e35"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others, including SST creator Dax Raad, express skepticism that the standard is thin and that useful parts will end up client-specific.",
+        "sourceIds": [
+          "src_39171b",
+          "src_317cb2"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Developer advocate Angie Jones expressed support for the standard.",
+        "sourceIds": [
+          "src_39171b"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The standard collapses per-client packaging variants into one artifact that carries across supporting clients.",
+        "sourceIds": [
+          "src_8ec6de"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The original story received 24 points on Hacker News.",
+        "sourceIds": [
+          "src_015e99"
+        ],
+        "kind": "from-source"
+      }
+    ],
+    "uncertainties": [
+      "The publication date of theoutpost.ai article is unknown, so its claims cannot be verified as current.",
+      "The stiridelavaslui.ro source is a Romanian republication with no publication date; its content mirrors the Next Web article but its provenance is secondary.",
+      "The forkast.news source is marked as 'unknown' reliability.",
+      "The creativeainews.com source is marked as 'unknown' reliability.",
+      "The techorange.com source is a Chinese-language secondary report; its reliability is unknown.",
+      "It is unclear whether 'Kiro' (mentioned in src_9b2e35 as an integration target) refers to a specific product or is a typographical error."
+    ],
+    "freshness": {
+      "assessment": "current",
+      "note": "All dated sources are from August 6-7, 2026, making this a breaking-news event. The standard was announced on August 6, 2026, and coverage is within 24 hours of the announcement."
+    },
+    "insufficient": false,
+    "insufficientReason": "",
+    "sourceIds": [
+      "src_015e99",
+      "src_9b2e35",
+      "src_8ec6de",
+      "src_8e93fe",
+      "src_39171b",
+      "src_317cb2"
+    ],
+    "droppedUrls": [],
+    "noProviders": false,
+    "completedAt": "2026-08-09T20:00:16.512Z"
+  },
+  "angles": [
+    {
+      "id": "a1",
+      "kind": "counterintuitive",
+      "thesis": "The Agent Plugins standard is deliberately thin—and that's the point: by leaving permissions, sandboxing, and trust models unspecified, the spec avoids the governance quagmire that killed broader standards efforts and lets each platform compete on safety rather than on packaging.",
+      "whyItFits": "I gravitate toward the design decisions in standards—what's left out matters more than what's included. This is a concrete observation about trade-offs, not hype.",
+      "evidenceNeeded": [
+        "src_9b2e35 (deliberate exclusion of distribution, trust, sandboxing from spec)",
+        "src_39171b (thin standard criticism)",
+        "src_9b2e35 (IETF DAWN governance debates as comparison point)"
+      ],
+      "noveltyRisk": "low",
+      "noveltyNote": "No prior posts exist; the angle interprets a detail the news coverage mentions but doesn't explore as a strategic choice."
+    },
+    {
+      "id": "a2",
+      "kind": "question",
+      "thesis": "If Anthropic—the company that originated MCP—is absent from the Agent Plugins announcement, does the standard already carry a hidden assumption about how agents should work that Anthropic's approach rejects?",
+      "whyItFits": "I watch open-source AI and protocol politics closely. Anthropic's absence is the most interesting data point in the story and nobody's asking why.",
+      "evidenceNeeded": [
+        "src_9b2e35 (Anthropic's notable absence)",
+        "Inference: Anthropic created MCP; MCP is the substrate of Agent Plugins. Their absence implies a disagreement worth investigating, but the evidence doesn't confirm this—must be framed as a question."
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "No prior posts exist. The Anthropic absence is mentioned as a fact but not explored as a question."
+    },
+    {
+      "id": "a3",
+      "kind": "technical",
+      "thesis": "Agent Plugins collapses two different ideas—Agent Skills (workflows) and MCP Servers (tool middleware)—into one directory format, and the conflation may age poorly once developers realize packaging isn't the same as composability.",
+      "whyItFits": "I care about abstractions and their costs. This is a technical design critique, not a news summary, and it fits the programming pillar.",
+      "evidenceNeeded": [
+        "src_8e93fe (two core components: Agent Skills and MCP Servers)",
+        "src_8ec6de (plugin.json manifest, skills/ and mcp.json layout)",
+        "src_39171b (Dax Raad skepticism that useful parts end up client-specific)"
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "No prior posts exist. The distinction between the two component types is in the source material but nobody has questioned whether bundling them together is correct."
+    },
+    {
+      "id": "a4",
+      "kind": "explanation",
+      "thesis": "What actually shipped: Agent Plugins 1.0 is a folder with a plugin.json file, a skills directory, and an mcp.json config—nothing more, no registry, no marketplace, no runtime—and that minimalism is what makes adoption by five competing platforms possible on day one.",
+      "whyItFits": "I explain technical things plainly for people tired of hype. This cuts through the press-release language and shows exactly what the standard is.",
+      "evidenceNeeded": [
+        "src_8ec6de (plugin.json manifest structure, skills/ and mcp.json layout)",
+        "src_9b2e35 (deliberate exclusion of distribution, trust models)",
+        "src_8e93fe (two core components)"
+      ],
+      "noveltyRisk": "low",
+      "noveltyNote": "No prior posts exist. The news coverage describes the standard but doesn't distill it to its bare technical minimum."
+    },
+    {
+      "id": "a5",
+      "kind": "product",
+      "thesis": "The real product decision hiding inside this standard is that each platform now gets to build its own plugin marketplace, meaning the 'build once, run anywhere' promise ends the moment a developer needs to get their plugin in front of users.",
+      "whyItFits": "I think about product decisions, not press releases. The marketplace gap is a distribution problem masquerading as an interoperability win.",
+      "evidenceNeeded": [
+        "src_9b2e35 (marketplaces, installation left to each client platform)",
+        "src_39171b (Dax Raad skepticism about client-specific useful parts)",
+        "Inference: without a shared marketplace, discoverability remains platform-specific, undermining portability."
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "No prior posts exist. The marketplace gap is mentioned in sources but not framed as the product problem it actually is."
+    },
+    {
+      "id": "a6",
+      "kind": "opinion",
+      "thesis": "The speed at which this standard went from zero to adopted—with Google joining as maintainer on the same day—suggests the real work happened in backroom agreement long before the public announcement, and that's how useful standards actually get made: not by committee, but by a small group shipping something narrow and letting others join.",
+      "whyItFits": "I have a moderate belief that open-source and open standards are worth watching, and I'm skeptical of formal standards bodies. This is an opinion grounded in the timeline facts.",
+      "evidenceNeeded": [
+        "src_9b2e35 (industry outpaced IETF DAWN working group)",
+        "src_9b2e35 (Google joined same day)",
+        "Inference: the simultaneous adoption by five companies implies prior coordination, but this is stated as opinion, not fact."
+      ],
+      "noveltyRisk": "low",
+      "noveltyNote": "No prior posts exist. The IETF comparison is in the sources; the 'backroom agreement' framing is an opinion drawn from the timing."
+    }
+  ],
+  "anglePick": {
+    "angleId": "a1",
+    "reasoning": "I chose the lowest-novelty-risk angle that the evidence can carry. No diversity correction yet — only 0 published posts."
+  },
+  "selectedAngleId": "a1",
+  "drafts": [
+    {
+      "id": "1786305652897-x9ii0x",
+      "text": "The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework. Just a plugin.json manifest and a directory layout. That's not a bug. It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework.",
+          "claimType": "opinion",
+          "sourceIds": [
+            "src_317cb2",
+            "src_39171b",
+            "src_9b2e35"
+          ],
+          "support": "n/a"
+        },
+        {
+          "id": "s2",
+          "text": "Just a plugin.json manifest and a directory layout.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_8ec6de",
+            "src_9b2e35",
+            "src_39171b"
+          ],
+          "support": "supported"
+        },
+        {
+          "id": "s3",
+          "text": "That's not a bug.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s4",
+          "text": "It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.",
+          "claimType": "inference",
+          "sourceIds": [
+            "src_9b2e35",
+            "src_317cb2"
+          ],
+          "support": "supported"
+        }
+      ],
+      "characterCount": 394,
+      "toneTags": [
+        "analytical",
+        "direct",
+        "technical"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "low",
+        "matches": [],
+        "usedModel": false,
+        "comparedAgainst": 0
+      },
+      "warnings": [
+        "394 characters, past the 280 limit."
+      ]
+    },
+    {
+      "id": "1786305652897-rxlu6n",
+      "text": "Most standards efforts try to specify everything and collapse under their own weight. Agent Plugins 1.0 took the opposite approach. The spec covers only packaging and discovery — one folder, one plugin.json. Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms. The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "Most standards efforts try to specify everything and collapse under their own weight.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s2",
+          "text": "Agent Plugins 1.0 took the opposite approach.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s3",
+          "text": "The spec covers only packaging and discovery — one folder, one plugin.json.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_8ec6de",
+            "src_9b2e35",
+            "src_317cb2"
+          ],
+          "support": "supported"
+        },
+        {
+          "id": "s4",
+          "text": "Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_9b2e35",
+            "src_39171b",
+            "src_317cb2"
+          ],
+          "support": "supported"
+        },
+        {
+          "id": "s5",
+          "text": "The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_9b2e35",
+            "src_317cb2"
+          ],
+          "support": "supported"
+        }
+      ],
+      "characterCount": 435,
+      "toneTags": [
+        "analytical",
+        "comparative",
+        "direct"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "low",
+        "matches": [],
+        "usedModel": false,
+        "comparedAgainst": 0
+      },
+      "warnings": [
+        "435 characters, past the 280 limit."
+      ]
+    },
+    {
+      "id": "1786305652897-a11nq8",
+      "text": "Agent Plugins 1.0 is a standard that wins by being small. Packaging and discovery only — no permissions, no trust model, no marketplace. I think that's the right call for now. You can't spec safety across six companies with different threat models, but you can agree on a folder layout. Anthropic sitting it out is the other story here.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "Agent Plugins 1.0 is a standard that wins by being small.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s2",
+          "text": "Packaging and discovery only — no permissions, no trust model, no marketplace.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_317cb2",
+            "src_39171b",
+            "src_9b2e35"
+          ],
+          "support": "supported"
+        },
+        {
+          "id": "s3",
+          "text": "I think that's the right call for now.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s4",
+          "text": "You can't spec safety across six companies with different threat models, but you can agree on a folder layout.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s5",
+          "text": "Anthropic sitting it out is the other story here.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_9b2e35"
+          ],
+          "support": "supported"
+        }
+      ],
+      "characterCount": 336,
+      "toneTags": [
+        "direct",
+        "opinionated",
+        "analytical"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "low",
+        "matches": [],
+        "usedModel": false,
+        "comparedAgainst": 0
+      },
+      "warnings": [
+        "336 characters, past the 280 limit."
+      ]
+    }
+  ],
+  "selectedDraftId": "1786305652897-a11nq8",
+  "validation": {
+    "sentences": [
+      {
+        "id": "s1",
+        "support": "unsupported",
+        "sourceIds": [],
+        "notes": "No source cited; the claim that the standard 'wins by being small' is an opinion not evidenced in the provided sources."
+      },
+      {
+        "id": "s2",
+        "support": "supported",
+        "sourceIds": [
+          "src_317cb2",
+          "src_39171b",
+          "src_9b2e35"
+        ],
+        "notes": "src_317cb2 states the spec 'deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust to each platform.' src_39171b and src_9b2e35 similarly confirm the narrow scope excluding permissions, trust, and marketplaces."
+      },
+      {
+        "id": "s3",
+        "support": "unsupported",
+        "sourceIds": [],
+        "notes": "Opinion sentence asserting no factual claim; nothing to check. (No valid source was named.)"
+      },
+      {
+        "id": "s4",
+        "support": "unsupported",
+        "sourceIds": [],
+        "notes": "Opinion sentence asserting no factual claim; nothing to check. (No valid source was named.)"
+      },
+      {
+        "id": "s5",
+        "support": "supported",
+        "sourceIds": [
+          "src_9b2e35"
+        ],
+        "notes": "src_9b2e35 explicitly notes 'Anthropic's absence' from the standard."
+      }
+    ],
+    "canPublish": true,
+    "blockingReasons": []
+  },
+  "critique": {
+    "personaFit": "strong",
+    "genericness": "low",
+    "factualRisk": "medium",
+    "issues": [
+      {
+        "sentenceId": "s1",
+        "severity": "warn",
+        "type": "unsupported_claim",
+        "detail": "Fact validation marks s1 as unsupported: no source cited for the claim that the standard 'wins by being small.' The sentence is labeled opinion but reads as a declarative judgment without grounding.",
+        "suggestion": "Reframe as a clearer opinion, e.g., 'What I like about Agent Plugins 1.0 is how small it is.' Or cite a source that supports the small-scope design choice."
+      },
+      {
+        "sentenceId": "s5",
+        "severity": "note",
+        "type": "underdeveloped_point",
+        "detail": "The sentence gestures at an interesting angle—Anthropic's absence—but drops it without elaboration. The reader gets a headline, not insight.",
+        "suggestion": "Add one more sentence explaining why Anthropic sitting out matters, or cut the line if it can't be developed within the concise format."
+      }
+    ],
+    "recommendation": "revise",
+    "fingerprintScore": 0,
+    "similarityRisk": "low"
+  },
+  "reasoning": "",
+  "contentId": null,
+  "runIds": [
+    "1786305580404-nu42c7"
+  ],
+  "createdAt": "2026-08-09T19:59:42.421Z",
+  "updatedAt": "2026-08-09T20:04:02.469Z"
+}

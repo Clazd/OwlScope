@@ -11,6 +11,10 @@ interface Rate {
 }
 
 const RATES: ReadonlyArray<readonly [string, Rate]> = [
+  // DeepSeek cache-miss rates. Cache hits are cheaper, so these estimates are
+  // deliberately conservative rather than understating spend.
+  ["deepseek-v4-pro", { in: 0.435, out: 0.87 }],
+  ["deepseek-v4-flash", { in: 0.14, out: 0.28 }],
   ["claude-opus", { in: 15, out: 75 }],
   ["claude-sonnet", { in: 3, out: 15 }],
   ["claude-haiku", { in: 1, out: 5 }],

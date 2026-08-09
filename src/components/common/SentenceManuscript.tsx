@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/format/cn";
 import { EPISTEMIC_LABELS, type EpistemicState } from "./EpistemicChip";
 import { MicroLabel } from "./MicroLabel";
+import { useDialogFocus } from "./use-dialog-focus";
 
 export interface ManuscriptSource {
   id: string;
@@ -120,13 +121,13 @@ export function SentenceManuscript({
                 )}
               />
 
-              <p
+              <div
                 ref={(node) => {
                   if (node) refs.current.set(sentence.id, node);
                   else refs.current.delete(sentence.id);
                 }}
                 tabIndex={0}
-                role="button"
+                role="group"
                 aria-label={`${sentence.text} — ${EPISTEMIC_LABELS[sentence.state]}`}
                 onFocus={() => setActiveId(sentence.id)}
                 onBlur={() => setActiveId(null)}
@@ -141,7 +142,7 @@ export function SentenceManuscript({
                   }
                 }}
                 className={cn(
-                  "type-manuscript cursor-default py-2 text-ink outline-none",
+                  "type-manuscript cursor-default py-2 text-ink",
                   "transition-opacity duration-(--dur-state)",
                   dimmed && "opacity-60",
                   // The only underline in the product. It means one thing.
@@ -158,7 +159,7 @@ export function SentenceManuscript({
                 >
                   <span aria-hidden className={cn("size-2 rounded-pill", RULE[sentence.state])} />
                 </button>
-              </p>
+              </div>
 
               <Margin
                 sentence={sentence}
@@ -243,26 +244,23 @@ function BottomSheet({
   onClose: () => void;
   onOpenSource?: (sourceId: string) => void;
 }) {
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onClose]);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useDialogFocus<HTMLDivElement>(true, onClose, closeRef);
 
   return (
     <div className="fixed inset-0 z-40 flex flex-col justify-end md:hidden">
-      <button type="button" aria-label="Close" onClick={onClose} className="grow cursor-default bg-ink/20" />
+      <button type="button" aria-label="Close" tabIndex={-1} onClick={onClose} className="grow cursor-default bg-ink/20" />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Evidence for this sentence"
+        tabIndex={-1}
         className="rounded-t-card border-t border-rule bg-surface px-6 py-4 shadow-pop"
       >
         <p className="type-manuscript mb-3 text-ink">{sentence.text}</p>
         <Margin sentence={sentence} dimmed={false} onOpenSource={onOpenSource} />
-        <button type="button" onClick={onClose} className="type-micro mt-4 text-ink-3">
+        <button ref={closeRef} type="button" onClick={onClose} className="type-micro mt-4 text-ink-3">
           Close
         </button>
       </div>

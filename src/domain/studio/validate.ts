@@ -82,7 +82,7 @@ export async function runValidation(input: ValidateInput): Promise<ValidationOut
   const { prompt, usage } = buildPrompt(input);
   const result = await runStage({
     stage: STAGE,
-    tier: "strong",
+    tier: "fast",
     prompt,
     schema: ValidationOutputSchema,
     schemaName: "ValidationOutput",

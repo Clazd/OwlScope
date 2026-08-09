@@ -19,6 +19,16 @@ export interface SyncResult {
   output: string;
 }
 
+export function describeSyncFailure(output: string, conflicts: readonly string[]): Pick<SyncResult, "message" | "conflicts"> {
+  if (conflicts.length > 0) {
+    return {
+      message: `Rebase stopped on ${conflicts.length} conflicting file(s): ${conflicts.join(", ")}. Resolve them in git, then run pull again.`,
+      conflicts: [...conflicts],
+    };
+  }
+  return { message: `Pull failed. ${firstLine(output)}`, conflicts: [] };
+}
+
 async function git(args: string[]): Promise<{ stdout: string; stderr: string; code: number }> {
   try {
     const { stdout, stderr } = await run("git", args, {
@@ -53,15 +63,7 @@ export async function syncPull(): Promise<SyncResult> {
 
   if (result.code !== 0) {
     const conflicts = await conflictingPaths();
-    if (conflicts.length > 0) {
-      return {
-        ok: false,
-        message: `Rebase stopped on ${conflicts.length} conflicting file(s). Resolve them in git, then run pull again.`,
-        conflicts,
-        output,
-      };
-    }
-    return { ok: false, message: `Pull failed. ${firstLine(output)}`, conflicts: [], output };
+    return { ok: false, ...describeSyncFailure(output, conflicts), output };
   }
 
   await rebuildIndex();

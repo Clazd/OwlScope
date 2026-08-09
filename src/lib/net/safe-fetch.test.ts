@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
-import { SAFE_FETCH_LIMITS, assertPublicUrl, isBlockedAddress } from "./safe-fetch";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { SAFE_FETCH_LIMITS, assertPublicUrl, isBlockedAddress, safeFetch } from "./safe-fetch";
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe("SSRF guard", () => {
   it("blocks the ranges that make SSRF worth doing", () => {
@@ -57,5 +59,16 @@ describe("SSRF guard", () => {
     expect(SAFE_FETCH_LIMITS.maxBytes).toBe(2 * 1024 * 1024);
     expect(SAFE_FETCH_LIMITS.timeoutMs).toBe(10_000);
     expect(SAFE_FETCH_LIMITS.userAgent).toMatch(/PersonaStudio/);
+  });
+
+  it("does not forward credentials to another origin after a redirect", async () => {
+    const request = vi.fn()
+      .mockResolvedValueOnce(new Response(null, { status: 302, headers: { location: "https://1.1.1.1/final" } }))
+      .mockResolvedValueOnce(new Response("ok", { status: 200 }));
+    vi.stubGlobal("fetch", request);
+    await safeFetch("https://93.184.216.34/start", { headers: { authorization: "Bearer secret", "x-test": "kept" } });
+    expect(request.mock.calls[0]?.[1]?.headers.authorization).toBe("Bearer secret");
+    expect(request.mock.calls[1]?.[1]?.headers.authorization).toBeUndefined();
+    expect(request.mock.calls[1]?.[1]?.headers["x-test"]).toBe("kept");
   });
 });

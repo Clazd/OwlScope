@@ -10,11 +10,31 @@ function provider() {
   return createAnthropicProvider({ apiKey: "test-key", baseUrl: "https://api.example", models: MODELS });
 }
 
+function deepSeekProvider() {
+  return createAnthropicProvider({
+    apiKey: "test-key",
+    baseUrl: "https://api.deepseek.com/anthropic",
+    models: { strong: "deepseek-v4-pro", fast: "deepseek-v4-flash" },
+  });
+}
+
 function reply(text: string, tokensIn = 10, tokensOut = 5) {
   return new Response(
     JSON.stringify({
       model: MODELS.fast,
       content: [{ type: "text", text }],
+      usage: { input_tokens: tokensIn, output_tokens: tokensOut },
+    }),
+    { status: 200, headers: { "content-type": "application/json" } },
+  );
+}
+
+function toolReply(input: unknown, tokensIn = 10, tokensOut = 5) {
+  return new Response(
+    JSON.stringify({
+      model: "deepseek-v4-flash",
+      stop_reason: "tool_use",
+      content: [{ type: "tool_use", name: "return_structured_output", input }],
       usage: { input_tokens: tokensIn, output_tokens: tokensOut },
     }),
     { status: 200, headers: { "content-type": "application/json" } },
@@ -66,6 +86,13 @@ describe("anthropic adapter", () => {
     expect(JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string).model).toBe(MODELS.strong);
   });
 
+  it("disables default DeepSeek thinking for plain completions", async () => {
+    fetchMock.mockImplementation(async () => reply("ready"));
+    await deepSeekProvider().complete({ stage: "connection", tier: "fast", prompt: "Reply ready." });
+    const body = JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string);
+    expect(body.thinking).toEqual({ type: "disabled" });
+  });
+
   it("names a timeout as a timeout, not an unknown failure", async () => {
     const timeout = Object.assign(new Error("aborted"), { name: "TimeoutError" });
     fetchMock.mockRejectedValue(timeout);
@@ -90,6 +117,15 @@ describe("anthropic adapter", () => {
 
     await expect(provider().complete({ stage: "connection", tier: "fast", prompt: "hi" })).rejects.toMatchObject({
       category: "http",
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("categorises context overflow with an actionable reduction message", async () => {
+    fetchMock.mockImplementation(async () => new Response("prompt is too long for the context window", { status: 400 }));
+    await expect(provider().complete({ stage: "writing", tier: "strong", prompt: "too much" })).rejects.toMatchObject({
+      category: "context-overflow",
+      message: expect.stringContaining("Reduce the topic, memory, or evidence"),
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
@@ -130,6 +166,19 @@ describe("anthropic adapter", () => {
     const assertion = expect(pending).rejects.toMatchObject({ category: "network" });
     await vi.runAllTimersAsync();
     await assertion;
+    vi.useRealTimers();
+  });
+
+  it("retries a transient non-JSON provider body", async () => {
+    vi.useFakeTimers();
+    fetchMock
+      .mockResolvedValueOnce(new Response("", { status: 200 }))
+      .mockResolvedValueOnce(reply("recovered"));
+
+    const pending = provider().complete({ stage: "connection", tier: "fast", prompt: "hi" });
+    await vi.runAllTimersAsync();
+    await expect(pending).resolves.toMatchObject({ text: "recovered" });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
     vi.useRealTimers();
   });
 
@@ -208,6 +257,46 @@ describe("completeStructured", () => {
     expect(body.messages[0].content).toContain("Verdict");
     expect(body.messages[0].content).toContain("No prose");
   });
+
+  it("uses a forced non-thinking tool call for DeepSeek structured output", async () => {
+    fetchMock.mockResolvedValueOnce(toolReply({ verdict: "skip", why: "nothing new" }, 40, 12));
+
+    const result = await deepSeekProvider().completeStructured(request);
+
+    expect(result.data).toEqual({ verdict: "skip", why: "nothing new" });
+    expect(result.text).toBe('{"verdict":"skip","why":"nothing new"}');
+    expect(result.repaired).toBe(false);
+    const body = JSON.parse((fetchMock.mock.calls[0] as [string, RequestInit])[1].body as string);
+    expect(body.thinking).toEqual({ type: "disabled" });
+    expect(body.tool_choice).toEqual({ type: "tool", name: "return_structured_output" });
+    expect(body.tools[0].input_schema).toMatchObject({ type: "object" });
+  });
+
+  it("repairs invalid DeepSeek tool input exactly once", async () => {
+    fetchMock
+      .mockResolvedValueOnce(toolReply({ verdict: "maybe", why: "unsure" }, 30, 10))
+      .mockResolvedValueOnce(toolReply({ verdict: "post", why: "fixed" }, 50, 11));
+
+    const result = await deepSeekProvider().completeStructured(request);
+
+    expect(result.repaired).toBe(true);
+    expect(result.data.verdict).toBe("post");
+    expect(result.tokensIn).toBe(80);
+    expect(result.tokensOut).toBe(21);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("accepts a valid DeepSeek payload nested under a compatibility wrapper", async () => {
+    fetchMock.mockResolvedValueOnce(toolReply({
+      output: { verdict: "post", why: "wrapped by the provider" },
+    }));
+
+    const result = await deepSeekProvider().completeStructured(request);
+
+    expect(result.data).toEqual({ verdict: "post", why: "wrapped by the provider" });
+    expect(result.repaired).toBe(false);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe("pricing", () => {
@@ -215,6 +304,8 @@ describe("pricing", () => {
     expect(rateFor("claude-opus-4-6")).toEqual({ in: 15, out: 75 });
     expect(rateFor("claude-haiku-4-5-20251001")).toEqual({ in: 1, out: 5 });
     expect(rateFor("claude-3-haiku-20240307")).toEqual({ in: 0.25, out: 1.25 });
+    expect(rateFor("deepseek-v4-pro")).toEqual({ in: 0.435, out: 0.87 });
+    expect(rateFor("deepseek-v4-flash")).toEqual({ in: 0.14, out: 0.28 });
   });
 
   it("falls back for a model it has never seen", () => {
@@ -225,6 +316,7 @@ describe("pricing", () => {
     expect(estimateCost("claude-opus-4-6", 1_000_000, 0)).toBe(15);
     expect(estimateCost("claude-opus-4-6", 0, 1_000_000)).toBe(75);
     expect(estimateCost("claude-haiku-4-5-20251001", 1000, 500)).toBeCloseTo(0.0035, 6);
+    expect(estimateCost("deepseek-v4-pro", 1_000_000, 1_000_000)).toBe(1.305);
   });
 });
 

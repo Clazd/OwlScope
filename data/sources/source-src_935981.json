@@ -1,0 +1,12 @@
+{
+  "id": "src_935981",
+  "topicId": "1786304338533-5t1hxg",
+  "title": "testing123 0.1.1 | Snyk",
+  "url": "https://security.snyk.io/package/npm/testing123/0.1.1",
+  "domain": "security.snyk.io",
+  "publishedAt": null,
+  "retrievedAt": "2026-08-09T19:39:33.486Z",
+  "excerpt": "An npm package called testing123, described as \"The best project ever.\" First published 13 years ago with a latest version of 0.2.0; Snyk reports no direct vulnerabilities for version 0.1.1.",
+  "sourceQuality": "unknown",
+  "providerId": "native-model-search"
+}

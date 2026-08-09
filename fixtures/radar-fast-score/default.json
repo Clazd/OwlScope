@@ -1,0 +1,7 @@
+{
+  "text": "{\"assessments\":[{\"key\":\"https://theverge.com/2026/8/8/agent-frameworks-long-tasks\",\"personaRelevance\":92,\"claimRisk\":78,\"pillarId\":null,\"fitReason\":\"Fits because your persona treats context limits and concrete agent failures as more important than product hype.\"},{\"key\":\"https://arxiv.org/abs/2608.01234\",\"personaRelevance\":94,\"claimRisk\":93,\"pillarId\":null,\"fitReason\":\"Fits because it tests a concrete belief about memory and long-running agents with primary evidence.\"},{\"key\":\"https://news.ycombinator.com/item?id=44821003\",\"personaRelevance\":82,\"claimRisk\":55,\"pillarId\":null,\"fitReason\":\"Fits because practitioner failure reports can reveal a useful engineering pattern.\"},{\"key\":\"https://github.com/example/stateful-agent-loop\",\"personaRelevance\":88,\"claimRisk\":85,\"pillarId\":null,\"fitReason\":\"Fits because it is a concrete implementation rather than a generic announcement.\"},{\"key\":\"evergreen:context windows are not durable memory\",\"personaRelevance\":91,\"claimRisk\":90,\"pillarId\":null,\"fitReason\":\"Fits because it turns a recurring agent constraint into a precise product-design argument.\"},{\"key\":\"evergreen:the cheapest abstraction is often a file\",\"personaRelevance\":83,\"claimRisk\":88,\"pillarId\":null,\"fitReason\":\"Fits because the persona values local-first tools and inspectable systems.\"}]}",
+  "model": "sandbox-fast",
+  "tokensIn": 980,
+  "tokensOut": 420,
+  "latencyMs": 620
+}

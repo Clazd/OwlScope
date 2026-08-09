@@ -13,6 +13,7 @@ export type ErrorCategory =
   | "timeout"
   | "network"
   | "rate-limit"
+  | "context-overflow"
   | "http"
   | "parse"
   | "schema"

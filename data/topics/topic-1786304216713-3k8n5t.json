@@ -1,0 +1,30 @@
+{
+  "id": "1786304216713-3k8n5t",
+  "title": "Pricing AI Features by Job-to-Be-Done",
+  "summary": "AI features have unpredictable marginal costs, which makes pricing tricky. The right model depends more on perceived value than on cost accounting.",
+  "sourceType": "bank",
+  "pillarId": "1786303705119-00mo71",
+  "freshness": "evergreen",
+  "status": "banked",
+  "context": "",
+  "scoreComponents": {
+    "personaRelevance": 50,
+    "novelty": 100,
+    "freshness": 0,
+    "sourceQuality": 70,
+    "usefulness": 55,
+    "angleStrength": 60,
+    "claimRisk": 85,
+    "diversityContribution": 50
+  },
+  "scoreTotal": 68,
+  "scoreLabel": "Moderate",
+  "radarKind": "evergreen",
+  "angle": "Map AI feature types to pricing models: when per-use aligns with bursts of value, when seats fit habitual use, and when bundling removes adoption friction.",
+  "fitReason": "It overlaps with the subjects and beliefs in your persona.",
+  "bankedAt": "2026-08-09T19:35:07.074Z",
+  "bankedUntil": null,
+  "dismissedAt": null,
+  "createdAt": "2026-08-09T19:35:07.074Z",
+  "updatedAt": "2026-08-09T19:35:07.074Z"
+}

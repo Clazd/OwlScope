@@ -1,0 +1,435 @@
+{
+  "id": "1786305966055-2re92y",
+  "topicId": "1786304216686-iuhjo8",
+  "stage": "topic",
+  "stageStates": {
+    "topic": "active",
+    "research": "done",
+    "angles": "done",
+    "drafts": "done",
+    "critique": "active",
+    "final": "pending"
+  },
+  "boundary": {
+    "blocked": false,
+    "boundaryIds": [],
+    "explanation": ""
+  },
+  "research": {
+    "facts": [
+      {
+        "claim": "A workflow has predefined control flow owned by the programmer; an agent lets the model decide its own trajectory using tools in a loop.",
+        "sourceIds": [
+          "src_b0252b"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Key criteria for choosing between agents and workflows include: whether you can pre-map the decision tree, whether the task is valuable enough to justify token spend, whether bottleneck capabilities are solid, and what the cost of error is.",
+        "sourceIds": [
+          "src_b0252b"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Coding is highlighted by Anthropic as an ideal agent use case because it satisfies all the decision criteria.",
+        "sourceIds": [
+          "src_b0252b"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "AI Singapore presents a structured scoring framework across five dimensions: task complexity, business value vs. volume, reliability requirements, technical readiness, and organizational maturity.",
+        "sourceIds": [
+          "src_3ecfdb"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "In the AI Singapore framework, each dimension awards +2 points to either workflows or agents; a score ≥ 6 for workflows means stick with workflows, and ≥ 6 for agents means agents may be viable if no workflow-critical blockers exist.",
+        "sourceIds": [
+          "src_3ecfdb"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Hybrid systems are advocated where workflows handle predictable high-volume tasks and agents handle complex ambiguous decisions.",
+        "sourceIds": [
+          "src_3ecfdb"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The workflow-vs-agent distinction can be reframed as scripted orchestration (developers fix topology, guards, and stop conditions at design time) versus policy-driven orchestration (an LLM chooses actions, tools, parameters, and stop conditions at runtime).",
+        "sourceIds": [
+          "src_27cd55"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Three hybrid patterns that ship in production are: workflow-in-agent (agent delegates to deterministic sub-steps), agent-in-workflow (workflow backbone with agentic nodes), and agent-using-workflow-as-tool.",
+        "sourceIds": [
+          "src_27cd55"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Rex Black proposes four deciding questions: can the steps be enumerated in advance, how high is the blast radius of a wrong next step, how observable is the decision trace, and what is the unit economics at full volume.",
+        "sourceIds": [
+          "src_5ae77a"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "The 'earned autonomy' principle says to default to a workflow first and promote to agent only after instrumentation shows a workflow cannot solve the case.",
+        "sourceIds": [
+          "src_5ae77a"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Most production 'agents' are actually workflows that overshot their brief, according to Rex Black.",
+        "sourceIds": [
+          "src_5ae77a"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Workflows are the right move when the pathway is known ahead of time with few unforeseen edge cases, offering more upfront coding but greater efficiency and predictability.",
+        "sourceIds": [
+          "src_1ef271"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Agents are better at adapting on the fly for tasks that vary, can switch between chatting and doing work, and may discover new shortcuts, though they require tolerance for bumps along the way.",
+        "sourceIds": [
+          "src_1ef271"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "Multiple sources converge on the same core heuristic: use workflows when steps are predictable and enumerable; consider agents when the task requires runtime adaptation, exploration, or handling of ambiguous edge cases.",
+        "sourceIds": [
+          "src_b0252b",
+          "src_3ecfdb",
+          "src_27cd55",
+          "src_5ae77a",
+          "src_1ef271"
+        ],
+        "kind": "inference"
+      },
+      {
+        "claim": "No source advocates for agents as a universal default; all frameworks recommend deliberate evaluation of trade-offs before introducing autonomy.",
+        "sourceIds": [
+          "src_b0252b",
+          "src_3ecfdb",
+          "src_5ae77a",
+          "src_1ef271"
+        ],
+        "kind": "inference"
+      }
+    ],
+    "uncertainties": [
+      "Source src_3853c8 (Neo Agent docs) returned no retrievable text and cannot be used.",
+      "Source src_5ae77a (Rex Black) has no publication date, so its freshness cannot be verified.",
+      "Source src_1ef271 (InformIT) has no publication date, so its freshness cannot be verified.",
+      "The shellypalmer.com article (src_b0252b) is a secondary summary of an Anthropic talk, not a primary Anthropic source.",
+      "None of the sources provide empirical data or case studies comparing agent vs. workflow outcomes; all are conceptual frameworks or opinion pieces."
+    ],
+    "freshness": {
+      "assessment": "evergreen",
+      "note": "The topic is framed as evergreen. Sources range from 2025–2026, and the conceptual nature of the frameworks (decision heuristics, orchestration patterns) is not tied to a specific technology version that would expire quickly."
+    },
+    "insufficient": false,
+    "insufficientReason": "",
+    "sourceIds": [
+      "src_b0252b",
+      "src_3ecfdb",
+      "src_27cd55",
+      "src_5ae77a",
+      "src_1ef271",
+      "src_3853c8"
+    ],
+    "droppedUrls": [
+      "https://www.anthropic.com/engineering/building-effective-agents"
+    ],
+    "noProviders": false,
+    "completedAt": "2026-08-09T20:06:41.884Z"
+  },
+  "angles": [
+    {
+      "id": "a1",
+      "kind": "counterintuitive",
+      "thesis": "Most production 'agents' are actually workflows that overshot their brief, and that's a good thing — it means teams are discovering where autonomy adds value rather than shipping it by default.",
+      "whyItFits": "I'm opinionated about AI hype and drawn to observations that contradict the narrative. This angle lets me puncture the agent trend while crediting pragmatic engineering.",
+      "evidenceNeeded": [
+        "src_5ae77a (Rex Black's claim that most production agents are workflows that overshot)",
+        "inference that this pattern is healthy rather than a failure"
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "No prior posts exist, but the 'agents are just workflows' take is a known contrarian position. The reframing as a positive signal is the fresh part."
+    },
+    {
+      "id": "a2",
+      "kind": "technical",
+      "thesis": "The real architectural question isn't 'agent or workflow' — it's where you put the decision boundary, and production systems use three hybrid patterns that blur the distinction entirely.",
+      "whyItFits": "I care about what actually ships, not taxonomy debates. Engineers and product people want patterns they can use, not definitions.",
+      "evidenceNeeded": [
+        "src_27cd55 (three hybrid patterns: workflow-in-agent, agent-in-workflow, agent-using-workflow-as-tool)",
+        "inference that these patterns are more common in production than pure forms"
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "The hybrid patterns are documented in src_27cd55, but framing them as the real default rather than an edge case is a sharper take."
+    },
+    {
+      "id": "a3",
+      "kind": "opinion",
+      "thesis": "The 'earned autonomy' principle should be the default starting posture for any team building AI features: begin with a boring workflow, then instrument it to find the cases that genuinely need an agent.",
+      "whyItFits": "This aligns with my strong belief that AI products should solve concrete problems and my preference for concrete observations over motivational advice. It's a practical rule engineers can act on.",
+      "evidenceNeeded": [
+        "src_5ae77a (earned autonomy principle)",
+        "inference that this approach reduces over-engineering"
+      ],
+      "noveltyRisk": "low",
+      "noveltyNote": "The principle is directly from Rex Black's framework. The opinion layer is my endorsement of it as a team-level default."
+    },
+    {
+      "id": "a4",
+      "kind": "question",
+      "thesis": "If Anthropic says coding is the ideal agent use case because it satisfies all their decision criteria, what does that imply for the countless agent products being pitched for far less structured domains?",
+      "whyItFits": "I like asking uncomfortable questions that make builders think. Using Anthropic's own framework against the broader agent hype lets me question the market without ranting.",
+      "evidenceNeeded": [
+        "src_b0252b (Anthropic's criteria and coding as ideal use case)",
+        "inference that many agent products target domains that fail one or more of those criteria"
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "The Anthropic source is from 2026, but the question applies it critically rather than reporting it. No prior posts to conflict with."
+    },
+    {
+      "id": "a5",
+      "kind": "product",
+      "thesis": "The scoring frameworks from AI Singapore and Rex Black are useful, but they hide the real product question: what is the user willing to pay for, and does autonomy change that number enough to justify the reliability hit?",
+      "whyItFits": "I believe AI products should solve concrete problems and that good UX matters more than features. This angle brings product and business thinking to what's usually a pure engineering decision.",
+      "evidenceNeeded": [
+        "src_3ecfdb (AI Singapore scoring framework)",
+        "src_5ae77a (Rex Black's unit economics question)",
+        "inference that frameworks underweight willingness-to-pay"
+      ],
+      "noveltyRisk": "high",
+      "noveltyNote": "The decision frameworks exist, but none of the sources connect them to user willingness-to-pay. That's the fresh angle."
+    },
+    {
+      "id": "a6",
+      "kind": "explanation",
+      "thesis": "The workflow-vs-agent decision can be reduced to one question: can you pre-map the decision tree? If yes, build a workflow. If no, and if the cost of being wrong is tolerable, an agent might be worth it.",
+      "whyItFits": "I value clarity and dislike hype. This is a plain, actionable heuristic that cuts through the taxonomy noise and gives builders a concrete starting point.",
+      "evidenceNeeded": [
+        "src_b0252b (pre-map decision tree criterion)",
+        "src_5ae77a (blast radius question)",
+        "inference that this single question captures most of what the multi-dimensional frameworks cover"
+      ],
+      "noveltyRisk": "medium",
+      "noveltyNote": "Multiple sources converge on this heuristic, but reducing it to essentially one question with a cost-of-error guard is a sharper formulation than any single source offers."
+    }
+  ],
+  "anglePick": {
+    "angleId": "a3",
+    "reasoning": "I chose the lowest-novelty-risk angle that the evidence can carry. No diversity correction yet — only 0 published posts."
+  },
+  "selectedAngleId": "a3",
+  "drafts": [
+    {
+      "id": "1786306038352-rixzbr",
+      "text": "The 'earned autonomy' principle is the right starting posture for any team building AI features: begin with a boring, deterministic workflow, instrument it, then promote to agent only where the data shows a workflow genuinely can't handle the case. Most production 'agents' are actually workflows that overshot their brief.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "The 'earned autonomy' principle is the right starting posture for any team building AI features: begin with a boring, deterministic workflow, instrument it, then promote to agent only where the data shows a workflow genuinely can't handle the case.",
+          "claimType": "opinion",
+          "sourceIds": [
+            "src_5ae77a"
+          ],
+          "support": "n/a"
+        },
+        {
+          "id": "s2",
+          "text": "Most production 'agents' are actually workflows that overshot their brief.",
+          "claimType": "fact",
+          "sourceIds": [
+            "src_5ae77a"
+          ],
+          "support": "supported"
+        }
+      ],
+      "characterCount": 323,
+      "toneTags": [
+        "direct",
+        "opinionated",
+        "pragmatic"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "high",
+        "matches": [
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l1",
+            "score": 1,
+            "note": "100% of the topic and thesis wording is shared."
+          },
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l2",
+            "score": 0.5346573329512024,
+            "note": "53% character overlap with the whole post."
+          }
+        ],
+        "usedModel": false,
+        "comparedAgainst": 1
+      },
+      "warnings": [
+        "323 characters, past the 280 limit."
+      ]
+    },
+    {
+      "id": "1786306038352-g8oxxw",
+      "text": "Workflows give you predictability, observability, and a fixed cost per run. Agents give you flexibility at the cost of a trace you have to reconstruct and a token bill you didn't plan for. Earn the right to pay that cost: start with the workflow, measure where it breaks, and only then introduce autonomy.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "Workflows give you predictability, observability, and a fixed cost per run.",
+          "claimType": "inference",
+          "sourceIds": [
+            "src_b0252b",
+            "src_1ef271"
+          ],
+          "support": "partial"
+        },
+        {
+          "id": "s2",
+          "text": "Agents give you flexibility at the cost of a trace you have to reconstruct and a token bill you didn't plan for.",
+          "claimType": "inference",
+          "sourceIds": [
+            "src_b0252b",
+            "src_5ae77a"
+          ],
+          "support": "partial"
+        },
+        {
+          "id": "s3",
+          "text": "Earn the right to pay that cost: start with the workflow, measure where it breaks, and only then introduce autonomy.",
+          "claimType": "opinion",
+          "sourceIds": [
+            "src_5ae77a"
+          ],
+          "support": "n/a"
+        }
+      ],
+      "characterCount": 305,
+      "toneTags": [
+        "pragmatic",
+        "technical",
+        "direct"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "high",
+        "matches": [
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l1",
+            "score": 1,
+            "note": "100% of the topic and thesis wording is shared."
+          },
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l2",
+            "score": 0.4293584137700217,
+            "note": "43% character overlap with the whole post."
+          }
+        ],
+        "usedModel": false,
+        "comparedAgainst": 1
+      },
+      "warnings": [
+        "305 characters, past the 280 limit."
+      ]
+    },
+    {
+      "id": "1786307982872-imziu9",
+      "text": "If you can enumerate the steps in advance, you don't have an agent problem — you have a workflow. The hard part isn't choosing between them. It's resisting the urge to skip the boring thing that actually ships.",
+      "sentences": [
+        {
+          "id": "s1",
+          "text": "If you can enumerate the steps in advance, you don't have an agent problem — you have a workflow.",
+          "claimType": "inference",
+          "sourceIds": [
+            "src_b0252b",
+            "src_5ae77a",
+            "src_1ef271"
+          ],
+          "support": "supported"
+        },
+        {
+          "id": "s2",
+          "text": "The hard part isn't choosing between them.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        },
+        {
+          "id": "s3",
+          "text": "It's resisting the urge to skip the boring thing that actually ships.",
+          "claimType": "opinion",
+          "sourceIds": [],
+          "support": "n/a"
+        }
+      ],
+      "characterCount": 210,
+      "toneTags": [
+        "direct",
+        "technical",
+        "opinionated"
+      ],
+      "fingerprintScore": 0,
+      "fingerprintScored": false,
+      "fingerprintDeviations": [],
+      "similarity": {
+        "risk": "high",
+        "matches": [
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l1",
+            "score": 1,
+            "note": "100% of the topic and thesis wording is shared."
+          },
+          {
+            "contentId": "1786306074476-4bd21n",
+            "layer": "l2",
+            "score": 0.9341181575033404,
+            "note": "93% character overlap with the whole post."
+          }
+        ],
+        "usedModel": false,
+        "comparedAgainst": 1
+      },
+      "warnings": []
+    }
+  ],
+  "selectedDraftId": "1786307982872-imziu9",
+  "validation": null,
+  "critique": null,
+  "reasoning": "",
+  "contentId": null,
+  "runIds": [
+    "1786305794625-mqzd9o",
+    "1786307974114-42zgid"
+  ],
+  "createdAt": "2026-08-09T20:06:06.054Z",
+  "updatedAt": "2026-08-09T22:00:28.887Z"
+}

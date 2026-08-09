@@ -1,0 +1,7 @@
+{
+  "text": "{\"ideas\":[{\"title\":\"Context windows are not durable memory\",\"summary\":\"A conceptual explanation of why visibility and persistence solve different problems.\",\"angle\":\"Treat memory as product architecture, not a model feature.\",\"pillarId\":null},{\"title\":\"The cheapest abstraction is often a file\",\"summary\":\"A practical observation about local-first state and debuggability.\",\"angle\":\"A plain file can outperform an elaborate service when inspectability matters.\",\"pillarId\":null}]}",
+  "model": "sandbox-fast",
+  "tokensIn": 420,
+  "tokensOut": 170,
+  "latencyMs": 380
+}

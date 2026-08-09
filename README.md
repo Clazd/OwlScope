@@ -1,4 +1,4 @@
-# Persona Studio
+# Nova
 
 A private, local-only web app that acts as the office of an AI writer.
 
@@ -9,13 +9,14 @@ hands you a finished post with its reasoning attached. You approve and publish b
 **It is not a tweet generator.** A tweet generator answers "give me something to post."
 This answers "is there anything worth posting today, and if so, why this."
 
-> **Status: slice 3 — Studio.**
+> **Status: slice 6 — complete local product.**
 > Slice 1 shipped the shell, design system, storage layer, provider adapter, sandbox mode,
 > settings and run inspector. Slice 2 added Brain: the structured, versioned source of truth
-> for the AI identity. Slice 3 is the one that makes the product useful — type a topic, get a
-> finished, evidence-checked, voice-matched post you can copy. Radar, Today and Memory arrive
-> later; those pages are deliberately finished frames with empty states, not stubs waiting to
-> be styled.
+> for the AI identity. Slice 3 added the evidence-locked Studio pipeline. Slice 4 adds Radar:
+> cached keyless discovery, transparent scoring, deliberate skip outcomes, seed handoff, and an
+> expiring idea bank. Slice 5 composes those stages into the cached, cadence-aware Today loop.
+> Slice 6 adds indexed Memory, portable exports, guarded feedback/evolution, optional metrics
+> observations, deterministic evals, and the final reliability/accessibility pass.
 
 ---
 
@@ -39,10 +40,13 @@ app serves its own type and works with no network.
 | Key | Notes |
 |---|---|
 | `AI_PROVIDER` | `anthropic`. One adapter ships in this build. |
-| `AI_API_KEY` | The only credential. Never reaches the browser, never shown in the UI. |
+| `AI_API_KEY` | Required outside sandbox for model stages and native model search. Never reaches the browser or UI. |
 | `AI_MODEL_STRONG` | Optional. Overrides the strong model from Settings. |
 | `AI_MODEL_FAST` | Optional. Overrides the fast model from Settings. |
 | `AI_BASE_URL` | Optional. Defaults to the Anthropic API. |
+| `GITHUB_TOKEN` | Optional. Raises GitHub Radar rate limits; anonymous search remains available. |
+| `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` | Optional Reddit script-app credentials. Radar falls back to anonymous public feeds when both are blank. |
+| `REDDIT_USER_AGENT` | Identifies authenticated Reddit requests; include your Reddit username. |
 | `SANDBOX_MODE` | `true` pins sandbox on and disables the Settings toggle. |
 
 You can run the whole app with no API key at all by setting `SANDBOX_MODE=true`.
@@ -54,6 +58,7 @@ You can run the whole app with no API key at all by setting `SANDBOX_MODE=true`.
 | `npm run dev` | Dev server, bound to `127.0.0.1` |
 | `npm run build` / `npm start` | Production build and serve, also localhost-only |
 | `npm test` | Storage, provider, sandbox, SSRF-guard, persona, Studio and full-pipeline tests |
+| `npm run eval` | Eleven named deterministic safety cases in sandbox mode; non-zero on any failure |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint, including the "no `fs` outside `services/storage`" rule |
 | `npm run sync:pull` | `git pull --rebase`, then drop the derived cache index |
@@ -63,6 +68,21 @@ You can run the whole app with no API key at all by setting `SANDBOX_MODE=true`.
 ---
 
 ## How it is built
+
+### Memory, feedback, and exports
+
+Memory is a derived, validated index over every content item plus honest Today skip days. Keyword
+search and pillar, status, angle, date, and feedback filters run in the browser over that cache,
+so they make no model calls. Expanded rows show the full sentence-level Evidence Margin, stored
+sources, feedback, persona version, and originating run.
+
+The header exports all Memory entries as JSON or published posts as readable markdown. A copy is
+also written to `/data/exports/`; that folder and every derived cache are gitignored. Rejections
+are explicit feedback under `/data/feedback/`. Radar dismissals are kept as separate weak signals.
+
+Seven days after publication, Today can ask once for optional manual metrics. Patterns remains
+absent until ten measured posts exist, suppresses observations below the configured confidence
+floor, states its sample size, and never phrases an observation as an instruction.
 
 ### One process, no services
 
@@ -75,6 +95,22 @@ React state and route handlers are enough for one user on one machine.
 Brain is a structured record, not one giant system-prompt textarea. It holds identity,
 weighted pillars, beliefs, boundaries, voice rules, an experience log, writing samples and a
 derived voice fingerprint — each with its own Zod schema under `/data/persona/`.
+
+The **Persona Inbox** accepts a self-profile from ChatGPT or any other source as prose,
+Markdown, valid JSON, or broken JSON. One structured strong-model call turns it into an
+additive proposal across identity, knowledge pillars, beliefs, boundaries, voice preferences,
+and first-hand experience. Exact links in the paste are read through the same SSRF-safe,
+cached URL fetcher as Studio (five maximum); model-invented links are dropped. The proposal
+must still pass through Brain's normal field-level diff and version save, so an import can
+never silently overwrite the active persona.
+
+Three copyable ChatGPT prompts cover a memory-based profile, a memory audit followed by a
+one-question-at-a-time interview, and a strict JSON export. Every prompt requires ChatGPT to
+name the context it could actually access, separate explicit facts from inference, and avoid
+claiming it reviewed every chat. Reset Inbox clears only the unsaved paste. Settings also has
+a typed-confirmation **Reset writing memory** action: it removes published/draft content,
+feedback, metrics, exports, pending evolution suggestions, and Today history while preserving
+Brain identity, experience, samples, research sources, topics, settings, and run audit.
 
 Three parts of it are load-bearing for everything later:
 
@@ -280,6 +316,8 @@ There is no database. All application data lives under `/data`, one file per ite
   sources/     source-<id>.json
   runs/        2026-08-09/run-<id>.json
   metrics/     <contentId>.json
+  feedback/    <contentId>.json and radar-<topicId>.json
+  exports/     portable JSON and markdown exports (gitignored)
   .cache/      gitignored. derived indexes, quarantined files
 ```
 
@@ -316,6 +354,18 @@ Both are also buttons in Settings, with the last sync time. **Conflicts are repo
 merged automatically** — two machines editing the same persona is a decision you have to
 make, and a tool that guesses at it is worse than one that stops. You get the list of
 conflicting paths and resolve them in git.
+
+For the second machine: clone the same private repository, run `npm install`, copy its local
+`.env`, then run `npm run sync:pull` before opening the app. During normal use, pull before a
+session and push after it. If a rebase conflicts, the command stops and prints every conflicting
+path; resolve those JSON files deliberately, continue or abort the rebase in git, and rerun pull.
+
+### Deterministic evals
+
+`npm run eval` runs cases A–K against fixtures and pure domain checks. The command names every
+case and failing assertion, performs no external network requests, and exits non-zero on any
+failure. Add a named case whenever a production bug is fixed so prompt and gate changes cannot
+quietly reintroduce it.
 
 ### No auth
 
@@ -399,9 +449,8 @@ switch work and what keeps colour meaning one thing.
 | `↑ ↓` | Move between sentences in the manuscript |
 | `1`–`6` | Jump to a completed Studio stage |
 
-The palette is registry-based: a later slice registers its commands with
-`useRegisterCommands` from its own page and the palette picks them up with no edits to the
-palette itself.
+The palette is registry-based: each feature page registers its commands with
+`useRegisterCommands`, and the palette picks them up with no central switch statement.
 
 ---
 
@@ -411,16 +460,16 @@ palette itself.
 src/
   app/            routes, api handlers, tokens.css, globals.css
   components/
-    common/       the component inventory — later slices import, and build nothing
-    persona/ settings/ inspect/
-  domain/         persona (schema, statistics, fingerprint, weights, diff, versions),
-                  studio (schema, research, angles, write, validate, critique, similarity,
-                          gates, state-machine, finalise, prompts, context), settings, budget
+    common/       shared accessible primitives and the component inventory
+    persona/ radar/ studio/ today/ memory/ settings/ inspect/
+  domain/         persona, radar, studio, today, memory, feedback, metrics, evolution,
+                  settings and budget — schemas and workflow rules, independent of React
   services/
     ai/           provider.ts, anthropic.ts, sandbox.ts, pricing.ts
-    storage/      json-store.ts, atomic-write.ts, index-cache.ts, quarantine.ts, zip.ts
+    storage/      JSON stores, atomic writes, source signatures, caches, quarantine and export
     runs/         recorder.ts, schema.ts
-    search/       provider.ts, native.ts, manual-url.ts, fixture.ts, extract.ts
+    search/       native/model, manual URL, fixture, HN, Reddit, arXiv, GitHub and RSS/Atom
+    orchestration/ Today’s idempotent, cadence-aware daily pipeline
     memory/       similarity.ts — the three-layer check
     sync/         git.ts
   lib/            validation, logging, format, net (SSRF guard), boot

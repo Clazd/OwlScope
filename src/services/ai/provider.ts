@@ -12,6 +12,13 @@ export interface ResolvedProvider {
   models: Record<ModelTier, string>;
 }
 
+export function resolveConfiguredModels(saved: Record<ModelTier, string>): Record<ModelTier, string> {
+  return {
+    strong: process.env.AI_MODEL_STRONG || saved.strong,
+    fast: process.env.AI_MODEL_FAST || saved.fast,
+  };
+}
+
 /**
  * The single place that decides which adapter serves a call. Feature code asks
  * for a provider and gets whichever one the current settings imply — it never
@@ -19,10 +26,7 @@ export interface ResolvedProvider {
  */
 export async function getProvider(): Promise<ResolvedProvider> {
   const settings = await readSettings();
-  const models: Record<ModelTier, string> = {
-    strong: process.env.AI_MODEL_STRONG || settings.model.strong,
-    fast: process.env.AI_MODEL_FAST || settings.model.fast,
-  };
+  const models = resolveConfiguredModels(settings.model);
 
   const sandbox = await sandboxEnabled();
   if (sandbox) {

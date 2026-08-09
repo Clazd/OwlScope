@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type InputHTMLAttributes, type ReactNode } from "react";
+import { cloneElement, isValidElement, useId, type InputHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/format/cn";
 import { MicroLabel } from "./MicroLabel";
 
@@ -18,13 +18,21 @@ interface FieldProps {
 }
 
 export function Field({ label, hint, children, className }: FieldProps) {
+  const labelId = useId();
+  const hintId = useId();
+  const control = isValidElement<Record<string, unknown>>(children)
+    ? cloneElement(children, {
+        ...(!children.props["aria-label"] && !children.props["aria-labelledby"] ? { "aria-labelledby": labelId } : {}),
+        ...(hint && !children.props["aria-describedby"] ? { "aria-describedby": hintId } : {}),
+      })
+    : children;
   return (
     <div className={cn("py-3", className)}>
-      <MicroLabel strong className="mb-2 block">
+      <MicroLabel id={labelId} strong className="mb-2 block">
         {label}
       </MicroLabel>
-      {children}
-      {hint && <p className="type-small mt-2 text-ink-3">{hint}</p>}
+      {control}
+      {hint && <p id={hintId} className="type-small mt-2 text-ink-3">{hint}</p>}
     </div>
   );
 }

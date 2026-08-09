@@ -2,7 +2,7 @@ import "server-only";
 import { z } from "zod";
 import { createLogger } from "@/lib/logging/log";
 import { extractJson } from "@/lib/validation/json";
-import type { AIProvider } from "@/services/ai/types";
+import type { AIProvider, ModelTier } from "@/services/ai/types";
 import { domainOf } from "./extract";
 import type { SearchOptions, SearchProvider, SearchResult } from "./provider";
 
@@ -48,6 +48,13 @@ export interface NativeSearchOutcome {
   rawResponse: string;
 }
 
+export interface NativeSearchOptions extends SearchOptions {
+  /** Radar uses the fast model; focused research uses the strong model. */
+  tier?: ModelTier;
+  stage?: string;
+  maxSearches?: number;
+}
+
 function buildPrompt(query: string, limit: number): string {
   return [
     `Search the web for: ${query}`,
@@ -79,7 +86,7 @@ function urlKey(url: string): string {
 }
 
 export function createNativeSearchProvider(provider: AIProvider): SearchProvider & {
-  searchDetailed(query: string, opts?: SearchOptions): Promise<NativeSearchOutcome>;
+  searchDetailed(query: string, opts?: NativeSearchOptions): Promise<NativeSearchOutcome>;
 } {
   function unavailableReason(): string | null {
     if (!provider.searchCapability().supported || !provider.webSearch) {
@@ -88,17 +95,17 @@ export function createNativeSearchProvider(provider: AIProvider): SearchProvider
     return null;
   }
 
-  async function searchDetailed(query: string, opts: SearchOptions = {}): Promise<NativeSearchOutcome> {
+  async function searchDetailed(query: string, opts: NativeSearchOptions = {}): Promise<NativeSearchOutcome> {
     const reason = unavailableReason();
     if (reason) throw new Error(reason);
 
     const limit = opts.limit ?? 6;
     const prompt = buildPrompt(query, limit);
     const response = await provider.webSearch!({
-      stage: "research-search",
-      tier: "strong",
+      stage: opts.stage ?? "research-search",
+      tier: opts.tier ?? "strong",
       prompt,
-      maxSearches: 4,
+      maxSearches: opts.maxSearches ?? 4,
       maxTokens: 2000,
       fixtureCase: opts.fixtureCase,
     });

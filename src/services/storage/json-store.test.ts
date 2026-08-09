@@ -60,6 +60,20 @@ describe("createJsonStore", () => {
     expect(files).toEqual(["1.json"]);
   });
 
+  it("reports a disk write failure and removes its temporary file", async () => {
+    const target = join(dataDir, "blocked.json");
+    await mkdir(target, { recursive: true });
+    await expect(atomic.atomicWriteText(target, "cannot replace a directory")).rejects.toThrow();
+    const files = await readdir(dataDir);
+    expect(files.some((file) => file.endsWith(".tmp"))).toBe(false);
+  });
+
+  it("treats a missing data directory as an empty fresh clone", async () => {
+    const fresh = store.createJsonStore<Widget>(join(dataDir, "not-created-yet"), Widget());
+    await expect(fresh.list()).resolves.toEqual([]);
+    await expect(fresh.get("missing")).resolves.toBeNull();
+  });
+
   it("serialises concurrent writes rather than interleaving them", async () => {
     const widgets = store.createJsonStore<Widget>(join(dataDir, "widgets"), Widget());
 

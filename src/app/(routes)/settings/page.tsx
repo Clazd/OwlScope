@@ -25,7 +25,13 @@ export default async function SettingsPage() {
           initial={settings}
           data={{ ...summary, fixtures }}
           sandboxForcedByEnv={sandboxFromEnv()}
+          modelOverrides={{
+            strong: process.env.AI_MODEL_STRONG || null,
+            fast: process.env.AI_MODEL_FAST || null,
+            baseUrl: process.env.AI_BASE_URL || null,
+          }}
           hasPersona={isPersonaStarted(persona)}
+          pillars={persona?.pillars ?? []}
         />
       </PageBody>
     </>

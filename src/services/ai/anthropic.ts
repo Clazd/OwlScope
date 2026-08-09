@@ -1,4 +1,5 @@
 import "server-only";
+import { z } from "zod";
 import { createLogger } from "@/lib/logging/log";
 import { describeIssues, extractJson } from "@/lib/validation/json";
 import { estimateCost } from "./pricing";
@@ -45,6 +46,7 @@ interface AnthropicBlock {
   /** On `web_search_tool_result`: the result list, or an error object. */
   content?: AnthropicSearchResult[] | { type?: string; error_code?: string };
   name?: string;
+  input?: unknown;
 }
 
 interface AnthropicMessage {
@@ -80,16 +82,25 @@ export function webSearchToolType(model: string): string {
     : "web_search_20250305";
 }
 
-function categorise(status: number): ErrorCategory {
+function categorise(status: number, detail = ""): ErrorCategory {
   if (status === 401 || status === 403) return "auth";
   if (status === 429) return "rate-limit";
+  if (status === 413 || (status === 400 && /context|too many tokens|prompt is too long/i.test(detail))) return "context-overflow";
   return "http";
 }
 
 /** 429 and 5xx are worth another go. 4xx means the request itself is wrong. */
 function isRetryable(category: ErrorCategory, status?: number): boolean {
-  if (category === "network" || category === "timeout" || category === "rate-limit") return true;
+  if (category === "network" || category === "timeout" || category === "rate-limit" || category === "parse") return true;
   return category === "http" && status !== undefined && status >= 500;
+}
+
+function isDeepSeekEndpoint(baseUrl: string): boolean {
+  try {
+    return new URL(baseUrl).hostname.toLowerCase() === "api.deepseek.com";
+  } catch {
+    return false;
+  }
 }
 
 const backoffMs = (attempt: number) => Math.min(8_000, 500 * 2 ** (attempt - 1));
@@ -108,6 +119,8 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
 
   interface CallOptions {
     tools?: ServerTool[];
+    toolChoice?: ServerTool;
+    thinking?: { type: "disabled" };
     /** Overrides the single-user-turn default, for resuming a paused turn. */
     messages?: Array<{ role: string; content: unknown }>;
   }
@@ -120,6 +133,8 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
       temperature: req.temperature ?? 1,
       ...(req.system ? { system: req.system } : {}),
       ...(options.tools ? { tools: options.tools } : {}),
+      ...(options.toolChoice ? { tool_choice: options.toolChoice } : {}),
+      ...(options.thinking ? { thinking: options.thinking } : {}),
       messages: options.messages ?? [{ role: "user", content: req.prompt }],
     };
 
@@ -149,18 +164,25 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
 
     if (!response.ok) {
       const detail = (await response.text().catch(() => "")).slice(0, 800);
-      const category = categorise(response.status);
-      throw new ProviderError(category, `Provider returned ${response.status} for ${req.stage}.`, {
+      const category = categorise(response.status, detail);
+      const message = category === "context-overflow"
+        ? `${req.stage} exceeded the model context. Reduce the topic, memory, or evidence and retry.`
+        : `Provider returned ${response.status} for ${req.stage}.`;
+      throw new ProviderError(category, message, {
         status: response.status,
         detail,
       });
     }
 
+    const rawBody = await response.text();
     let payload: AnthropicMessage;
     try {
-      payload = (await response.json()) as AnthropicMessage;
+      payload = JSON.parse(rawBody) as AnthropicMessage;
     } catch (err) {
-      throw new ProviderError("parse", "Provider returned a body that is not JSON.", { cause: err });
+      throw new ProviderError("parse", "Provider returned a body that is not JSON.", {
+        detail: rawBody.slice(0, 800) || "The response body was empty.",
+        cause: err,
+      });
     }
 
     const text = (payload.content ?? [])
@@ -188,24 +210,15 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     };
   }
 
-  async function callOnce(req: CompletionRequest, model: string): Promise<CompletionResult> {
-    return (await callRaw(req, model)).result;
-  }
-
   /**
    * Bounded retries, and only on failures that are safe to repeat. A completion
    * has no side effects on our side, so replaying one is always idempotent.
    */
-  async function complete(req: CompletionRequest): Promise<CompletionResult> {
-    const model = config.models[req.tier];
-    if (!model) {
-      throw new ProviderError("config", `No ${req.tier} model configured. Set it in Settings.`);
-    }
-
+  async function callWithRetry(req: CompletionRequest, model: string, options: CallOptions = {}): Promise<RawCall> {
     let lastError: ProviderError | null = null;
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
       try {
-        return await callOnce(req, model);
+        return await callRaw(req, model, options);
       } catch (err) {
         const error = err instanceof ProviderError ? err : new ProviderError("unknown", (err as Error).message, { cause: err });
         lastError = error;
@@ -217,11 +230,28 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     throw lastError ?? new ProviderError("unknown", `${req.stage} failed for an unknown reason.`);
   }
 
+  async function complete(req: CompletionRequest): Promise<CompletionResult> {
+    const model = modelFor(req.tier);
+    const options: CallOptions = isDeepSeekEndpoint(config.baseUrl)
+      ? { thinking: { type: "disabled" } }
+      : {};
+    return (await callWithRetry(req, model, options)).result;
+  }
+
   async function completeStructured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>> {
     const instruction =
       `${req.prompt}\n\n` +
       `Reply with a single JSON value matching ${req.schemaName}. ` +
       `No prose, no code fence, no commentary.`;
+
+    // DeepSeek V4 defaults to high-effort thinking. That is useful for open-ended
+    // reasoning, but wasteful for schema-bound stages and can exhaust the output
+    // budget before a final JSON answer appears. Its Anthropic-compatible API
+    // supports forced tool input, which gives us typed data directly and avoids
+    // asking the model to serialize JSON text at all.
+    if (isDeepSeekEndpoint(config.baseUrl)) {
+      return completeDeepSeekStructured(req, instruction);
+    }
 
     const first = await complete({ ...req, prompt: instruction });
     const firstAttempt = validate(req, first.text);
@@ -259,6 +289,95 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     return { ...merged, data: secondAttempt.data, repaired: true };
   }
 
+  async function completeDeepSeekStructured<T>(
+    req: StructuredRequest<T>,
+    instruction: string,
+  ): Promise<StructuredResult<T>> {
+    const model = modelFor(req.tier);
+    const toolName = "return_structured_output";
+    const options: CallOptions = {
+      thinking: { type: "disabled" },
+      tools: [{
+        name: toolName,
+        description: `Return the requested ${req.schemaName} value.`,
+        input_schema: z.toJSONSchema(req.schema),
+      }],
+      toolChoice: { type: "tool", name: toolName },
+    };
+
+    const first = await callWithRetry({ ...req, prompt: instruction }, model, options);
+    const firstAttempt = validateStructuredPayload(req, first, toolName);
+    if (firstAttempt.validated.ok) {
+      return {
+        ...first.result,
+        text: firstAttempt.text,
+        data: firstAttempt.validated.data,
+        repaired: false,
+      };
+    }
+
+    log.warn(`${req.stage} failed validation; attempting one repair`);
+    const repairPrompt =
+      `${instruction}\n\n` +
+      `Your previous reply did not validate against ${req.schemaName}.\n` +
+      `Previous reply:\n${firstAttempt.text}\n\n` +
+      `Problems: ${firstAttempt.validated.error}\n\n` +
+      `Call ${toolName} once with corrected input.`;
+    const second = await callWithRetry({ ...req, prompt: repairPrompt }, model, options);
+    const secondAttempt = validateStructuredPayload(req, second, toolName);
+    const merged: CompletionResult = {
+      ...second.result,
+      text: secondAttempt.text,
+      prompt: instruction,
+      tokensIn: first.result.tokensIn + second.result.tokensIn,
+      tokensOut: first.result.tokensOut + second.result.tokensOut,
+      latencyMs: first.result.latencyMs + second.result.latencyMs,
+      costEstimate: first.result.costEstimate + second.result.costEstimate,
+    };
+
+    if (!secondAttempt.validated.ok) {
+      throw new ProviderError("schema", `${req.stage} did not return valid ${req.schemaName}.`, {
+        detail: `${secondAttempt.validated.error}; received: ${secondAttempt.text.slice(0, 1000)}`,
+      });
+    }
+    return { ...merged, data: secondAttempt.validated.data, repaired: true };
+  }
+
+  function validateStructuredPayload<T>(
+    req: StructuredRequest<T>,
+    raw: RawCall,
+    toolName: string,
+  ): { text: string; validated: Validated<T> } {
+    const toolUses = raw.payload.content?.filter(
+      (block) => block.type === "tool_use" && block.name === toolName,
+    ) ?? [];
+    if (toolUses.length > 0) {
+      const inputs = toolUses.map((block) => block.input ?? null);
+      for (const input of inputs) {
+        const candidates: unknown[] = [input];
+        if (input && typeof input === "object" && !Array.isArray(input)) {
+          const object = input as Record<string, unknown>;
+          for (const key of ["output", "result", "data", req.schemaName]) {
+            if (key in object) candidates.push(object[key]);
+          }
+        }
+        for (const candidate of candidates) {
+          const validated = validateValue(req, candidate);
+          if (validated.ok) return { text: JSON.stringify(candidate), validated };
+        }
+      }
+      const text = JSON.stringify(inputs.length === 1 ? inputs[0] : inputs);
+      return { text, validated: validateValue(req, inputs.at(-1)) };
+    }
+    return { text: raw.result.text, validated: validate(req, raw.result.text) };
+  }
+
+  function modelFor(tier: ModelTier): string {
+    const model = config.models[tier];
+    if (!model) throw new ProviderError("config", `No ${tier} model configured. Set it in Settings.`);
+    return model;
+  }
+
   /**
    * One completion with the web search server tool attached.
    *
@@ -271,10 +390,7 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
    * how a model-invented URL gets caught instead of shipped.
    */
   async function webSearch(req: WebSearchRequest): Promise<WebSearchResponse> {
-    const model = config.models[req.tier];
-    if (!model) {
-      throw new ProviderError("config", `No ${req.tier} model configured. Set it in Settings.`);
-    }
+    const model = modelFor(req.tier);
 
     const tools: ServerTool[] = [
       {
@@ -372,6 +488,10 @@ export function validate<T>(req: StructuredRequest<T>, text: string): Validated<
   } catch (err) {
     return { ok: false, error: (err as Error).message };
   }
+  return validateValue(req, value);
+}
+
+function validateValue<T>(req: StructuredRequest<T>, value: unknown): Validated<T> {
   const result = req.schema.safeParse(value);
   if (!result.success) return { ok: false, error: describeIssues(result.error.issues) };
   return { ok: true, data: result.data };

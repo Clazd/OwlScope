@@ -1,0 +1,599 @@
+{
+  "id": "1786305580404-nu42c7",
+  "kind": "today",
+  "personaVersion": 1,
+  "status": "failed",
+  "startedAt": "2026-08-09T19:59:40.404Z",
+  "finishedAt": "2026-08-09T20:01:06.528Z",
+  "totalTokensIn": 18359,
+  "totalTokensOut": 4851,
+  "totalCost": 0.011992999999999998,
+  "sandbox": false,
+  "idempotencyKey": "today-retry-1786305580355",
+  "stages": [
+    {
+      "stage": "boundary",
+      "model": "deepseek-v4-flash",
+      "prompt": "Decide whether a topic falls inside a writer's stated no-go areas.\nThis is a classification task. Do not write anything about the topic.\nNO-GO AREAS\n  Politics\n  Religion\n  Celebrity gossip\nTOPIC\nOpenAI and four rivals just agreed on one standard for AI agents\nSummary: 24 points on Hacker News.\nA topic is blocked only when writing about it would require taking a position inside a no-go area.\nA topic that merely mentions one in passing, or discusses it as a technical or business subject, is not blocked.\nFor example, with politics as a no-go area: an election result is blocked; how a government procures software is not.\nReply with JSON: {\"blocked\":true|false,\"boundaryValues\":[\"…\"],\"explanation\":\"one plain sentence\"}\n\nReply with a single JSON value matching BoundaryCheck. No prose, no code fence, no commentary.",
+      "rawResponse": "{\"blocked\":false,\"boundaryValues\":[],\"explanation\":\"The topic is a technical/business matter about AI industry standards, not politics, religion, or celebrity gossip.\"}",
+      "parsed": {
+        "blocked": false,
+        "boundaryValues": [],
+        "explanation": "The topic is a technical/business matter about AI industry standards, not politics, religion, or celebrity gossip."
+      },
+      "validationError": null,
+      "latencyMs": 1978,
+      "tokensIn": 540,
+      "tokensOut": 94,
+      "status": "done",
+      "errorCategory": null
+    },
+    {
+      "stage": "research-search",
+      "model": "deepseek-v4-pro",
+      "prompt": "Search the web for: OpenAI and four rivals just agreed on one standard for AI agents\n\nThen summarise what you actually retrieved.\n\nRules:\n  - Only list pages the search tool returned. Do not add a URL from memory.\n  - Copy each URL exactly as the search returned it.\n  - The snippet must be a factual summary of that page, 1-3 sentences, in the page's own terms.\n  - publishedAt is an ISO 8601 date, or null if the page does not state one. Never guess a date.\n  - At most 6 results, best first.\n\nReply with JSON: {\"results\":[{\"url\":\"…\",\"title\":\"…\",\"snippet\":\"…\",\"publishedAt\":\"…\"|null}]}\nNo prose, no code fence.",
+      "rawResponse": "{\"results\":[{\"url\":\"https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp\",\"title\":\"OpenAI and four rivals just agreed on one standard for AI agents\",\"snippet\":\"OpenAI, Amazon, Microsoft, Cursor, and Vercel have agreed on a shared open standard called Agent Plugins that lets a single agent extension work across competing products like ChatGPT, Copilot, Cursor, and more. The standard bundles Model Context Protocol servers and Agent Skills into one portable package with a plugin.json manifest, but deliberately leaves marketplaces, permissions, sandboxing, and trust to each client. The steering committee includes Amazon, Cursor, Microsoft, OpenAI, and Vercel, and the project is openly licensed.\", \"publishedAt\":\"2026-08-07\"},{\"url\":\"https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/\",\"title\":\"Industry Shipped Agent Plugins 1.0 While the Standards Body Debated\",\"snippet\":\"On August 6, 2026, OpenAI, AWS, Microsoft, Google, and Cursor co-developed and shipped Agent Plugins 1.0.0, a working vendor-neutral standard for packaging Agent Skills and MCP servers into portable plugins, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day; Anthropic is notably absent despite having authored the underlying Agent Skills specification. The standard excludes installation mechanisms, provenance verification, and marketplaces, leaving each platform operator to build its own distribution channel.\", \"publishedAt\":\"2026-08-07\"},{\"url\":\"https://www.creativeainews.com/articles/agent-plugins-open-standard-2026/\",\"title\":\"Agent Plugins: OpenAI, Microsoft, Vercel Back One Standard\",\"snippet\":\"On August 6, 2026, OpenAI, Microsoft, Amazon, Vercel, and Cursor agreed on Agent Plugins, an open vendor-neutral packaging format (version 1.0.0) that wraps MCP servers and Agent Skills into a single portable directory. The spec is deliberately narrow, defining only how a plugin is structured and discovered, and is backed by a Technical Steering Committee drawn from AWS, Anysphere (Cursor), Microsoft, OpenAI, and Vercel, with Vercel initiating the proposal.\", \"publishedAt\":\"2026-08-07\"},{\"url\":\"https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/\",\"title\":\"Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard\",\"snippet\":\"OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. Each plugin is organized as a folder containing a plugin.json manifest, and can include Agent Skills, MCP Servers, or both. The standard focuses on packaging and discovery, leaving marketplaces, permissions, and runtime environments open for platform-specific customization.\", \"publishedAt\":null},{\"url\":\"https://stiridelavaslui.ro/categorie/tech/openai-and-four-rivals-just-agreed-on-one-standard-for-ai-agents-the-next-web\",\"title\":\"OpenAI and four rivals just agreed on one standard for AI agents - The Next Web\",\"snippet\":\"A Romanian-language reprint of The Next Web's article covering the Agent Plugins open standard agreed upon by OpenAI, Amazon, Microsoft, Cursor, and Vercel on the eve of GPT-5's first birthday. The standard defines packaging and discovery for agent extensions using a plugin.json file, while intentionally leaving security, trust, and marketplace decisions to each client.\", \"publishedAt\":null},{\"url\":\"https://techorange.com/2026/08/07/ai-agent-plugins/\",\"title\":\"AI Agent 跨平台終於有共同標準了：Agent Plugins 統一封裝，安全與信任仍留白\",\"snippet\":\"A Chinese-language report on the Agent Plugins 1.0 open standard published on August 6, 2026 by OpenAI, AWS, Microsoft, Cursor, and Vercel, with Google later joining as a core maintainer. The standard provides a single packaging format for AI agent extensions so they can run across ChatGPT, GitHub Copilot, Cursor, and other platforms, but deliberately leaves trust, security, and marketplace governance to each platform. Developer reactions are mixed, with some praising the portability and others criticizing the standard as too thin.\", \"publishedAt\":\"2026-08-07\"}]}",
+      "parsed": {
+        "searchCount": 1,
+        "returned": 6,
+        "droppedUrls": []
+      },
+      "validationError": null,
+      "latencyMs": 19689,
+      "tokensIn": 9145,
+      "tokensOut": 1346,
+      "status": "done",
+      "errorCategory": null
+    },
+    {
+      "stage": "research",
+      "model": "deepseek-v4-pro",
+      "prompt": "You are the researcher. Establish what is true about this topic.\n\nYou do not write posts. You do not propose wording. Another stage does that.\n\nTRUTHFULNESS\nDo not invent facts, statistics, quotations, sources, or URLs. Do not claim personal experience unless it appears in the experience log provided. Treat the retrieved evidence as the factual boundary. Label inference as inference. If the evidence is inadequate, say so. Opinions may be stated as opinions.\n\nRules specific to this stage:\n  - Every fact must cite the source ids that carry it.\n  - A conclusion you drew rather than read is kind \"inference\", and its sourceIds may be empty.\n  - Prefer primary and official sources. Say when a claim rests only on a forum or an aggregator.\n  - If a source does not state a publication date, do not assume the claim is current.\n  - Set insufficient to true when the evidence will not carry a factual post, and say why.\n\nTOPIC\nOpenAI and four rivals just agreed on one standard for AI agents\nSummary: 24 points on Hacker News.\nWhat the user already knows: https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp\nFreshness: current\n\nSOURCES — the complete evidence. Cite by id. Nothing outside this list exists.\n[src_015e99] OpenAI and four rivals just agreed on one standard for AI agents\n  https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp (thenextweb.com, primary, published 2026-08-06T22:21:32.000Z)\n  \"24 points on Hacker News.\"\n[src_9b2e35] Industry Shipped Agent Plugins 1.0 While the Standards Body Debated\n  https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/ (forkast.news, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, Amazon, Microsoft, OpenAI, Vercel, and Cursor simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for agent skills and MCP servers, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day. The article notes Anthropic's absence, the deliberate exclusion of distribution and trust models from the spec, and positions the standard as an industry move that outpaced the IETF DAWN working group's governance debates.\"\n[src_8ec6de] Agent Plugins: OpenAI, Microsoft, Vercel Back One Standard\n  https://www.creativeainews.com/articles/agent-plugins-open-standard-2026/ (creativeainews.com, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, five companies backed Agent Plugins 1.0.0, an open, vendor-neutral packaging format that wraps MCP servers and Agent Skills into a portable directory. The steering committee spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. The article details the minimal plugin.json manifest structure, the skills/ and mcp.json layout, and explains how the standard collapses per-client packaging variants into one artifact that carries across supporting clients.\"\n[src_8e93fe] Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard\n  https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/ (theoutpost.ai, primary, no publication date)\n  \"OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. The standard is built around two core components—Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs)—packaged in a folder with a plugin.json manifest. The article emphasizes the developer benefits of efficiency, portability, interoperability, and scalability.\"\n[src_39171b] OpenAI and four rivals just agreed on one standard for AI agents - The Next Web\n  https://stiridelavaslui.ro/categorie/tech/openai-and-four-rivals-just-agreed-on-one-standard-for-ai-agents-the-next-web (stiridelavaslui.ro, unknown, no publication date)\n  \"A Romanian republication of the original The Next Web article. Covers the Agent Plugins standard: OpenAI, Amazon, Microsoft, Cursor and Vercel agreed on a shared format bundling MCP servers and Agent Skills into one package with a plugin.json manifest. The standard is narrow by design, defining packaging and discovery but leaving marketplaces, permissions, sandboxing, and trust to each client. Reactions include support from developer advocate Angie Jones and skepticism from SST creator Dax Raad.\"\n[src_317cb2] AI Agent 跨平台終於有共同標準了：Agent Plugins 統一封裝，安全與信任仍留白\n  https://techorange.com/2026/08/07/ai-agent-plugins/ (techorange.com, unknown, published 2026-08-07T00:00:00.000Z)\n  \"On August 6, 2026, OpenAI and rivals Amazon, Microsoft, Cursor, and Vercel jointly published the open standard Agent Plugins 1.0; Google subsequently joined as a core maintainer. The standard packages MCP servers and Agent Skills into a single portable format using a plugin.json file. The 1.0 spec deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust to each platform. Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others call it a thin standard whose useful parts will end up client-specific.\"\n\nOUTPUT — a single JSON value matching ResearchOutput.\n{\n  \"facts\": [{\"claim\":\"…\",\"sourceIds\":[\"src_…\"],\"kind\":\"from-source\"|\"inference\"}],\n  \"uncertainties\": [\"…\"],\n  \"freshness\": {\"assessment\":\"current\"|\"evergreen\",\"note\":\"…\"},\n  \"insufficient\": true|false,\n  \"insufficientReason\": \"…\"\n}\nNo prose. No code fence.\n\nReply with a single JSON value matching ResearchOutput. No prose, no code fence, no commentary.",
+      "rawResponse": "{\"facts\":[{\"claim\":\"On August 6, 2026, OpenAI, Amazon (AWS), Microsoft, Cursor (Anysphere), and Vercel simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for AI agent skills and MCP servers.\",\"sourceIds\":[\"src_015e99\",\"src_9b2e35\",\"src_8ec6de\",\"src_8e93fe\",\"src_39171b\",\"src_317cb2\"],\"kind\":\"from-source\"},{\"claim\":\"Google joined as a core maintainer of Agent Plugins on the same day, August 6, 2026.\",\"sourceIds\":[\"src_9b2e35\",\"src_317cb2\"],\"kind\":\"from-source\"},{\"claim\":\"The standard is already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro.\",\"sourceIds\":[\"src_9b2e35\"],\"kind\":\"from-source\"},{\"claim\":\"The steering committee for Agent Plugins spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator.\",\"sourceIds\":[\"src_8ec6de\"],\"kind\":\"from-source\"},{\"claim\":\"Agent Plugins wraps MCP (Model Context Protocol) servers and Agent Skills into a single portable directory with a plugin.json manifest.\",\"sourceIds\":[\"src_8ec6de\",\"src_8e93fe\",\"src_39171b\",\"src_317cb2\"],\"kind\":\"from-source\"},{\"claim\":\"The standard defines two core components: Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs).\",\"sourceIds\":[\"src_8e93fe\"],\"kind\":\"from-source\"},{\"claim\":\"The 1.0 specification deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust models to each client platform.\",\"sourceIds\":[\"src_9b2e35\",\"src_39171b\",\"src_317cb2\"],\"kind\":\"from-source\"},{\"claim\":\"Anthropic was notably absent from the adopting companies.\",\"sourceIds\":[\"src_9b2e35\"],\"kind\":\"from-source\"},{\"claim\":\"The standard is positioned as an industry move that outpaced the IETF DAWN working group's governance debates.\",\"sourceIds\":[\"src_9b2e35\"],\"kind\":\"from-source\"},{\"claim\":\"Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others, including SST creator Dax Raad, express skepticism that the standard is thin and that useful parts will end up client-specific.\",\"sourceIds\":[\"src_39171b\",\"src_317cb2\"],\"kind\":\"from-source\"},{\"claim\":\"Developer advocate Angie Jones expressed support for the standard.\",\"sourceIds\":[\"src_39171b\"],\"kind\":\"from-source\"},{\"claim\":\"The standard collapses per-client packaging variants into one artifact that carries across supporting clients.\",\"sourceIds\":[\"src_8ec6de\"],\"kind\":\"from-source\"},{\"claim\":\"The original story received 24 points on Hacker News.\",\"sourceIds\":[\"src_015e99\"],\"kind\":\"from-source\"}],\"uncertainties\":[\"The publication date of theoutpost.ai article is unknown, so its claims cannot be verified as current.\",\"The stiridelavaslui.ro source is a Romanian republication with no publication date; its content mirrors the Next Web article but its provenance is secondary.\",\"The forkast.news source is marked as 'unknown' reliability.\",\"The creativeainews.com source is marked as 'unknown' reliability.\",\"The techorange.com source is a Chinese-language secondary report; its reliability is unknown.\",\"It is unclear whether 'Kiro' (mentioned in src_9b2e35 as an integration target) refers to a specific product or is a typographical error.\"],\"freshness\":{\"assessment\":\"current\",\"note\":\"All dated sources are from August 6-7, 2026, making this a breaking-news event. The standard was announced on August 6, 2026, and coverage is within 24 hours of the announcement.\"},\"insufficient\":false,\"insufficientReason\":\"\"}",
+      "parsed": {
+        "output": {
+          "facts": [
+            {
+              "claim": "On August 6, 2026, OpenAI, Amazon (AWS), Microsoft, Cursor (Anysphere), and Vercel simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for AI agent skills and MCP servers.",
+              "sourceIds": [
+                "src_015e99",
+                "src_9b2e35",
+                "src_8ec6de",
+                "src_8e93fe",
+                "src_39171b",
+                "src_317cb2"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "Google joined as a core maintainer of Agent Plugins on the same day, August 6, 2026.",
+              "sourceIds": [
+                "src_9b2e35",
+                "src_317cb2"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The standard is already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro.",
+              "sourceIds": [
+                "src_9b2e35"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The steering committee for Agent Plugins spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator.",
+              "sourceIds": [
+                "src_8ec6de"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "Agent Plugins wraps MCP (Model Context Protocol) servers and Agent Skills into a single portable directory with a plugin.json manifest.",
+              "sourceIds": [
+                "src_8ec6de",
+                "src_8e93fe",
+                "src_39171b",
+                "src_317cb2"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The standard defines two core components: Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs).",
+              "sourceIds": [
+                "src_8e93fe"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The 1.0 specification deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust models to each client platform.",
+              "sourceIds": [
+                "src_9b2e35",
+                "src_39171b",
+                "src_317cb2"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "Anthropic was notably absent from the adopting companies.",
+              "sourceIds": [
+                "src_9b2e35"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The standard is positioned as an industry move that outpaced the IETF DAWN working group's governance debates.",
+              "sourceIds": [
+                "src_9b2e35"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others, including SST creator Dax Raad, express skepticism that the standard is thin and that useful parts will end up client-specific.",
+              "sourceIds": [
+                "src_39171b",
+                "src_317cb2"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "Developer advocate Angie Jones expressed support for the standard.",
+              "sourceIds": [
+                "src_39171b"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The standard collapses per-client packaging variants into one artifact that carries across supporting clients.",
+              "sourceIds": [
+                "src_8ec6de"
+              ],
+              "kind": "from-source"
+            },
+            {
+              "claim": "The original story received 24 points on Hacker News.",
+              "sourceIds": [
+                "src_015e99"
+              ],
+              "kind": "from-source"
+            }
+          ],
+          "uncertainties": [
+            "The publication date of theoutpost.ai article is unknown, so its claims cannot be verified as current.",
+            "The stiridelavaslui.ro source is a Romanian republication with no publication date; its content mirrors the Next Web article but its provenance is secondary.",
+            "The forkast.news source is marked as 'unknown' reliability.",
+            "The creativeainews.com source is marked as 'unknown' reliability.",
+            "The techorange.com source is a Chinese-language secondary report; its reliability is unknown.",
+            "It is unclear whether 'Kiro' (mentioned in src_9b2e35 as an integration target) refers to a specific product or is a typographical error."
+          ],
+          "freshness": {
+            "assessment": "current",
+            "note": "All dated sources are from August 6-7, 2026, making this a breaking-news event. The standard was announced on August 6, 2026, and coverage is within 24 hours of the announcement."
+          },
+          "insufficient": false,
+          "insufficientReason": ""
+        },
+        "contextBudget": [
+          {
+            "section": "instructions",
+            "tokens": 230,
+            "budget": 1200,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 57,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 1047,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "output",
+            "tokens": 79,
+            "budget": 800,
+            "truncated": false
+          }
+        ],
+        "repaired": false
+      },
+      "validationError": null,
+      "latencyMs": 14319,
+      "tokensIn": 1936,
+      "tokensOut": 997,
+      "status": "done",
+      "errorCategory": null
+    },
+    {
+      "stage": "angles",
+      "model": "deepseek-v4-pro",
+      "prompt": "You are choosing what argument is worth making about this topic.\n\nProduce 4 to 6 angles that genuinely differ in what they claim, not in how they word it.\nCover a spread of kinds: technical, opinion, plain explanation, counterintuitive observation,\nquestion or discussion, product and design perspective. Skip any kind the evidence cannot carry.\n\nTRUTHFULNESS\nDo not invent facts, statistics, quotations, sources, or URLs. Do not claim personal experience unless it appears in the experience log provided. Treat the retrieved evidence as the factual boundary. Label inference as inference. If the evidence is inadequate, say so. Opinions may be stated as opinions.\n\nFor each angle:\n  thesis — one sentence stating what the post would argue. Not a headline.\n  whyItFits — why this writer, specifically, would make this argument.\n  evidenceNeeded — which claims it depends on. If the evidence is not above, say so here.\n  noveltyRisk — how close it is to the recent posts listed below, and noveltyNote saying which one.\n\nDo not write the post. Do not draft an opening line.\n\nIDENTITY\nI am someone deeply interested in AI, software, unusual products, and how technology changes the way people build things.\nAudience: Engineers and product people who build things and are tired of hype.\nLanguage: en\nPILLARS\nWeights are soft pressure on what to look at, not a quota to fill.\n  Artificial intelligence (35%, fresh) — Models, tooling, and what actually ships.\n  Programming (25%, evergreen) — Craft, trade-offs, and the cost of abstraction.\n  Technology (20%, balanced) — How tools change the way people work.\n  Startups and products (10%, balanced) — Product decisions, not funding rounds.\n  Unusual software experiments (10%, evergreen) — Things built because they were interesting.\nBELIEFS you may argue from. Never invent a new permanent belief.\n  [strong] Good UX often matters more than adding more features.\n  [strong] AI products should solve concrete problems.\n  [moderate] Open-source AI is worth watching.\n  [moderate] Unusual software experiments are often more interesting than polished clones.\nBOUNDARIES — hard blocks. Refuse a topic that touches these.\n  Politics\n  Religion\n  Celebrity gossip\nVOICE RULES\n  NEVER: Never claim to have personally used a product unless it appears in the experience log.\n  NEVER: Never open with \"AI is changing everything.\"\n  NEVER: Never write \"here are 5 tools.\"\n  NEVER: No corporate marketing language.\n  NEVER: Do not manufacture outrage.\n  NEVER: Do not state speculation as fact.\n  PREFER: Prefer a concrete observation to motivational advice.\nADJUSTMENTS beyond the samples\n  Casual (0) to Formal (100): 25\n  Concise (0) to Detailed (100): 25\n  Serious (0) to Humorous (100): 40\n  Neutral (0) to Opinionated (100): 62\n  Technical (0) to Accessible (100): 45\n  Reserved (0) to Energetic (100): 40\n  Emojis: no\n  Hashtags: no\n  Questions: yes\n  Threads: no\n  First-person voice: yes\n  Strong hooks: no\n  Technical terminology: yes\n\nTOPIC\nOpenAI and four rivals just agreed on one standard for AI agents\nSummary: 24 points on Hacker News.\nWhat the user already knows: https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp\nFreshness: current\n\nVALIDATED RESEARCH\nEstablished:\n  On August 6, 2026, OpenAI, Amazon (AWS), Microsoft, Cursor (Anysphere), and Vercel simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for AI agent skills and MCP servers. [src_015e99, src_9b2e35, src_8ec6de, src_8e93fe, src_39171b, src_317cb2]\n  Google joined as a core maintainer of Agent Plugins on the same day, August 6, 2026. [src_9b2e35, src_317cb2]\n  The standard is already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. [src_9b2e35]\n  The steering committee for Agent Plugins spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. [src_8ec6de]\n  Agent Plugins wraps MCP (Model Context Protocol) servers and Agent Skills into a single portable directory with a plugin.json manifest. [src_8ec6de, src_8e93fe, src_39171b, src_317cb2]\n  The standard defines two core components: Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs). [src_8e93fe]\n  The 1.0 specification deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust models to each client platform. [src_9b2e35, src_39171b, src_317cb2]\n  Anthropic was notably absent from the adopting companies. [src_9b2e35]\n  The standard is positioned as an industry move that outpaced the IETF DAWN working group's governance debates. [src_9b2e35]\n  Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others, including SST creator Dax Raad, express skepticism that the standard is thin and that useful parts will end up client-specific. [src_39171b, src_317cb2]\n  Developer advocate Angie Jones expressed support for the standard. [src_39171b]\n  The standard collapses per-client packaging variants into one artifact that carries across supporting clients. [src_8ec6de]\n  The original story received 24 points on Hacker News. [src_015e99]\nNot established — treat as open questions, never as fact:\n  The publication date of theoutpost.ai article is unknown, so its claims cannot be verified as current.\n  The stiridelavaslui.ro source is a Romanian republication with no publication date; its content mirrors the Next Web article but its provenance is secondary.\n  The forkast.news source is marked as 'unknown' reliability.\n  The creativeainews.com source is marked as 'unknown' reliability.\n  The techorange.com source is a Chinese-language secondary report; its reliability is unknown.\n  It is unclear whether 'Kiro' (mentioned in src_9b2e35 as an integration target) refers to a specific product or is a typographical error.\nFreshness: current. All dated sources are from August 6-7, 2026, making this a breaking-news event. The standard was announced on August 6, 2026, and coverage is within 24 hours of the announcement.\n\nSOURCES — the complete evidence. Cite by id. Nothing outside this list exists.\n[src_015e99] OpenAI and four rivals just agreed on one standard for AI agents\n  https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp (thenextweb.com, primary, published 2026-08-06T22:21:32.000Z)\n  \"24 points on Hacker News.\"\n[src_317cb2] AI Agent 跨平台終於有共同標準了：Agent Plugins 統一封裝，安全與信任仍留白\n  https://techorange.com/2026/08/07/ai-agent-plugins/ (techorange.com, unknown, published 2026-08-07T00:00:00.000Z)\n  \"On August 6, 2026, OpenAI and rivals Amazon, Microsoft, Cursor, and Vercel jointly published the open standard Agent Plugins 1.0; Google subsequently joined as a core maintainer. The standard packages MCP servers and Agent Skills into a single portable format using a plugin.json file. The 1.0 spec deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust to each platform. Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others call it a thin standard whose useful parts will end up client-specific.\"\n[src_39171b] OpenAI and four rivals just agreed on one standard for AI agents - The Next Web\n  https://stiridelavaslui.ro/categorie/tech/openai-and-four-rivals-just-agreed-on-one-standard-for-ai-agents-the-next-web (stiridelavaslui.ro, unknown, no publication date)\n  \"A Romanian republication of the original The Next Web article. Covers the Agent Plugins standard: OpenAI, Amazon, Microsoft, Cursor and Vercel agreed on a shared format bundling MCP servers and Agent Skills into one package with a plugin.json manifest. The standard is narrow by design, defining packaging and discovery but leaving marketplaces, permissions, sandboxing, and trust to each client. Reactions include support from developer advocate Angie Jones and skepticism from SST creator Dax Raad.\"\n[src_8e93fe] Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard\n  https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/ (theoutpost.ai, primary, no publication date)\n  \"OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. The standard is built around two core components—Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs)—packaged in a folder with a plugin.json manifest. The article emphasizes the developer benefits of efficiency, portability, interoperability, and scalability.\"\n[src_8ec6de] Agent Plugins: OpenAI, Microsoft, Vercel Back One Standard\n  https://www.creativeainews.com/articles/agent-plugins-open-standard-2026/ (creativeainews.com, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, five companies backed Agent Plugins 1.0.0, an open, vendor-neutral packaging format that wraps MCP servers and Agent Skills into a portable directory. The steering committee spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. The article details the minimal plugin.json manifest structure, the skills/ and mcp.json layout, and explains how the standard collapses per-client packaging variants into one artifact that carries across supporting clients.\"\n[src_9b2e35] Industry Shipped Agent Plugins 1.0 While the Standards Body Debated\n  https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/ (forkast.news, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, Amazon, Microsoft, OpenAI, Vercel, and Cursor simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for agent skills and MCP servers, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day. The article notes Anthropic's absence, the deliberate exclusion of distribution and trust models from the spec, and positions the standard as an industry move that outpaced the IETF DAWN working group's governance debates.\"\n\nRECENT POSTS\nNothing published yet. There is nothing to repeat.\n\nOUTPUT — a single JSON value matching AnglesOutput.\n{\n  \"angles\": [{\n    \"id\":\"a1\", \"kind\":\"technical\"|\"opinion\"|\"explanation\"|\"counterintuitive\"|\"question\"|\"product\",\n    \"thesis\":\"one sentence\", \"whyItFits\":\"…\",\n    \"evidenceNeeded\":[\"…\"], \"noveltyRisk\":\"low\"|\"medium\"|\"high\", \"noveltyNote\":\"…\"\n  }]\n}\nNo prose. No code fence.\n\nReply with a single JSON value matching AnglesOutput. No prose, no code fence, no commentary.",
+      "rawResponse": "{\"angles\":[{\"id\":\"a1\",\"kind\":\"counterintuitive\",\"thesis\":\"The Agent Plugins standard is deliberately thin—and that's the point: by leaving permissions, sandboxing, and trust models unspecified, the spec avoids the governance quagmire that killed broader standards efforts and lets each platform compete on safety rather than on packaging.\",\"whyItFits\":\"I gravitate toward the design decisions in standards—what's left out matters more than what's included. This is a concrete observation about trade-offs, not hype.\",\"evidenceNeeded\":[\"src_9b2e35 (deliberate exclusion of distribution, trust, sandboxing from spec)\",\"src_39171b (thin standard criticism)\",\"src_9b2e35 (IETF DAWN governance debates as comparison point)\"],\"noveltyRisk\":\"low\",\"noveltyNote\":\"No prior posts exist; the angle interprets a detail the news coverage mentions but doesn't explore as a strategic choice.\"},{\"id\":\"a2\",\"kind\":\"question\",\"thesis\":\"If Anthropic—the company that originated MCP—is absent from the Agent Plugins announcement, does the standard already carry a hidden assumption about how agents should work that Anthropic's approach rejects?\",\"whyItFits\":\"I watch open-source AI and protocol politics closely. Anthropic's absence is the most interesting data point in the story and nobody's asking why.\",\"evidenceNeeded\":[\"src_9b2e35 (Anthropic's notable absence)\",\"Inference: Anthropic created MCP; MCP is the substrate of Agent Plugins. Their absence implies a disagreement worth investigating, but the evidence doesn't confirm this—must be framed as a question.\"],\"noveltyRisk\":\"medium\",\"noveltyNote\":\"No prior posts exist. The Anthropic absence is mentioned as a fact but not explored as a question.\"},{\"id\":\"a3\",\"kind\":\"technical\",\"thesis\":\"Agent Plugins collapses two different ideas—Agent Skills (workflows) and MCP Servers (tool middleware)—into one directory format, and the conflation may age poorly once developers realize packaging isn't the same as composability.\",\"whyItFits\":\"I care about abstractions and their costs. This is a technical design critique, not a news summary, and it fits the programming pillar.\",\"evidenceNeeded\":[\"src_8e93fe (two core components: Agent Skills and MCP Servers)\",\"src_8ec6de (plugin.json manifest, skills/ and mcp.json layout)\",\"src_39171b (Dax Raad skepticism that useful parts end up client-specific)\"],\"noveltyRisk\":\"medium\",\"noveltyNote\":\"No prior posts exist. The distinction between the two component types is in the source material but nobody has questioned whether bundling them together is correct.\"},{\"id\":\"a4\",\"kind\":\"explanation\",\"thesis\":\"What actually shipped: Agent Plugins 1.0 is a folder with a plugin.json file, a skills directory, and an mcp.json config—nothing more, no registry, no marketplace, no runtime—and that minimalism is what makes adoption by five competing platforms possible on day one.\",\"whyItFits\":\"I explain technical things plainly for people tired of hype. This cuts through the press-release language and shows exactly what the standard is.\",\"evidenceNeeded\":[\"src_8ec6de (plugin.json manifest structure, skills/ and mcp.json layout)\",\"src_9b2e35 (deliberate exclusion of distribution, trust models)\",\"src_8e93fe (two core components)\"],\"noveltyRisk\":\"low\",\"noveltyNote\":\"No prior posts exist. The news coverage describes the standard but doesn't distill it to its bare technical minimum.\"},{\"id\":\"a5\",\"kind\":\"product\",\"thesis\":\"The real product decision hiding inside this standard is that each platform now gets to build its own plugin marketplace, meaning the 'build once, run anywhere' promise ends the moment a developer needs to get their plugin in front of users.\",\"whyItFits\":\"I think about product decisions, not press releases. The marketplace gap is a distribution problem masquerading as an interoperability win.\",\"evidenceNeeded\":[\"src_9b2e35 (marketplaces, installation left to each client platform)\",\"src_39171b (Dax Raad skepticism about client-specific useful parts)\",\"Inference: without a shared marketplace, discoverability remains platform-specific, undermining portability.\"],\"noveltyRisk\":\"medium\",\"noveltyNote\":\"No prior posts exist. The marketplace gap is mentioned in sources but not framed as the product problem it actually is.\"},{\"id\":\"a6\",\"kind\":\"opinion\",\"thesis\":\"The speed at which this standard went from zero to adopted—with Google joining as maintainer on the same day—suggests the real work happened in backroom agreement long before the public announcement, and that's how useful standards actually get made: not by committee, but by a small group shipping something narrow and letting others join.\",\"whyItFits\":\"I have a moderate belief that open-source and open standards are worth watching, and I'm skeptical of formal standards bodies. This is an opinion grounded in the timeline facts.\",\"evidenceNeeded\":[\"src_9b2e35 (industry outpaced IETF DAWN working group)\",\"src_9b2e35 (Google joined same day)\",\"Inference: the simultaneous adoption by five companies implies prior coordination, but this is stated as opinion, not fact.\"],\"noveltyRisk\":\"low\",\"noveltyNote\":\"No prior posts exist. The IETF comparison is in the sources; the 'backroom agreement' framing is an opinion drawn from the timing.\"}]}",
+      "parsed": {
+        "output": {
+          "angles": [
+            {
+              "id": "a1",
+              "kind": "counterintuitive",
+              "thesis": "The Agent Plugins standard is deliberately thin—and that's the point: by leaving permissions, sandboxing, and trust models unspecified, the spec avoids the governance quagmire that killed broader standards efforts and lets each platform compete on safety rather than on packaging.",
+              "whyItFits": "I gravitate toward the design decisions in standards—what's left out matters more than what's included. This is a concrete observation about trade-offs, not hype.",
+              "evidenceNeeded": [
+                "src_9b2e35 (deliberate exclusion of distribution, trust, sandboxing from spec)",
+                "src_39171b (thin standard criticism)",
+                "src_9b2e35 (IETF DAWN governance debates as comparison point)"
+              ],
+              "noveltyRisk": "low",
+              "noveltyNote": "No prior posts exist; the angle interprets a detail the news coverage mentions but doesn't explore as a strategic choice."
+            },
+            {
+              "id": "a2",
+              "kind": "question",
+              "thesis": "If Anthropic—the company that originated MCP—is absent from the Agent Plugins announcement, does the standard already carry a hidden assumption about how agents should work that Anthropic's approach rejects?",
+              "whyItFits": "I watch open-source AI and protocol politics closely. Anthropic's absence is the most interesting data point in the story and nobody's asking why.",
+              "evidenceNeeded": [
+                "src_9b2e35 (Anthropic's notable absence)",
+                "Inference: Anthropic created MCP; MCP is the substrate of Agent Plugins. Their absence implies a disagreement worth investigating, but the evidence doesn't confirm this—must be framed as a question."
+              ],
+              "noveltyRisk": "medium",
+              "noveltyNote": "No prior posts exist. The Anthropic absence is mentioned as a fact but not explored as a question."
+            },
+            {
+              "id": "a3",
+              "kind": "technical",
+              "thesis": "Agent Plugins collapses two different ideas—Agent Skills (workflows) and MCP Servers (tool middleware)—into one directory format, and the conflation may age poorly once developers realize packaging isn't the same as composability.",
+              "whyItFits": "I care about abstractions and their costs. This is a technical design critique, not a news summary, and it fits the programming pillar.",
+              "evidenceNeeded": [
+                "src_8e93fe (two core components: Agent Skills and MCP Servers)",
+                "src_8ec6de (plugin.json manifest, skills/ and mcp.json layout)",
+                "src_39171b (Dax Raad skepticism that useful parts end up client-specific)"
+              ],
+              "noveltyRisk": "medium",
+              "noveltyNote": "No prior posts exist. The distinction between the two component types is in the source material but nobody has questioned whether bundling them together is correct."
+            },
+            {
+              "id": "a4",
+              "kind": "explanation",
+              "thesis": "What actually shipped: Agent Plugins 1.0 is a folder with a plugin.json file, a skills directory, and an mcp.json config—nothing more, no registry, no marketplace, no runtime—and that minimalism is what makes adoption by five competing platforms possible on day one.",
+              "whyItFits": "I explain technical things plainly for people tired of hype. This cuts through the press-release language and shows exactly what the standard is.",
+              "evidenceNeeded": [
+                "src_8ec6de (plugin.json manifest structure, skills/ and mcp.json layout)",
+                "src_9b2e35 (deliberate exclusion of distribution, trust models)",
+                "src_8e93fe (two core components)"
+              ],
+              "noveltyRisk": "low",
+              "noveltyNote": "No prior posts exist. The news coverage describes the standard but doesn't distill it to its bare technical minimum."
+            },
+            {
+              "id": "a5",
+              "kind": "product",
+              "thesis": "The real product decision hiding inside this standard is that each platform now gets to build its own plugin marketplace, meaning the 'build once, run anywhere' promise ends the moment a developer needs to get their plugin in front of users.",
+              "whyItFits": "I think about product decisions, not press releases. The marketplace gap is a distribution problem masquerading as an interoperability win.",
+              "evidenceNeeded": [
+                "src_9b2e35 (marketplaces, installation left to each client platform)",
+                "src_39171b (Dax Raad skepticism about client-specific useful parts)",
+                "Inference: without a shared marketplace, discoverability remains platform-specific, undermining portability."
+              ],
+              "noveltyRisk": "medium",
+              "noveltyNote": "No prior posts exist. The marketplace gap is mentioned in sources but not framed as the product problem it actually is."
+            },
+            {
+              "id": "a6",
+              "kind": "opinion",
+              "thesis": "The speed at which this standard went from zero to adopted—with Google joining as maintainer on the same day—suggests the real work happened in backroom agreement long before the public announcement, and that's how useful standards actually get made: not by committee, but by a small group shipping something narrow and letting others join.",
+              "whyItFits": "I have a moderate belief that open-source and open standards are worth watching, and I'm skeptical of formal standards bodies. This is an opinion grounded in the timeline facts.",
+              "evidenceNeeded": [
+                "src_9b2e35 (industry outpaced IETF DAWN working group)",
+                "src_9b2e35 (Google joined same day)",
+                "Inference: the simultaneous adoption by five companies implies prior coordination, but this is stated as opinion, not fact."
+              ],
+              "noveltyRisk": "low",
+              "noveltyNote": "No prior posts exist. The IETF comparison is in the sources; the 'backroom agreement' framing is an opinion drawn from the timing."
+            }
+          ]
+        },
+        "contextBudget": [
+          {
+            "section": "instructions",
+            "tokens": 268,
+            "budget": 1200,
+            "truncated": false
+          },
+          {
+            "section": "persona",
+            "tokens": 477,
+            "budget": 800,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 57,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 722,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 1047,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "memory",
+            "tokens": 16,
+            "budget": 1500,
+            "truncated": false
+          },
+          {
+            "section": "output",
+            "tokens": 82,
+            "budget": 800,
+            "truncated": false
+          }
+        ],
+        "repaired": false
+      },
+      "validationError": null,
+      "latencyMs": 22315,
+      "tokensIn": 3220,
+      "tokensOut": 1239,
+      "status": "done",
+      "errorCategory": null
+    },
+    {
+      "stage": "drafts",
+      "model": "deepseek-v4-pro",
+      "prompt": "You are the writer. Write 3 substantially different drafts of one post.\nDifferent means different structure and different emphasis, not different synonyms.\nTRUTHFULNESS\nDo not invent facts, statistics, quotations, sources, or URLs. Do not claim personal experience unless it appears in the experience log provided. Treat the retrieved evidence as the factual boundary. Label inference as inference. If the evidence is inadequate, say so. Opinions may be stated as opinions.\nLength: at most 280 characters. Shorter is usually better.\nNo hashtags unless the fingerprint says hashtags are common. No engagement bait, no hook templates.\nDo not open with a question unless the angle is a question angle.\nSENTENCE RULES — the post is an array of sentences, not a blob of text.\n  - Split the post into its sentences, in order. text must be exactly those sentences joined with single spaces.\n  - claimType \"fact\" is a checkable statement about the world. It MUST cite sourceIds.\n  - claimType \"inference\" is a conclusion you drew from the evidence. Cite what it rests on.\n  - claimType \"opinion\" is a judgement offered as one. support is \"n/a\" and sourceIds may be empty.\n  - claimType \"rhetorical\" is a question or framing that asserts nothing. support is \"n/a\".\n  - Never mark a sentence supported unless a listed source actually carries it.\n  - A fact you cannot cite does not belong in the post. Drop it or write it as an opinion.\nSELECTED ANGLE — write all drafts on this angle. Do not switch to another one.\n  counterintuitive: The Agent Plugins standard is deliberately thin—and that's the point: by leaving permissions, sandboxing, and trust models unspecified, the spec avoids the governance quagmire that killed broader standards efforts and lets each platform compete on safety rather than on packaging.\n  Why it fits: I gravitate toward the design decisions in standards—what's left out matters more than what's included. This is a concrete observation about trade-offs, not hype.\n  Pillar: Artificial intelligence — Models, tooling, and what actually ships.\n\nIDENTITY\nI am someone deeply interested in AI, software, unusual products, and how technology changes the way people build things.\nAudience: Engineers and product people who build things and are tired of hype.\nLanguage: en\nPILLARS\nWeights are soft pressure on what to look at, not a quota to fill.\n  Artificial intelligence (35%, fresh) — Models, tooling, and what actually ships.\n  Programming (25%, evergreen) — Craft, trade-offs, and the cost of abstraction.\n  Technology (20%, balanced) — How tools change the way people work.\n  Startups and products (10%, balanced) — Product decisions, not funding rounds.\n  Unusual software experiments (10%, evergreen) — Things built because they were interesting.\nBELIEFS you may argue from. Never invent a new permanent belief.\n  [strong] Good UX often matters more than adding more features.\n  [strong] AI products should solve concrete problems.\n  [moderate] Open-source AI is worth watching.\n  [moderate] Unusual software experiments are often more interesting than polished clones.\nBOUNDARIES — hard blocks. Refuse a topic that touches these.\n  Politics\n  Religion\n  Celebrity gossip\nVOICE RULES\n  NEVER: Never claim to have personally used a product unless it appears in the experience log.\n  NEVER: Never open with \"AI is changing everything.\"\n  NEVER: Never write \"here are 5 tools.\"\n  NEVER: No corporate marketing language.\n  NEVER: Do not manufacture outrage.\n  NEVER: Do not state speculation as fact.\n  PREFER: Prefer a concrete observation to motivational advice.\nADJUSTMENTS beyond the samples\n  Casual (0) to Formal (100): 25\n  Concise (0) to Detailed (100): 25\n  Serious (0) to Humorous (100): 40\n  Neutral (0) to Opinionated (100): 62\n  Technical (0) to Accessible (100): 45\n  Reserved (0) to Energetic (100): 40\n  Emojis: no\n  Hashtags: no\n  Questions: yes\n  Threads: no\n  First-person voice: yes\n  Strong hooks: no\n  Technical terminology: yes\n\nVOICE FINGERPRINT\nNone recorded. Write plainly and do not invent a stylistic signature.\n\nTOPIC\nOpenAI and four rivals just agreed on one standard for AI agents\nSummary: 24 points on Hacker News.\nWhat the user already knows: https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp\nFreshness: current\n\nVALIDATED RESEARCH\nEstablished:\n  On August 6, 2026, OpenAI, Amazon (AWS), Microsoft, Cursor (Anysphere), and Vercel simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for AI agent skills and MCP servers. [src_015e99, src_9b2e35, src_8ec6de, src_8e93fe, src_39171b, src_317cb2]\n  Google joined as a core maintainer of Agent Plugins on the same day, August 6, 2026. [src_9b2e35, src_317cb2]\n  The standard is already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. [src_9b2e35]\n  The steering committee for Agent Plugins spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. [src_8ec6de]\n  Agent Plugins wraps MCP (Model Context Protocol) servers and Agent Skills into a single portable directory with a plugin.json manifest. [src_8ec6de, src_8e93fe, src_39171b, src_317cb2]\n  The standard defines two core components: Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs). [src_8e93fe]\n  The 1.0 specification deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust models to each client platform. [src_9b2e35, src_39171b, src_317cb2]\n  Anthropic was notably absent from the adopting companies. [src_9b2e35]\n  The standard is positioned as an industry move that outpaced the IETF DAWN working group's governance debates. [src_9b2e35]\n  Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others, including SST creator Dax Raad, express skepticism that the standard is thin and that useful parts will end up client-specific. [src_39171b, src_317cb2]\n  Developer advocate Angie Jones expressed support for the standard. [src_39171b]\n  The standard collapses per-client packaging variants into one artifact that carries across supporting clients. [src_8ec6de]\n  The original story received 24 points on Hacker News. [src_015e99]\nNot established — treat as open questions, never as fact:\n  The publication date of theoutpost.ai article is unknown, so its claims cannot be verified as current.\n  The stiridelavaslui.ro source is a Romanian republication with no publication date; its content mirrors the Next Web article but its provenance is secondary.\n  The forkast.news source is marked as 'unknown' reliability.\n  The creativeainews.com source is marked as 'unknown' reliability.\n  The techorange.com source is a Chinese-language secondary report; its reliability is unknown.\n  It is unclear whether 'Kiro' (mentioned in src_9b2e35 as an integration target) refers to a specific product or is a typographical error.\nFreshness: current. All dated sources are from August 6-7, 2026, making this a breaking-news event. The standard was announced on August 6, 2026, and coverage is within 24 hours of the announcement.\n\nSOURCES — the complete evidence. Cite by id. Nothing outside this list exists.\n[src_015e99] OpenAI and four rivals just agreed on one standard for AI agents\n  https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp (thenextweb.com, primary, published 2026-08-06T22:21:32.000Z)\n  \"24 points on Hacker News.\"\n[src_317cb2] AI Agent 跨平台終於有共同標準了：Agent Plugins 統一封裝，安全與信任仍留白\n  https://techorange.com/2026/08/07/ai-agent-plugins/ (techorange.com, unknown, published 2026-08-07T00:00:00.000Z)\n  \"On August 6, 2026, OpenAI and rivals Amazon, Microsoft, Cursor, and Vercel jointly published the open standard Agent Plugins 1.0; Google subsequently joined as a core maintainer. The standard packages MCP servers and Agent Skills into a single portable format using a plugin.json file. The 1.0 spec deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust to each platform. Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others call it a thin standard whose useful parts will end up client-specific.\"\n[src_39171b] OpenAI and four rivals just agreed on one standard for AI agents - The Next Web\n  https://stiridelavaslui.ro/categorie/tech/openai-and-four-rivals-just-agreed-on-one-standard-for-ai-agents-the-next-web (stiridelavaslui.ro, unknown, no publication date)\n  \"A Romanian republication of the original The Next Web article. Covers the Agent Plugins standard: OpenAI, Amazon, Microsoft, Cursor and Vercel agreed on a shared format bundling MCP servers and Agent Skills into one package with a plugin.json manifest. The standard is narrow by design, defining packaging and discovery but leaving marketplaces, permissions, sandboxing, and trust to each client. Reactions include support from developer advocate Angie Jones and skepticism from SST creator Dax Raad.\"\n[src_8e93fe] Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard\n  https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/ (theoutpost.ai, primary, no publication date)\n  \"OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. The standard is built around two core components—Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs)—packaged in a folder with a plugin.json manifest. The article emphasizes the developer benefits of efficiency, portability, interoperability, and scalability.\"\n[src_8ec6de] Agent Plugins: OpenAI, Microsoft, Vercel Back One Standard\n  https://www.creativeainews.com/articles/agent-plugins-open-standard-2026/ (creativeainews.com, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, five companies backed Agent Plugins 1.0.0, an open, vendor-neutral packaging format that wraps MCP servers and Agent Skills into a portable directory. The steering committee spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. The article details the minimal plugin.json manifest structure, the skills/ and mcp.json layout, and explains how the standard collapses per-client packaging variants into one artifact that carries across supporting clients.\"\n[src_9b2e35] Industry Shipped Agent Plugins 1.0 While the Standards Body Debated\n  https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/ (forkast.news, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, Amazon, Microsoft, OpenAI, Vercel, and Cursor simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for agent skills and MCP servers, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day. The article notes Anthropic's absence, the deliberate exclusion of distribution and trust models from the spec, and positions the standard as an industry move that outpaced the IETF DAWN working group's governance debates.\"\n\nRECENT POSTS\nNothing published yet. There is nothing to repeat.\n\nOUTPUT — a single JSON value matching DraftsOutput.\n{\n  \"drafts\": [{\n    \"text\": \"the post exactly as it would be published\",\n    \"sentences\": [{\"id\":\"s1\",\"text\":\"…\",\"claimType\":\"fact\"|\"inference\"|\"opinion\"|\"rhetorical\",\n                  \"sourceIds\":[\"src_…\"],\"support\":\"supported\"|\"partial\"|\"unsupported\"|\"n/a\"}],\n    \"toneTags\": [\"direct\",\"technical\"]\n  }]\n}\nNo prose. No code fence.\n\nReply with a single JSON value matching DraftsOutput. No prose, no code fence, no commentary.",
+      "rawResponse": "{\"drafts\":[{\"text\":\"The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework. Just a plugin.json manifest and a directory layout. That's not a bug. It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.\",\"sentences\":[{\"id\":\"s1\",\"text\":\"The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s2\",\"text\":\"Just a plugin.json manifest and a directory layout.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_8ec6de\",\"src_9b2e35\",\"src_39171b\"],\"support\":\"supported\"},{\"id\":\"s3\",\"text\":\"That's not a bug.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s4\",\"text\":\"It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.\",\"claimType\":\"inference\",\"sourceIds\":[\"src_9b2e35\",\"src_317cb2\"],\"support\":\"partial\"}],\"toneTags\":[\"analytical\",\"direct\",\"technical\"]},{\"text\":\"Most standards efforts try to specify everything and collapse under their own weight. Agent Plugins 1.0 took the opposite approach. The spec covers only packaging and discovery — one folder, one plugin.json. Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms. The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.\",\"sentences\":[{\"id\":\"s1\",\"text\":\"Most standards efforts try to specify everything and collapse under their own weight.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s2\",\"text\":\"Agent Plugins 1.0 took the opposite approach.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s3\",\"text\":\"The spec covers only packaging and discovery — one folder, one plugin.json.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_8ec6de\",\"src_9b2e35\",\"src_39171b\",\"src_317cb2\"],\"support\":\"supported\"},{\"id\":\"s4\",\"text\":\"Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_9b2e35\",\"src_39171b\",\"src_317cb2\"],\"support\":\"supported\"},{\"id\":\"s5\",\"text\":\"The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_9b2e35\",\"src_317cb2\"],\"support\":\"supported\"}],\"toneTags\":[\"analytical\",\"comparative\",\"direct\"]},{\"text\":\"Agent Plugins 1.0 is a standard that wins by being small. Packaging and discovery only — no permissions, no trust model, no marketplace. I think that's the right call for now. You can't spec safety across six companies with different threat models, but you can agree on a folder layout. Anthropic sitting it out is the other story here.\",\"sentences\":[{\"id\":\"s1\",\"text\":\"Agent Plugins 1.0 is a standard that wins by being small.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s2\",\"text\":\"Packaging and discovery only — no permissions, no trust model, no marketplace.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_9b2e35\",\"src_39171b\",\"src_317cb2\"],\"support\":\"supported\"},{\"id\":\"s3\",\"text\":\"I think that's the right call for now.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s4\",\"text\":\"You can't spec safety across six companies with different threat models, but you can agree on a folder layout.\",\"claimType\":\"opinion\",\"sourceIds\":[],\"support\":\"n/a\"},{\"id\":\"s5\",\"text\":\"Anthropic sitting it out is the other story here.\",\"claimType\":\"fact\",\"sourceIds\":[\"src_9b2e35\"],\"support\":\"supported\"}],\"toneTags\":[\"direct\",\"opinionated\",\"analytical\"]}]}",
+      "parsed": {
+        "output": {
+          "drafts": [
+            {
+              "text": "The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework. Just a plugin.json manifest and a directory layout. That's not a bug. It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.",
+              "sentences": [
+                {
+                  "id": "s1",
+                  "text": "The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s2",
+                  "text": "Just a plugin.json manifest and a directory layout.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_8ec6de",
+                    "src_9b2e35",
+                    "src_39171b"
+                  ],
+                  "support": "supported"
+                },
+                {
+                  "id": "s3",
+                  "text": "That's not a bug.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s4",
+                  "text": "It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.",
+                  "claimType": "inference",
+                  "sourceIds": [
+                    "src_9b2e35",
+                    "src_317cb2"
+                  ],
+                  "support": "partial"
+                }
+              ],
+              "toneTags": [
+                "analytical",
+                "direct",
+                "technical"
+              ]
+            },
+            {
+              "text": "Most standards efforts try to specify everything and collapse under their own weight. Agent Plugins 1.0 took the opposite approach. The spec covers only packaging and discovery — one folder, one plugin.json. Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms. The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.",
+              "sentences": [
+                {
+                  "id": "s1",
+                  "text": "Most standards efforts try to specify everything and collapse under their own weight.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s2",
+                  "text": "Agent Plugins 1.0 took the opposite approach.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s3",
+                  "text": "The spec covers only packaging and discovery — one folder, one plugin.json.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_8ec6de",
+                    "src_9b2e35",
+                    "src_39171b",
+                    "src_317cb2"
+                  ],
+                  "support": "supported"
+                },
+                {
+                  "id": "s4",
+                  "text": "Permissions, sandboxing, trust, marketplaces: all deliberately left to the platforms.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_9b2e35",
+                    "src_39171b",
+                    "src_317cb2"
+                  ],
+                  "support": "supported"
+                },
+                {
+                  "id": "s5",
+                  "text": "The result is something that already runs in ChatGPT, Copilot, Cursor, and VS Code while the IETF working group is still debating governance.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_9b2e35",
+                    "src_317cb2"
+                  ],
+                  "support": "supported"
+                }
+              ],
+              "toneTags": [
+                "analytical",
+                "comparative",
+                "direct"
+              ]
+            },
+            {
+              "text": "Agent Plugins 1.0 is a standard that wins by being small. Packaging and discovery only — no permissions, no trust model, no marketplace. I think that's the right call for now. You can't spec safety across six companies with different threat models, but you can agree on a folder layout. Anthropic sitting it out is the other story here.",
+              "sentences": [
+                {
+                  "id": "s1",
+                  "text": "Agent Plugins 1.0 is a standard that wins by being small.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s2",
+                  "text": "Packaging and discovery only — no permissions, no trust model, no marketplace.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_9b2e35",
+                    "src_39171b",
+                    "src_317cb2"
+                  ],
+                  "support": "supported"
+                },
+                {
+                  "id": "s3",
+                  "text": "I think that's the right call for now.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s4",
+                  "text": "You can't spec safety across six companies with different threat models, but you can agree on a folder layout.",
+                  "claimType": "opinion",
+                  "sourceIds": [],
+                  "support": "n/a"
+                },
+                {
+                  "id": "s5",
+                  "text": "Anthropic sitting it out is the other story here.",
+                  "claimType": "fact",
+                  "sourceIds": [
+                    "src_9b2e35"
+                  ],
+                  "support": "supported"
+                }
+              ],
+              "toneTags": [
+                "direct",
+                "opinionated",
+                "analytical"
+              ]
+            }
+          ]
+        },
+        "contextBudget": [
+          {
+            "section": "instructions",
+            "tokens": 516,
+            "budget": 1200,
+            "truncated": false
+          },
+          {
+            "section": "persona",
+            "tokens": 477,
+            "budget": 800,
+            "truncated": false
+          },
+          {
+            "section": "persona",
+            "tokens": 22,
+            "budget": 800,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 57,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 722,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "evidence",
+            "tokens": 1047,
+            "budget": 2500,
+            "truncated": false
+          },
+          {
+            "section": "memory",
+            "tokens": 16,
+            "budget": 1500,
+            "truncated": false
+          },
+          {
+            "section": "output",
+            "tokens": 97,
+            "budget": 800,
+            "truncated": false
+          }
+        ],
+        "repaired": false
+      },
+      "validationError": null,
+      "latencyMs": 14012,
+      "tokensIn": 3518,
+      "tokensOut": 1175,
+      "status": "done",
+      "errorCategory": null
+    },
+    {
+      "stage": "validate",
+      "model": "deepseek-v4-pro",
+      "prompt": "You are the fact validator. For each sentence, decide whether the listed sources support it.\n\nYou do not rewrite. You do not suggest wording. You return verdicts.\n\nTRUTHFULNESS\nDo not invent facts, statistics, quotations, sources, or URLs. Do not claim personal experience unless it appears in the experience log provided. Treat the retrieved evidence as the factual boundary. Label inference as inference. If the evidence is inadequate, say so. Opinions may be stated as opinions.\n\nVerdicts:\n  supported — a listed source states this. Name which in sourceIds.\n  partial — a source touches it but does not carry it as written (wrong scope, weaker claim, older).\n  unsupported — nothing listed states it, or it rests on a source that does not say it.\n\nRules:\n  - Judge only against the sources below. Your own knowledge is not evidence here.\n  - The writer's own citation is a claim, not a fact. Check it.\n  - Judge opinion and rhetorical sentences as \"supported\" only if they state something checkable;\n    otherwise mark them supported with a note saying they assert nothing factual.\n  - notes is one short sentence saying what the source actually says, or what is missing.\n  - canPublish is false when any sentence stating a fact is unsupported.\n  - blockingReasons names those sentences in plain language. Empty when canPublish is true.\n\nSENTENCES TO CHECK\n  [s1] (opinion, writer cited nothing) The Agent Plugins 1.0 spec is interesting precisely because of what it refuses to define: no permissions model, no sandboxing, no trust framework.\n  [s2] (fact, writer cited src_8ec6de, src_9b2e35, src_39171b) Just a plugin.json manifest and a directory layout.\n  [s3] (opinion, writer cited nothing) That's not a bug.\n  [s4] (inference, writer cited src_9b2e35, src_317cb2) It means each platform competes on safety rather than on packaging format — and the IETF DAWN group is still debating governance while this already ships in VS Code and Copilot.\n\nSOURCES — the complete evidence. Cite by id. Nothing outside this list exists.\n[src_015e99] OpenAI and four rivals just agreed on one standard for AI agents\n  https://thenextweb.com/news/openai-agent-plugins-open-standard-skills-mcp (thenextweb.com, primary, published 2026-08-06T22:21:32.000Z)\n  \"24 points on Hacker News.\"\n[src_317cb2] AI Agent 跨平台終於有共同標準了：Agent Plugins 統一封裝，安全與信任仍留白\n  https://techorange.com/2026/08/07/ai-agent-plugins/ (techorange.com, unknown, published 2026-08-07T00:00:00.000Z)\n  \"On August 6, 2026, OpenAI and rivals Amazon, Microsoft, Cursor, and Vercel jointly published the open standard Agent Plugins 1.0; Google subsequently joined as a core maintainer. The standard packages MCP servers and Agent Skills into a single portable format using a plugin.json file. The 1.0 spec deliberately limits itself to packaging and discovery, leaving marketplaces, installation, permissions, sandboxing, and trust to each platform. Developer reactions are split: some celebrate the 'build once, run anywhere' promise, while others call it a thin standard whose useful parts will end up client-specific.\"\n[src_39171b] OpenAI and four rivals just agreed on one standard for AI agents - The Next Web\n  https://stiridelavaslui.ro/categorie/tech/openai-and-four-rivals-just-agreed-on-one-standard-for-ai-agents-the-next-web (stiridelavaslui.ro, unknown, no publication date)\n  \"A Romanian republication of the original The Next Web article. Covers the Agent Plugins standard: OpenAI, Amazon, Microsoft, Cursor and Vercel agreed on a shared format bundling MCP servers and Agent Skills into one package with a plugin.json manifest. The standard is narrow by design, defining packaging and discovery but leaving marketplaces, permissions, sandboxing, and trust to each client. Reactions include support from developer advocate Angie Jones and skepticism from SST creator Dax Raad.\"\n[src_8e93fe] Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard\n  https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/ (theoutpost.ai, primary, no publication date)\n  \"OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. The standard is built around two core components—Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs)—packaged in a folder with a plugin.json manifest. The article emphasizes the developer benefits of efficiency, portability, interoperability, and scalability.\"\n[src_8ec6de] Agent Plugins: OpenAI, Microsoft, Vercel Back One Standard\n  https://www.creativeainews.com/articles/agent-plugins-open-standard-2026/ (creativeainews.com, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, five companies backed Agent Plugins 1.0.0, an open, vendor-neutral packaging format that wraps MCP servers and Agent Skills into a portable directory. The steering committee spans AWS, Cursor maker Anysphere, Microsoft, OpenAI, and Vercel, with GitHub as an early collaborator. The article details the minimal plugin.json manifest structure, the skills/ and mcp.json layout, and explains how the standard collapses per-client packaging variants into one artifact that carries across supporting clients.\"\n[src_9b2e35] Industry Shipped Agent Plugins 1.0 While the Standards Body Debated\n  https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/ (forkast.news, unknown, published 2026-08-06T00:00:00.000Z)\n  \"On August 6, 2026, Amazon, Microsoft, OpenAI, Vercel, and Cursor simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for agent skills and MCP servers, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day. The article notes Anthropic's absence, the deliberate exclusion of distribution and trust models from the spec, and positions the standard as an industry move that outpaced the IETF DAWN working group's governance debates.\"\n\nOUTPUT — a single JSON value matching ValidationOutput.\n{\n  \"sentences\": [{\"id\":\"s1\",\"support\":\"supported\"|\"partial\"|\"unsupported\",\"sourceIds\":[\"src_…\"],\"notes\":\"…\"}],\n  \"canPublish\": true|false,\n  \"blockingReasons\": [\"…\"]\n}\nNo prose. No code fence.",
+      "rawResponse": "sentences: Invalid input: expected array, received undefined; canPublish: Invalid input: expected boolean, received undefined; blockingReasons: Invalid input: expected array, received undefined",
+      "parsed": null,
+      "validationError": "validate did not return valid ValidationOutput.",
+      "latencyMs": 0,
+      "tokensIn": 0,
+      "tokensOut": 0,
+      "status": "failed",
+      "errorCategory": "schema"
+    },
+    {
+      "stage": "today:claims",
+      "model": "none",
+      "prompt": "",
+      "rawResponse": "",
+      "parsed": null,
+      "validationError": "validate did not return valid ValidationOutput.",
+      "latencyMs": 0,
+      "tokensIn": 0,
+      "tokensOut": 0,
+      "status": "failed",
+      "errorCategory": "unknown"
+    }
+  ]
+}

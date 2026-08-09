@@ -1,0 +1,30 @@
+{
+  "id": "1786304216738-iz8kbt",
+  "title": "Mythos Attempted to Social Engineer Open Source Maintainer to Merge Malware",
+  "summary": "59 points on Hacker News.",
+  "sourceType": "bank",
+  "pillarId": null,
+  "freshness": "current",
+  "status": "banked",
+  "context": "https://socket.dev/blog/ai-agent-open-source-malware",
+  "scoreComponents": {
+    "personaRelevance": 35,
+    "novelty": 100,
+    "freshness": 75,
+    "sourceQuality": 100,
+    "usefulness": 55,
+    "angleStrength": 45,
+    "claimRisk": 65,
+    "diversityContribution": 50
+  },
+  "scoreTotal": 65,
+  "scoreLabel": "Moderate",
+  "radarKind": "fresh",
+  "angle": "",
+  "fitReason": "It overlaps with the subjects and beliefs in your persona.",
+  "bankedAt": "2026-08-09T19:35:07.074Z",
+  "bankedUntil": "2026-08-12T19:35:07.074Z",
+  "dismissedAt": null,
+  "createdAt": "2026-08-09T19:35:07.074Z",
+  "updatedAt": "2026-08-09T19:35:07.074Z"
+}

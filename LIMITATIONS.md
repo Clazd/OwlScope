@@ -3,6 +3,10 @@
 Honest accounting of what is not finished, what is deliberately deferred, and the two places
 where the implementation differs from the slice 1 brief.
 
+> This is a cumulative release journal. Earlier slice sections describe the state at that
+> historical milestone; later sections supersede their scoped stubs. Current limitations are
+> in the Slice 6 section at the end.
+
 ---
 
 ## Deliberate deviations from the brief
@@ -290,3 +294,112 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
   per-sentence rule colours and widths, hover dimming, arrow-key navigation, the source drawer,
   the character counter, and that the unsupported sentence is the only underlined element on the
   page — but that verification is a script that was run, not a suite that runs.
+
+---
+
+# Known limitations — slice 4 (Radar)
+
+## Public provider behaviour
+
+- Hacker News, Reddit, arXiv, GitHub, RSS, and Atom are unauthenticated public endpoints. Their
+  quotas and availability are controlled by those services and can change without an app
+  release. A `429` pauses that provider for the server session; any provider failure becomes a
+  warning and the rest of the scan completes.
+- GitHub's unauthenticated search allowance is intentionally treated as scarce. Radar makes one
+  search per uncached scan and does not paginate. Hacker News is queried by a small keyword set;
+  Reddit and RSS lists are capped; arXiv receives one combined category query.
+- RSS/Atom parsing is deliberately small and dependency-free. It handles conventional RSS 2.0
+  and Atom entries, CDATA, alternate links, summaries, and common date fields. Feeds with custom
+  XML namespaces or JavaScript-generated bodies may return no candidates and will be reported.
+- Feed bodies are cached for 30 minutes under `/data/.cache/feeds/`. The cache is derived and can
+  be deleted safely. A repeated scan inside the window makes no feed network request, although
+  enabled model-scoring stages still run unless sandbox mode is on.
+- “Test all providers” really calls each enabled provider. Native model search therefore uses the
+  existing AI credential and may incur the provider's normal search cost; no second secret exists.
+
+## Scoring and selection
+
+- Scores are ranking heuristics, not probabilities. Components are stored as integers, displayed
+  as ten ink segments, and labeled Excellent/Strong/Moderate/Weak. The UI intentionally never
+  renders decimal percentages.
+- L1/L2 novelty is lexical and character-based. It catches repeated topics and reworded openings
+  cheaply, but not two semantically identical arguments with entirely different vocabulary.
+  Radar never uses the model for novelty; borderline semantic review remains in Studio.
+- Strong-model work is capped at five candidates. Candidates below that cut receive conservative
+  usefulness and angle defaults, so a lower-ranked item can be banked but will not gain false
+  precision from a model that never judged it.
+- Evergreen freshness is excluded from the weighted sum rather than assigned an invented age.
+  Fresh bank items expire on read or scan, so no background process is required; evergreen bank
+  items have no expiry.
+
+## Testing
+
+- Pure tests cover transitive URL/title deduplication, tunable weighted scoring, threshold and
+  label behaviour, free novelty conversion, fresh-topic decay, and evergreen non-expiry.
+- `src/domain/radar/scan.test.ts` runs the complete Radar scan against fixtures, asserts zero
+  network calls, verifies multi-provider source merging, and checks that provider and free-novelty
+  stages appear in the Inspector run.
+
+---
+
+# Known limitations — slice 5 (Today)
+
+## Orchestration and reattachment
+
+- A running Today job is owned by the local Next.js process. Refreshing or closing the browser does
+  not cancel it, and reopening reattaches through the persisted day checkpoint. A process crash can
+  interrupt the active model request; the failed stage is then retried from the last persisted Studio
+  checkpoint, but the provider cannot resume halfway through a single completion.
+- Retry creates a new run record for the resumed work. The original failed run remains inspectable;
+  the successful daily pass still has one recorder covering every stage it executed.
+- “Improve” and “Shorten” use Studio's existing revision service and open that same session in Studio.
+  They do not silently replace the already accepted Today content item.
+
+## Cadence and selection
+
+- Pillar, angle, length, and opening-pattern distributions are deterministic heuristics over the last
+  fifteen published posts. Opening patterns deliberately use a small lexical classifier rather than a
+  model call. Unusual prose can land in the broad `direct-claim` bucket.
+- Diversity debt is a soft score contribution and an angle tie-breaker. It cannot make a candidate
+  pass the quality threshold, provide missing evidence, or clear a gate.
+
+## Testing
+
+- Cadence tests pin the under-five zero case and the four-explanation correction. The Today
+  orchestration test runs Radar through accepted content in sandbox with zero network, proves the
+  single run contains every stage, verifies same-day caching, and exercises a counted skip day.
+- The asynchronous route is polled by the UI. There is no cross-process job coordinator because the
+  product is explicitly one local process and has no database or queue.
+
+---
+
+# Known limitations — slice 6 (Memory, evolution, evals)
+
+## Memory and metrics
+
+- Memory checks a metadata-only signature when the server-rendered page opens and reuses the derived
+  index while its source collections are unchanged. A source write triggers a rebuild on the next
+  visit; there is no long-running filesystem watcher.
+- Keyword search covers topic, thesis, and text. L1/L2 similarity remains the semantic safeguard;
+  no embedding service or external search index was added.
+- Manual performance observations use impressions as the common comparison measure. They describe
+  correlations by pillar, angle, length, freshness, and posting hour; they do not infer causality or
+  affect Today selection.
+- A seven-day metrics request is marked prompted when it first renders. Ignoring it means it will not
+  nag again; numbers can still be entered through the metrics API or the stored JSON file.
+
+## Evolution
+
+- Evolution is deliberately narrow: it currently turns repeated rejection labels into proposed
+  numeric changes to three existing persona sliders. It does not infer beliefs, boundaries, voice
+  rules, fingerprint edits, or broad qualitative identity changes.
+- User edits between generated and accepted drafts are not yet stored as a standalone diff event,
+  so they are not part of evolution analysis. Accepted changes remain explicit, versioned, and
+  reversible through Brain history.
+
+## Verification boundaries
+
+- `npm run eval` is deterministic and offline. It protects the eleven named safety behaviours, but
+  it is not a statistical model-quality benchmark and does not claim that fixture prose generalises.
+- Browser refresh reattachment is process-local. A full server crash still resumes from persisted
+  checkpoints rather than from the middle of a provider completion.

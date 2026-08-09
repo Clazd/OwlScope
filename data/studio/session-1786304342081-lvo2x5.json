@@ -1,0 +1,102 @@
+{
+  "id": "1786304342081-lvo2x5",
+  "topicId": "1786304338533-5t1hxg",
+  "stage": "topic",
+  "stageStates": {
+    "topic": "active",
+    "research": "active",
+    "angles": "active",
+    "drafts": "pending",
+    "critique": "pending",
+    "final": "pending"
+  },
+  "boundary": {
+    "blocked": false,
+    "boundaryIds": [],
+    "explanation": ""
+  },
+  "research": {
+    "facts": [
+      {
+        "claim": "A Go module package named test123 exists at github.com/dajoo75/test123, providing a Test123() function for testing Go module imports.",
+        "sourceIds": [
+          "src_de6707"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "A Kaggle prediction competition titled 'TEST 123' using the Titanic dataset ran from March 14 to March 26, 2023.",
+        "sourceIds": [
+          "src_e4b87e"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "An npm package called 'testing123' (description: 'The best project ever.') exists, with version 0.1.1 having no direct vulnerabilities according to Snyk.",
+        "sourceIds": [
+          "src_935981"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "An npm package called 'nodes-test123' provides a test123 module and is runnable via RunKit.",
+        "sourceIds": [
+          "src_9f981a"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "A blog post on bothersbar.co.uk titled 'Testing Testing 123' discusses similarities between the video game Portal 2 and the TV show Solitary.",
+        "sourceIds": [
+          "src_70d874"
+        ],
+        "kind": "from-source"
+      },
+      {
+        "claim": "An npm package named 'test-play-123' (version 1.0.0) exists, though no descriptive text was retrieved from its RunKit page.",
+        "sourceIds": [
+          "src_fa95b7"
+        ],
+        "kind": "inference"
+      }
+    ],
+    "uncertainties": [
+      "The GitHub repository (src_de6707) has no publication date, so the current status and maintenance of the Go module are unknown.",
+      "The Snyk page (src_935981) states the npm package was first published '13 years ago' but does not provide a reference date, making the exact publication year indeterminate.",
+      "The blog post (src_70d874) has no publication date, so its recency cannot be confirmed.",
+      "The RunKit page for test-play-123 (src_fa95b7) retrieved no text, so its functionality and description are entirely unknown beyond its name and version."
+    ],
+    "freshness": {
+      "assessment": "evergreen",
+      "note": "The referenced projects and resources are static or historical, and their existence as test/demonstration artifacts remains verifiable regardless of age. The Kaggle competition ended in 2023 but the dataset and leaderboard persist."
+    },
+    "insufficient": false,
+    "insufficientReason": "",
+    "sourceIds": [
+      "src_de6707",
+      "src_e4b87e",
+      "src_935981",
+      "src_9f981a",
+      "src_70d874",
+      "src_fa95b7"
+    ],
+    "droppedUrls": [],
+    "noProviders": false,
+    "completedAt": "2026-08-09T19:39:54.995Z"
+  },
+  "angles": [],
+  "anglePick": null,
+  "selectedAngleId": null,
+  "drafts": [],
+  "selectedDraftId": null,
+  "validation": null,
+  "critique": null,
+  "reasoning": "",
+  "contentId": null,
+  "runIds": [
+    "1786304338543-eanwci",
+    "1786304360375-huvyxe"
+  ],
+  "createdAt": "2026-08-09T19:39:02.081Z",
+  "updatedAt": "2026-08-09T19:41:46.678Z"
+}

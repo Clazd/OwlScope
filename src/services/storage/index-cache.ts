@@ -1,5 +1,5 @@
 import { mkdir, readFile, readdir, stat } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { basename, join, relative, sep } from "node:path";
 import { createLogger } from "@/lib/logging/log";
 import { atomicWriteJson } from "./atomic-write";
 import { CACHE_ROOT, DATA_ROOT } from "./paths";
@@ -67,7 +67,7 @@ export async function rebuildIndex(): Promise<CacheIndex> {
 
   for (const file of files) {
     const rel = relative(DATA_ROOT, file);
-    const collection = rel.includes("/") ? rel.slice(0, rel.indexOf("/")) : "root";
+    const collection = rel.includes(sep) ? rel.slice(0, rel.indexOf(sep)) : "root";
     let s;
     try {
       s = await stat(file);
@@ -77,7 +77,7 @@ export async function rebuildIndex(): Promise<CacheIndex> {
     totalBytes += s.size;
     const entry: IndexEntry = {
       file: rel,
-      id: idFromFileName(rel.slice(rel.lastIndexOf("/") + 1)),
+      id: idFromFileName(basename(rel)),
       bytes: s.size,
       modifiedAt: s.mtime.toISOString(),
     };

@@ -1,0 +1,125 @@
+{
+  "id": "settings",
+  "schemaVersion": 1,
+  "model": {
+    "provider": "anthropic",
+    "strong": "claude-opus-4-6",
+    "fast": "claude-haiku-4-5-20251001"
+  },
+  "budget": {
+    "dailyTokenBudget": 200000,
+    "maxRunsPerDay": 20,
+    "cooldownSeconds": 10
+  },
+  "sandbox": {
+    "enabled": false
+  },
+  "appearance": {
+    "theme": "system"
+  },
+  "memory": {
+    "patternConfidenceFloor": 0.2
+  },
+  "sync": {
+    "lastPullAt": null,
+    "lastPushAt": null
+  },
+  "radar": {
+    "providers": {
+      "nativeModelSearch": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      },
+      "hackerNews": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      },
+      "reddit": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      },
+      "arxiv": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      },
+      "github": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      },
+      "rss": {
+        "enabled": true,
+        "lastRunAt": null,
+        "lastStatus": "ready",
+        "lastResultCount": 0,
+        "lastMessage": "Not run yet."
+      }
+    },
+    "hackerNews": {
+      "minPoints": 20,
+      "keywords": [
+        "AI agents",
+        "local-first",
+        "developer tools"
+      ]
+    },
+    "reddit": {
+      "subreddits": [
+        "MachineLearning",
+        "LocalLLaMA",
+        "programming"
+      ]
+    },
+    "arxiv": {
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.SE"
+      ]
+    },
+    "github": {
+      "languages": [
+        "TypeScript",
+        "Python",
+        "Rust"
+      ],
+      "topics": [
+        "ai-agents",
+        "local-first"
+      ],
+      "windowDays": 14
+    },
+    "rss": {
+      "urls": []
+    },
+    "keywordOverrides": {},
+    "qualityThreshold": 62,
+    "noveltyFloor": 20,
+    "bankDecayHours": 72,
+    "weights": {
+      "personaRelevance": 22,
+      "novelty": 18,
+      "freshness": 10,
+      "sourceQuality": 12,
+      "usefulness": 14,
+      "angleStrength": 12,
+      "claimRisk": 7,
+      "diversityContribution": 5
+    }
+  },
+  "updatedAt": "2026-08-09T21:12:38.055Z"
+}

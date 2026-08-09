@@ -1,0 +1,12 @@
+{
+  "id": "src_5ae77a",
+  "topicId": "1786304216686-iuhjo8",
+  "title": "Workflow or Agent? A Decision Framework Before You Architect Anything",
+  "url": "https://www.rexblack.com/resources/writing/workflow-or-agent",
+  "domain": "rexblack.com",
+  "publishedAt": null,
+  "retrievedAt": "2026-08-09T20:06:28.429Z",
+  "excerpt": "Proposes four deciding questions: can the steps be enumerated in advance, how high is the blast radius of a wrong next step, how observable is the decision trace, and what is the unit economics at full volume. Introduces the 'earned autonomy' principle: default to a workflow first and promote to agent only after instrumentation shows a workflow cannot solve the case. Argues most production 'agents' are actually workflows that overshot their brief.",
+  "sourceQuality": "unknown",
+  "providerId": "native-model-search"
+}

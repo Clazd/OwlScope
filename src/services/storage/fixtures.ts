@@ -1,5 +1,5 @@
 import { readFile, readdir } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { isAbsolute, join, relative, resolve } from "node:path";
 import { FIXTURES_ROOT } from "./paths";
 
 /**
@@ -24,7 +24,8 @@ export class FixtureNotFoundError extends Error {
 export function fixturePath(stage: string, kase: string): string {
   const safe = (s: string) => s.replace(/[^a-z0-9._-]/gi, "-");
   const path = resolve(FIXTURES_ROOT, safe(stage), `${safe(kase)}.json`);
-  if (path !== FIXTURES_ROOT && !path.startsWith(FIXTURES_ROOT + "/")) {
+  const fromRoot = relative(FIXTURES_ROOT, path);
+  if (fromRoot.startsWith("..") || isAbsolute(fromRoot)) {
     throw new FixtureNotFoundError(path);
   }
   return path;

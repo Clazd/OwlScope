@@ -44,7 +44,7 @@ export function PipelineRail({ stages, className }: PipelineRailProps) {
         const last = i === stages.length - 1;
         const detail = stage.detail ?? (stage.latencyMs !== undefined ? formatMs(stage.latencyMs) : null);
         return (
-          <li key={stage.name} className="relative flex gap-3 pb-4 last:pb-0">
+          <li key={stage.name} aria-label={`${stage.name}: ${stage.state}`} aria-current={stage.state === "active" ? "step" : undefined} className="relative flex gap-3 pb-4 last:pb-0">
             <div className="flex flex-col items-center">
               <span
                 aria-hidden

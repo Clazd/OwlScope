@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "Evaluating recovery in long-running language-model agents",
+      "url": "https://doi.org/10.0000/example-agent-recovery",
+      "snippet": "A study of checkpoints, external state, and recovery after tool failures.",
+      "publishedAt": "2026-08-07T00:00:00.000Z"
+    }
+  ]
+}

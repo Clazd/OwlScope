@@ -65,6 +65,13 @@ export async function findRunByKey(key: string): Promise<Run | null> {
   return match ?? null;
 }
 
+/** Closes a run whose process disappeared before its in-memory recorder could. */
+export async function finishInterruptedRun(id: string): Promise<void> {
+  const run = (await runStore.list()).find((item) => item.id === id);
+  if (!run || run.status !== "running") return;
+  await runStore.put({ ...run, status: "failed", finishedAt: new Date().toISOString() });
+}
+
 export async function startRun(options: StartRunOptions): Promise<Recorder> {
   let run: Run = {
     id: newId(),

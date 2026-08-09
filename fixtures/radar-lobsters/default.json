@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "Agent frameworks keep failing the long-task test",
+      "url": "https://lobste.rs/s/example/agent_frameworks_long_tasks",
+      "snippet": "Engineers discuss durable state and recovery for long-running software agents.",
+      "publishedAt": "2026-08-08T23:10:00.000Z"
+    }
+  ]
+}

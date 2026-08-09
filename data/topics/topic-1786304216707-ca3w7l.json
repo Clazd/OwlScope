@@ -1,0 +1,30 @@
+{
+  "id": "1786304216707-ca3w7l",
+  "title": "The Developer Tools Boring Barometer",
+  "summary": "The best developer tools are often 'boring'—they do one thing reliably and don't change often. Excitement is a warning sign.",
+  "sourceType": "bank",
+  "pillarId": "1786303705119-37xxug",
+  "freshness": "evergreen",
+  "status": "banked",
+  "context": "",
+  "scoreComponents": {
+    "personaRelevance": 50,
+    "novelty": 100,
+    "freshness": 0,
+    "sourceQuality": 70,
+    "usefulness": 55,
+    "angleStrength": 60,
+    "claimRisk": 85,
+    "diversityContribution": 50
+  },
+  "scoreTotal": 68,
+  "scoreLabel": "Moderate",
+  "radarKind": "evergreen",
+  "angle": "A contrarian metric for evaluating dev tools: measure how little you notice them, not how many features they have; examples from git, SSH, and cron.",
+  "fitReason": "It overlaps with the subjects and beliefs in your persona.",
+  "bankedAt": "2026-08-09T19:35:07.074Z",
+  "bankedUntil": null,
+  "dismissedAt": null,
+  "createdAt": "2026-08-09T19:35:07.074Z",
+  "updatedAt": "2026-08-09T19:35:07.074Z"
+}

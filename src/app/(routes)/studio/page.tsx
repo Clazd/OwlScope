@@ -12,8 +12,9 @@ export const dynamic = "force-dynamic";
  * there is nothing to write in the voice of, so the screen says so rather than
  * offering a text box that would produce beige output.
  */
-export default async function StudioPage() {
+export default async function StudioPage({ searchParams }: { searchParams: Promise<{ session?: string }> }) {
   const persona = await readPersonaOrEmpty();
+  const params = await searchParams;
 
   if (!isPersonaStarted(persona)) {
     return (
@@ -35,12 +36,13 @@ export default async function StudioPage() {
     <div className="flex min-h-dvh flex-col">
       <PageHeader
         title="Studio"
-        subtitle={`${persona.name} · version ${persona.activeVersion} · manual topics only until Radar ships`}
+        subtitle={`${persona.name} · version ${persona.activeVersion} · evidence before assertion`}
       />
       <Studio
         pillars={persona.pillars}
         personaName={persona.name}
         handle={handle}
+        initialSessionId={params.session ?? null}
       />
     </div>
   );

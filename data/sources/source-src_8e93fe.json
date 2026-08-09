@@ -1,0 +1,12 @@
+{
+  "id": "src_8e93fe",
+  "topicId": "1786304216668-np600v",
+  "title": "Agent Plugins: OpenAI, Microsoft & Rivals Launch Open Standard",
+  "url": "https://theoutpost.ai/news-story/open-ai-microsoft-amazon-unveil-agent-plugins-open-standard-for-ai-agents-29534/",
+  "domain": "theoutpost.ai",
+  "publishedAt": null,
+  "retrievedAt": "2026-08-09T19:37:18.064Z",
+  "excerpt": "OpenAI, Microsoft, Amazon, Cursor, and Vercel launched Agent Plugins, a vendor-neutral open standard that lets developers build AI agent extensions once and deploy them across ChatGPT, Copilot, Cursor, and other platforms. The standard is built around two core components—Agent Skills (reusable, modular workflows) and MCP Servers (middleware connecting agents to external tools and APIs)—packaged in a folder with a plugin.json manifest. The article emphasizes the developer benefits of efficiency, portability, interoperability, and scalability.",
+  "sourceQuality": "primary",
+  "providerId": "native-model-search"
+}

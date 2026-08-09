@@ -2,7 +2,7 @@ import "server-only";
 import { readFile, readdir, rm, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { createLogger } from "@/lib/logging/log";
-import { CACHE_ROOT, DATA_ROOT, assertInsideData } from "./paths";
+import { CACHE_ROOT, DATA_ROOT, DIRS, assertInsideData } from "./paths";
 import { createZip, type ZipEntry } from "./zip";
 import { rebuildIndex } from "./index-cache";
 
@@ -66,6 +66,25 @@ export async function clearCache(): Promise<void> {
   await rm(CACHE_ROOT, { recursive: true, force: true });
   await rebuildIndex();
   log.info("cache cleared and index rebuilt");
+}
+
+/**
+ * Clears the records that actively teach the writer what it already said and
+ * how those posts performed. Persona identity, research sources, topic bank,
+ * settings and run audit remain intact.
+ */
+export async function resetWritingMemory(): Promise<number> {
+  const targets = [DIRS.content, DIRS.feedback, DIRS.metrics, DIRS.exports, DIRS.personaSuggestions];
+  let removed = 0;
+  for (const target of targets) {
+    assertInsideData(target);
+    removed += (await walkAll(target, false)).length;
+    await rm(target, { recursive: true, force: true });
+  }
+  // Today skip/recommendation history and the Memory index are derived cache.
+  await clearCache();
+  log.warn(`reset writing memory by deleting ${removed} source file(s) at the user's request`);
+  return removed;
 }
 
 /**

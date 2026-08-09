@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "Agent frameworks keep failing the long-task test",
+      "url": "https://example.dev/blog/agent-frameworks-long-tasks",
+      "snippet": "A technical write-up separating context, memory, and durable task state.",
+      "publishedAt": "2026-08-08T12:00:00.000Z"
+    }
+  ]
+}

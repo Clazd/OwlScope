@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/format/cn";
 import { MicroLabel } from "./MicroLabel";
+import { useDialogFocus } from "./use-dialog-focus";
 
 interface SourceDrawerProps {
   open: boolean;
@@ -22,26 +23,8 @@ interface SourceDrawerProps {
  * shadow.
  */
 export function SourceDrawer({ open, onClose, title, subtitle, children }: SourceDrawerProps) {
-  const panelRef = useRef<HTMLDivElement>(null);
-  const restoreTo = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    restoreTo.current = document.activeElement as HTMLElement | null;
-    panelRef.current?.focus();
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.stopPropagation();
-        onClose();
-      }
-    }
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      restoreTo.current?.focus?.();
-    };
-  }, [open, onClose]);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useDialogFocus<HTMLDivElement>(open, onClose, closeRef);
 
   if (!open) return null;
 
@@ -51,6 +34,7 @@ export function SourceDrawer({ open, onClose, title, subtitle, children }: Sourc
         type="button"
         aria-label="Close panel"
         onClick={onClose}
+        tabIndex={-1}
         className="grow cursor-default bg-ink/20"
       />
       <div
@@ -61,7 +45,7 @@ export function SourceDrawer({ open, onClose, title, subtitle, children }: Sourc
         tabIndex={-1}
         className={cn(
           "flex h-full w-full max-w-[var(--drawer-width)] flex-col",
-          "border-l border-rule bg-surface shadow-pop outline-none",
+          "border-l border-rule bg-surface shadow-pop",
         )}
       >
         <header className="flex items-start justify-between gap-4 border-b border-rule px-6 py-4">
@@ -70,6 +54,7 @@ export function SourceDrawer({ open, onClose, title, subtitle, children }: Sourc
             {subtitle && <MicroLabel className="mt-1 block">{subtitle}</MicroLabel>}
           </div>
           <button
+            ref={closeRef}
             type="button"
             onClick={onClose}
             className="type-micro rounded-control px-2 py-1 text-ink-3 hover:bg-surface-sunken hover:text-ink"

@@ -27,8 +27,29 @@ export const TopicStatusSchema = z.enum([
   "used",
   "rejected",
   "insufficient_evidence",
+  "banked",
+  "stale",
+  "dismissed",
 ]);
 export type TopicStatus = z.infer<typeof TopicStatusSchema>;
+
+export const RadarScoreComponentsSchema = z.object({
+  personaRelevance: z.number().int().min(0).max(100),
+  novelty: z.number().int().min(0).max(100),
+  freshness: z.number().int().min(0).max(100),
+  sourceQuality: z.number().int().min(0).max(100),
+  usefulness: z.number().int().min(0).max(100),
+  angleStrength: z.number().int().min(0).max(100),
+  claimRisk: z.number().int().min(0).max(100),
+  diversityContribution: z.number().int().min(0).max(100),
+});
+export type RadarScoreComponents = z.infer<typeof RadarScoreComponentsSchema>;
+
+export const RadarKindSchema = z.enum(["fresh", "evergreen", "seed"]);
+export type RadarKind = z.infer<typeof RadarKindSchema>;
+
+export const RadarScoreLabelSchema = z.enum(["Excellent", "Strong", "Moderate", "Weak"]);
+export type RadarScoreLabel = z.infer<typeof RadarScoreLabelSchema>;
 
 export const TopicSchema = z.object({
   id: z.string().min(1),
@@ -41,9 +62,18 @@ export const TopicSchema = z.object({
   status: TopicStatusSchema,
   /** Anything the user already knows. Passed to research, never treated as evidence. */
   context: z.string(),
-  /** Radar's scoring, in slice 4. Null for every topic this slice creates. */
-  scoreComponents: z.record(z.string(), z.number()).nullable(),
+  /** Radar's scoring. Null for manual topics. */
+  scoreComponents: RadarScoreComponentsSchema.nullable(),
+  scoreTotal: z.number().int().min(0).max(100).nullable().optional(),
+  scoreLabel: RadarScoreLabelSchema.nullable().optional(),
+  radarKind: RadarKindSchema.nullable().optional(),
+  angle: z.string().optional(),
+  fitReason: z.string().optional(),
+  bankedAt: z.string().nullable().optional(),
+  bankedUntil: z.string().nullable().optional(),
+  dismissedAt: z.string().nullable().optional(),
   createdAt: z.string(),
+  updatedAt: z.string().optional(),
 });
 export type Topic = z.infer<typeof TopicSchema>;
 

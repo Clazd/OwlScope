@@ -123,6 +123,7 @@ const AGGREGATOR_DOMAINS = [
   "flipboard.com",
   "medium.com",
   "substack.com",
+  "dev.to",
 ];
 
 const SECONDARY_DOMAINS = [
@@ -165,7 +166,7 @@ export function classifyQuality(url: string): SourceQuality {
   // suffix (`nist.gov`, `mit.edu`) and the country-code form (`gov.uk`,
   // `ac.uk`, `edu.au`), which a plain `.gov` suffix check silently misses.
   if (/(^|\.)(gov|edu|ac|mil|int)(\.[a-z]{2,3})?$/.test(domain)) return "primary";
-  if (matches(domain, ["arxiv.org", "acm.org", "ieee.org", "nature.com", "science.org", "github.com"])) {
+  if (matches(domain, ["arxiv.org", "openalex.org", "doi.org", "acm.org", "ieee.org", "nature.com", "science.org", "github.com"])) {
     return "primary";
   }
 

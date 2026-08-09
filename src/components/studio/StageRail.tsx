@@ -53,22 +53,22 @@ interface StageRailProps {
  */
 export function StageRail({ session, onGoTo, busy }: StageRailProps) {
   return (
-    <nav aria-label="Pipeline stages">
-      <ol className="space-y-1">
+    <nav aria-label="Pipeline stages" className="min-w-0 max-w-full overflow-hidden [contain:layout_paint_inline-size] lg:overflow-visible lg:[contain:none]">
+      <ol className="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto pb-2 lg:block lg:space-y-1 lg:pb-0">
         {STUDIO_STAGES.map((stage, index) => {
           const state = session.stageStates[stage];
           const reachable = state !== "pending" && !busy;
           const current = session.stage === stage;
 
           return (
-            <li key={stage}>
+            <li key={stage} className="shrink-0 lg:shrink">
               <button
                 type="button"
                 disabled={!reachable}
                 aria-current={current ? "step" : undefined}
                 onClick={() => onGoTo(stage)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-control px-2 py-2 text-left",
+                  "flex min-w-[132px] items-center gap-3 rounded-control px-2 py-2 text-left lg:w-full lg:min-w-0",
                   "transition-colors duration-(--dur-state) ease-(--ease)",
                   reachable ? "hover:bg-surface-sunken" : "cursor-default",
                   current && "bg-surface-sunken",

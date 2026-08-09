@@ -19,7 +19,7 @@ interface TopicStageProps {
 }
 
 /**
- * Stage 1. Radar does not exist yet, so topics come from a text box.
+ * Stage 1. Topics can be entered here or pre-loaded from Radar.
  *
  * The boundary check runs the moment a topic is submitted and before anything
  * else, so a blocked topic is refused here with a plain explanation rather than

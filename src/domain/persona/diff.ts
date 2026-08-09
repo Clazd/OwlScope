@@ -158,6 +158,7 @@ export function diffExperience(before: ExperienceItem[], after: ExperienceItem[]
   collection(entries, "Experience", before, after, (e) => e.item, [
     { name: "detail", get: (e) => e.detail },
     { name: "when", get: (e) => e.occurredAt },
+    { name: "sources", get: (e) => (e.sourceUrls ?? []).join(", ") },
   ]);
   return entries;
 }

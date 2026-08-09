@@ -9,6 +9,7 @@ import { TextInput } from "@/components/common/Field";
 import { MicroLabel } from "@/components/common/MicroLabel";
 import { useRegisterCommands } from "@/components/common/command-registry";
 import { useToast } from "@/components/common/Toast";
+import { useDialogFocus } from "@/components/common/use-dialog-focus";
 import { diffSnapshot } from "@/domain/persona/diff";
 import type { Fingerprint, Persona, PersonaSnapshot, Sample } from "@/domain/persona/schema";
 import { normaliseWeights } from "@/domain/persona/weights";
@@ -16,6 +17,7 @@ import { BeliefsSection, BoundariesSection } from "./BeliefsSection";
 import { FingerprintSection } from "./FingerprintSection";
 import { IdentitySection } from "./IdentitySection";
 import { PillarsSection } from "./PillarsSection";
+import { PersonaInbox } from "./PersonaInbox";
 import { SectionIndex } from "./section-chrome";
 import { TestVoicePanel } from "./TestVoicePanel";
 import { VersionsSection, type VersionHeader } from "./VersionsSection";
@@ -43,6 +45,7 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
   const [confirming, setConfirming] = useState(false);
   const [changeReason, setChangeReason] = useState("");
   const [saving, setSaving] = useState(false);
+  const saveDialogRef = useDialogFocus<HTMLDivElement>(confirming, () => setConfirming(false));
 
   // Weights are normalised before comparing, so the diff never reports a
   // rounding difference the user did not make.
@@ -149,6 +152,8 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
         </div>
 
         <div className="min-w-0 space-y-8">
+          <PersonaInbox snapshot={draft} onUseProposal={setDraft} />
+
           <IdentitySection persona={draft.persona} onChange={patchPersona} />
 
           <PillarsSection
@@ -198,8 +203,8 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
         </div>
       </div>
 
-      {dirty && !confirming && (
-        <div className="sticky bottom-0 -mx-6 mt-8 flex flex-wrap items-center gap-3 border-t border-rule bg-bg px-6 py-3">
+      {dirty && (
+        <div inert={confirming} className="sticky bottom-0 -mx-6 mt-8 flex flex-wrap items-center gap-3 border-t border-rule bg-bg px-6 py-3">
           <Button variant="primary" onClick={() => setConfirming(true)}>
             Save as version {nextVersion}
           </Button>
@@ -207,7 +212,7 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
             Discard
           </Button>
           <MicroLabel>
-            {changes.length} change{changes.length === 1 ? "" : "s"}
+            draft only · {changes.length} unsaved change{changes.length === 1 ? "" : "s"}
           </MicroLabel>
         </div>
       )}
@@ -217,13 +222,16 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
           <button
             type="button"
             aria-label="Cancel"
+            tabIndex={-1}
             onClick={() => setConfirming(false)}
             className="fixed inset-0 cursor-default"
           />
           <div
+            ref={saveDialogRef}
             role="dialog"
             aria-modal="true"
             aria-label="Confirm save"
+            tabIndex={-1}
             className="relative flex max-h-[80vh] w-full max-w-[560px] flex-col rounded-card border border-rule bg-surface shadow-pop"
           >
             <header className="border-b border-rule px-6 py-4">
@@ -282,14 +290,13 @@ export function BrainEmptyState() {
   }
 
   return (
-    <Card padding="24">
+    <Card padding="24" className="mx-6 mb-6">
       <p className="type-body reading-column text-ink-2">
-        No persona yet. Onboarding takes about five minutes and asks one question per screen — or load the demo
-        persona first and see the product working before you invest in configuration.
+        Prefer a guided setup? Onboarding asks one question per screen. The demo loads a complete worked example.
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <Button variant="primary" onClick={() => router.push("/onboarding")}>
-          Start onboarding
+          Guided onboarding
         </Button>
         <Button onClick={loadDemo} disabled={loading}>
           {loading ? "Loading" : "Load the Nova demo persona"}

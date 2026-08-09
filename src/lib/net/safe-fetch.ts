@@ -109,15 +109,32 @@ export interface SafeFetchResult {
  * The only way user-supplied URLs are ever fetched. Follows redirects by hand
  * so every hop is re-validated, caps the body, and always times out.
  */
-export async function safeFetch(rawUrl: string): Promise<SafeFetchResult> {
+export interface SafeFetchOptions {
+  accept?: string;
+  userAgent?: string;
+  method?: "GET" | "POST";
+  headers?: Record<string, string>;
+  body?: string;
+}
+
+export async function safeFetch(rawUrl: string, options: SafeFetchOptions = {}): Promise<SafeFetchResult> {
   let target = await assertPublicUrl(rawUrl);
+  const credentialOrigin = target.origin;
 
   for (let hop = 0; hop <= SAFE_FETCH_LIMITS.maxRedirects; hop += 1) {
+    const extraHeaders = Object.fromEntries(
+      Object.entries(options.headers ?? {}).filter(([name]) =>
+        target.origin === credentialOrigin || !/^(authorization|cookie|proxy-authorization)$/i.test(name),
+      ),
+    );
     const response = await fetch(target, {
+      method: options.method ?? "GET",
+      body: options.body,
       redirect: "manual",
       headers: {
-        "user-agent": SAFE_FETCH_LIMITS.userAgent,
-        accept: "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5",
+        ...extraHeaders,
+        "user-agent": options.userAgent ?? SAFE_FETCH_LIMITS.userAgent,
+        accept: options.accept ?? "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5",
       },
       signal: AbortSignal.timeout(SAFE_FETCH_LIMITS.timeoutMs),
     });

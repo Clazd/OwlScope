@@ -1,0 +1,7 @@
+{
+  "text": "{\"assessments\":[{\"key\":\"https://theverge.com/2026/8/8/agent-frameworks-long-tasks\",\"usefulness\":88,\"angleStrength\":91,\"angle\":\"Long-running agents fail when the objective is treated as context instead of durable state.\"},{\"key\":\"https://arxiv.org/abs/2608.01234\",\"usefulness\":93,\"angleStrength\":94,\"angle\":\"A larger context window is visibility; an external scratchpad is memory.\"},{\"key\":\"https://news.ycombinator.com/item?id=44821003\",\"usefulness\":72,\"angleStrength\":68,\"angle\":\"The simplest reliable agent memory may be a checkpoint file.\"},{\"key\":\"https://github.com/example/stateful-agent-loop\",\"usefulness\":86,\"angleStrength\":82,\"angle\":\"Inspectable state is a debugging feature, not just persistence.\"},{\"key\":\"evergreen:context windows are not durable memory\",\"usefulness\":90,\"angleStrength\":92,\"angle\":\"Treat memory as architecture, not a model capability.\"},{\"key\":\"evergreen:the cheapest abstraction is often a file\",\"usefulness\":80,\"angleStrength\":79,\"angle\":\"A file can beat a service when the primary requirement is inspectability.\"}]}",
+  "model": "sandbox-strong",
+  "tokensIn": 820,
+  "tokensOut": 330,
+  "latencyMs": 900
+}

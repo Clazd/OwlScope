@@ -1,4 +1,4 @@
-import { resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 
 /**
  * Every path in the storage layer is derived from here. `DATA_DIR` can be
@@ -25,6 +25,10 @@ export const DIRS = {
   sources: resolve(DATA_ROOT, "sources"),
   runs: resolve(DATA_ROOT, "runs"),
   metrics: resolve(DATA_ROOT, "metrics"),
+  feedback: resolve(DATA_ROOT, "feedback"),
+  exports: resolve(DATA_ROOT, "exports"),
+  personaSuggestions: resolve(DATA_ROOT, "persona", "suggestions"),
+  todayCache: resolve(CACHE_ROOT, "today"),
 } as const;
 
 export const SETTINGS_FILE: string = resolve(DATA_ROOT, "settings.json");
@@ -32,7 +36,8 @@ export const SETTINGS_FILE: string = resolve(DATA_ROOT, "settings.json");
 /** Guards against a caller escaping /data with `..` in an id. */
 export function assertInsideData(path: string): void {
   const target = resolve(path);
-  if (target !== DATA_ROOT && !target.startsWith(DATA_ROOT + "/")) {
+  const fromRoot = relative(DATA_ROOT, target);
+  if (fromRoot.startsWith("..") || isAbsolute(fromRoot)) {
     throw new Error(`Refusing to touch a path outside the data directory: ${target}`);
   }
 }

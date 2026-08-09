@@ -1,6 +1,14 @@
 import { z } from "zod";
 
-export const RunKindSchema = z.enum(["today", "studio", "radar", "test-voice", "fingerprint", "connection"]);
+export const RunKindSchema = z.enum([
+  "today",
+  "studio",
+  "radar",
+  "test-voice",
+  "fingerprint",
+  "persona-import",
+  "connection",
+]);
 export type RunKind = z.infer<typeof RunKindSchema>;
 
 export const RunStatusSchema = z.enum(["running", "done", "failed"]);
@@ -12,6 +20,7 @@ export const ErrorCategorySchema = z.enum([
   "timeout",
   "network",
   "rate-limit",
+  "context-overflow",
   "http",
   "parse",
   "schema",

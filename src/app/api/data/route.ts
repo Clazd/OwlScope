@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clearCache, deleteAllData, summariseData } from "@/services/storage/data-admin";
+import { clearCache, deleteAllData, resetWritingMemory, summariseData } from "@/services/storage/data-admin";
 import { countFixtures } from "@/services/ai/sandbox";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +27,20 @@ export async function POST(request: Request) {
     }
     const removed = await deleteAllData();
     return NextResponse.json({ ok: true, message: `Deleted ${removed} file(s).` });
+  }
+
+  if (body.action === "reset-memory") {
+    if (body.confirm !== "reset writing memory") {
+      return NextResponse.json(
+        { error: 'Type "reset writing memory" to confirm.' },
+        { status: 400 },
+      );
+    }
+    const removed = await resetWritingMemory();
+    return NextResponse.json({
+      ok: true,
+      message: `Writing memory reset. Deleted ${removed} archive, feedback, metric, export, and suggestion file(s).`,
+    });
   }
 
   return NextResponse.json({ error: "Unknown action." }, { status: 400 });

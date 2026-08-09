@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "stateful-agent-loop",
+      "url": "https://github.com/example/stateful-agent-loop",
+      "snippet": "A small reference implementation that persists objectives and checkpoints to files.",
+      "publishedAt": "2026-08-07T00:00:00.000Z"
+    }
+  ]
+}

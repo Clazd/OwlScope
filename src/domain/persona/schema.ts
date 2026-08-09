@@ -252,6 +252,8 @@ export const ExperienceItemSchema = z.object({
   detail: z.string(),
   /** Free text: "March 2026", "last year". Precision is not the point. */
   occurredAt: z.string(),
+  /** Exact user-provided links that support this first-hand claim. */
+  sourceUrls: z.array(z.string().url()).optional(),
 });
 export type ExperienceItem = z.infer<typeof ExperienceItemSchema>;
 

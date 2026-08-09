@@ -167,8 +167,11 @@ export function Onboarding({ initial, rerun }: Props) {
             help="Eleven questions, one per screen, about five minutes. Nothing here asks for an account on any platform — this app never posts for you."
           >
             <div className="flex flex-wrap gap-2">
+              <Button onClick={() => router.push("/brain#inbox")}>
+                Paste ChatGPT profile instead
+              </Button>
               <Button variant="primary" onClick={advance}>
-                Start
+                Answer manually
               </Button>
               <Button onClick={loadDemo} disabled={saving}>
                 Load the Nova demo persona

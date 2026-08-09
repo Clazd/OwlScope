@@ -1,0 +1,30 @@
+{
+  "id": "1786304216747-9rl03s",
+  "title": "Open-Weight Models Are the New Linux",
+  "summary": "The trajectory of open-weight AI mirrors the rise of Linux: infrastructure gets commoditized, value moves up the stack.",
+  "sourceType": "bank",
+  "pillarId": "1786303705119-cg0m20",
+  "freshness": "evergreen",
+  "status": "banked",
+  "context": "",
+  "scoreComponents": {
+    "personaRelevance": 35,
+    "novelty": 100,
+    "freshness": 0,
+    "sourceQuality": 70,
+    "usefulness": 55,
+    "angleStrength": 60,
+    "claimRisk": 85,
+    "diversityContribution": 50
+  },
+  "scoreTotal": 64,
+  "scoreLabel": "Moderate",
+  "radarKind": "evergreen",
+  "angle": "Analyze historical parallels between open-source OS adoption and open-weight model licensing; what startups should build on top that isn't just a model wrapper.",
+  "fitReason": "It overlaps with the subjects and beliefs in your persona.",
+  "bankedAt": "2026-08-09T19:35:07.074Z",
+  "bankedUntil": null,
+  "dismissedAt": null,
+  "createdAt": "2026-08-09T19:35:07.074Z",
+  "updatedAt": "2026-08-09T19:35:07.074Z"
+}

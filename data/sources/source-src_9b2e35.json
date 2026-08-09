@@ -1,0 +1,12 @@
+{
+  "id": "src_9b2e35",
+  "topicId": "1786304216668-np600v",
+  "title": "Industry Shipped Agent Plugins 1.0 While the Standards Body Debated",
+  "url": "https://forkast.news/industry-shipped-agent-plugins-1-0-while-the-standards-body-debated/",
+  "domain": "forkast.news",
+  "publishedAt": "2026-08-06T00:00:00.000Z",
+  "retrievedAt": "2026-08-09T19:37:18.064Z",
+  "excerpt": "On August 6, 2026, Amazon, Microsoft, OpenAI, Vercel, and Cursor simultaneously adopted Agent Plugins 1.0.0, a vendor-neutral packaging standard for agent skills and MCP servers, already integrated into VS Code, GitHub Copilot, Cursor, ChatGPT, and Kiro. Google joined as a core maintainer the same day. The article notes Anthropic's absence, the deliberate exclusion of distribution and trust models from the spec, and positions the standard as an industry move that outpaced the IETF DAWN working group's governance debates.",
+  "sourceQuality": "unknown",
+  "providerId": "native-model-search"
+}

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/format/cn";
 import { MicroLabel } from "./MicroLabel";
 import { useCommands, type Command } from "./command-registry";
+import { useDialogFocus } from "./use-dialog-focus";
 
 function score(command: Command, query: string): boolean {
   if (!query) return true;
@@ -33,13 +34,9 @@ function Palette() {
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useDialogFocus<HTMLDivElement>(true, () => setOpen(false), inputRef);
 
   const matches = useMemo(() => commands.filter((command) => score(command, query)), [commands, query]);
-
-  // Focusing an input is a DOM side effect, which is what effects are for.
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
 
   // Clamped on read rather than corrected in an effect: filtering can shrink
   // the list under the cursor at any keystroke.
@@ -61,11 +58,13 @@ function Palette() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-ink/20 px-4 pt-16">
-      <button type="button" aria-label="Close command palette" onClick={() => setOpen(false)} className="fixed inset-0 cursor-default" />
+      <button type="button" aria-label="Close command palette" tabIndex={-1} onClick={() => setOpen(false)} className="fixed inset-0 cursor-default" />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Command palette"
+        tabIndex={-1}
         className="relative w-full max-w-[560px] overflow-hidden rounded-card border border-rule bg-surface shadow-pop"
       >
         <input
@@ -89,7 +88,7 @@ function Palette() {
           }}
           placeholder="Type a command"
           aria-label="Command"
-          className="type-body w-full border-b border-rule bg-transparent px-4 py-3 text-ink outline-none placeholder:text-ink-3"
+          className="type-body w-full border-b border-rule bg-transparent px-4 py-3 text-ink placeholder:text-ink-3"
         />
 
         <div className="max-h-[320px] overflow-y-auto py-2">

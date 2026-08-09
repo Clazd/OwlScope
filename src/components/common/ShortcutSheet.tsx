@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import { useCommands } from "./command-registry";
 import { MicroLabel } from "./MicroLabel";
+import { useDialogFocus } from "./use-dialog-focus";
 
 const SHORTCUTS: Array<{ keys: string; action: string }> = [
   { keys: "Cmd/Ctrl K", action: "Command palette" },
@@ -17,6 +19,8 @@ const SHORTCUTS: Array<{ keys: string; action: string }> = [
 /** The `?` sheet. Deliberately a plain table — it is a reference, not a tour. */
 export function ShortcutSheet() {
   const { shortcutsOpen, setShortcutsOpen } = useCommands();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useDialogFocus<HTMLDivElement>(shortcutsOpen, () => setShortcutsOpen(false), closeRef);
   if (!shortcutsOpen) return null;
 
   return (
@@ -24,13 +28,16 @@ export function ShortcutSheet() {
       <button
         type="button"
         aria-label="Close shortcuts"
+        tabIndex={-1}
         onClick={() => setShortcutsOpen(false)}
         className="fixed inset-0 cursor-default"
       />
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Keyboard shortcuts"
+        tabIndex={-1}
         className="relative w-full max-w-[420px] rounded-card border border-rule bg-surface p-6 shadow-pop"
       >
         <h2 className="type-h2 mb-4 text-ink">Keyboard</h2>
@@ -45,6 +52,7 @@ export function ShortcutSheet() {
           ))}
         </dl>
         <button
+          ref={closeRef}
           type="button"
           onClick={() => setShortcutsOpen(false)}
           className="type-small mt-4 text-ink-3 hover:text-ink"

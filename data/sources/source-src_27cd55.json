@@ -1,0 +1,12 @@
+{
+  "id": "src_27cd55",
+  "topicId": "1786304216686-iuhjo8",
+  "title": "Workflow vs. Agent: a Policy-vs-Script Perspective",
+  "url": "https://huggingface.co/blog/MengkangHu/workflow-vs-agent",
+  "domain": "huggingface.co",
+  "publishedAt": "2025-09-16T00:00:00.000Z",
+  "retrievedAt": "2026-08-09T20:06:28.429Z",
+  "excerpt": "Reframes the distinction as scripted orchestration (developers fix topology, guards, and stop conditions at design time) versus policy-driven orchestration (an LLM chooses actions, tools, parameters, and stop conditions at runtime). Describes three hybrid patterns that ship in production: workflow-in-agent (agent delegates to deterministic sub-steps), agent-in-workflow (workflow backbone with agentic nodes), and agent-using-workflow-as-tool.",
+  "sourceQuality": "primary",
+  "providerId": "native-model-search"
+}

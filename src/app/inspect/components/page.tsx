@@ -2,7 +2,7 @@ import { PageBody } from "@/components/common/PageBody";
 import { PageHeader } from "@/components/common/PageHeader";
 import { Gallery } from "@/components/inspect/Gallery";
 
-export const metadata = { title: "Component gallery — Persona Studio" };
+export const metadata = { title: "Component gallery - Nova" };
 
 export default function ComponentGalleryPage() {
   return (

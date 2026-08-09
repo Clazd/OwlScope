@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/common/Button";
 import { Card, CardSection } from "@/components/common/Card";
 import { Field, RadioRow, TextInput, Toggle } from "@/components/common/Field";
@@ -8,7 +9,9 @@ import { MicroLabel } from "@/components/common/MicroLabel";
 import { useToast } from "@/components/common/Toast";
 import { formatBytes, formatMs, formatRelative } from "@/lib/format/display";
 import { formatCost } from "@/services/ai/pricing";
-import type { Settings, Theme } from "@/domain/settings/schema";
+import type { Pillar } from "@/domain/persona/schema";
+import { RADAR_SCORE_KEYS, type RadarSettings, type Settings, type Theme } from "@/domain/settings/schema";
+import type { ProviderReport } from "@/domain/radar/schema";
 
 interface DataInfo {
   path: string;
@@ -35,11 +38,14 @@ interface SettingsFormProps {
   data: DataInfo;
   /** SANDBOX_MODE=true in .env pins sandbox on and the toggle off. */
   sandboxForcedByEnv: boolean;
+  modelOverrides: { strong: string | null; fast: string | null; baseUrl: string | null };
   hasPersona: boolean;
+  pillars: Pillar[];
 }
 
-export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: SettingsFormProps) {
+export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides, hasPersona, pillars }: SettingsFormProps) {
   const toast = useToast();
+  const router = useRouter();
   const [settings, setSettings] = useState(initial);
   const [saving, setSaving] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -70,7 +76,8 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: 
       }
       setSettings(body);
       setDirty(false);
-      toast.show("Settings saved.");
+      toast.show("Settings saved to disk.");
+      router.refresh();
     } catch (err) {
       toast.show(`Settings could not be saved: ${(err as Error).message}`, "failure");
     } finally {
@@ -80,8 +87,9 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: 
 
   return (
     <>
-      <ModelSection settings={settings} update={update} />
+      <ModelSection settings={settings} update={update} overrides={modelOverrides} />
       <BudgetSection settings={settings} update={update} />
+      <SourcesSection settings={settings} update={update} pillars={pillars} />
       <SandboxSection
         settings={settings}
         update={update}
@@ -89,6 +97,7 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: 
         forcedByEnv={sandboxForcedByEnv}
       />
       <AppearanceSection settings={settings} update={update} />
+      <MemorySection settings={settings} update={update} />
       <PersonaSection hasPersona={hasPersona} />
       <DataSection data={data} settings={settings} />
       <DangerZone />
@@ -106,9 +115,149 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: 
   );
 }
 
+/* ---------------------------------------------------------------- sources -- */
+
+const PROVIDERS: Array<[keyof RadarSettings["providers"], string]> = [
+  ["nativeModelSearch", "Native model search"], ["hackerNews", "Hacker News"],
+  ["reddit", "Reddit"], ["arxiv", "arXiv"], ["github", "GitHub"],
+  ["devCommunity", "DEV Community"], ["lobsters", "Lobsters"], ["openAlex", "OpenAlex"], ["rss", "RSS / Atom"],
+];
+
+function list(value: string): string[] {
+  return value.split(/[\n,]/).map((item) => item.trim()).filter(Boolean);
+}
+
+function SourcesSection({ settings, update, pillars }: {
+  settings: Settings; update: (c: Partial<Settings>) => void; pillars: Pillar[];
+}) {
+  const toast = useToast();
+  const radar = settings.radar;
+  const [testing, setTesting] = useState(false);
+  const [reports, setReports] = useState<ProviderReport[] | null>(null);
+  const setRadar = (next: RadarSettings) => update({ radar: next });
+  const setProvider = (key: keyof RadarSettings["providers"], enabled: boolean) => setRadar({
+    ...radar, providers: { ...radar.providers, [key]: { ...radar.providers[key], enabled } },
+  });
+
+  async function testProviders() {
+    setTesting(true);
+    try {
+      const response = await fetch("/api/radar/providers", { method: "POST" });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error ?? "Provider test failed.");
+      setReports(body.providers);
+      toast.show("Provider test complete.");
+    } catch (error) {
+      toast.show(error instanceof Error ? error.message : "Provider test failed.", "failure");
+    } finally {
+      setTesting(false);
+    }
+  }
+
+  return (
+    <Card label="Sources" padding="24">
+      <p className="type-small text-ink-3">All feed providers work without credentials and cache responses for 30 minutes. Optional GitHub and Reddit credentials in .env raise limits and reliability.</p>
+      <div className="mt-3 divide-y divide-rule">
+        {PROVIDERS.map(([key, label]) => {
+          const state = radar.providers[key];
+          const report = reports?.find((item) => item.id === providerId(key));
+          return (
+            <Toggle key={key} label={label}
+              description={`${report?.status ?? state.lastStatus} · ${report?.resultCount ?? state.lastResultCount} results · ${report?.message ?? state.lastMessage}`}
+              checked={state.enabled} onChange={(enabled) => setProvider(key, enabled)} />
+          );
+        })}
+      </div>
+
+      <CardSection label="Feed configuration" className="mt-4">
+        <div className="grid gap-x-4 md:grid-cols-2">
+          <Field label="Hacker News keywords" hint="Comma-separated.">
+            <TextInput value={radar.hackerNews.keywords.join(", ")} onChange={(event) => setRadar({ ...radar, hackerNews: { ...radar.hackerNews, keywords: list(event.target.value) } })} />
+          </Field>
+          <Field label="Hacker News minimum points">
+            <TextInput mono type="number" min={0} value={radar.hackerNews.minPoints} onChange={(event) => setRadar({ ...radar, hackerNews: { ...radar.hackerNews, minPoints: Math.max(0, Number(event.target.value) || 0) } })} />
+          </Field>
+          <Field label="Subreddits" hint="Names only, comma-separated.">
+            <TextInput value={radar.reddit.subreddits.join(", ")} onChange={(event) => setRadar({ ...radar, reddit: { subreddits: list(event.target.value) } })} />
+          </Field>
+          <Field label="arXiv categories">
+            <TextInput mono value={radar.arxiv.categories.join(", ")} onChange={(event) => setRadar({ ...radar, arxiv: { categories: list(event.target.value) } })} />
+          </Field>
+          <Field label="GitHub languages">
+            <TextInput value={radar.github.languages.join(", ")} onChange={(event) => setRadar({ ...radar, github: { ...radar.github, languages: list(event.target.value) } })} />
+          </Field>
+          <Field label="GitHub topics">
+            <TextInput value={radar.github.topics.join(", ")} onChange={(event) => setRadar({ ...radar, github: { ...radar.github, topics: list(event.target.value) } })} />
+          </Field>
+          <Field label="DEV Community tags" hint="Public API; no key required.">
+            <TextInput value={radar.devCommunity.tags.join(", ")} onChange={(event) => setRadar({ ...radar, devCommunity: { tags: list(event.target.value) } })} />
+          </Field>
+          <Field label="Lobsters tags" hint="Public RSS; no key required.">
+            <TextInput value={radar.lobsters.tags.join(", ")} onChange={(event) => setRadar({ ...radar, lobsters: { tags: list(event.target.value) } })} />
+          </Field>
+          <Field label="OpenAlex window (days)" hint="Recent academic work; no key required.">
+            <TextInput mono type="number" min={1} max={3650} value={radar.openAlex.windowDays} onChange={(event) => setRadar({ ...radar, openAlex: { windowDays: Math.max(1, Math.min(3650, Number(event.target.value) || 1)) } })} />
+          </Field>
+        </div>
+        <Field label="RSS and Atom URLs" hint="One URL per line.">
+          <textarea className="type-data min-h-[96px] w-full rounded-control border border-rule-strong bg-surface px-3 py-2" value={radar.rss.urls.join("\n")} onChange={(event) => setRadar({ ...radar, rss: { urls: list(event.target.value) } })} />
+        </Field>
+      </CardSection>
+
+      {pillars.length > 0 && (
+        <CardSection label="Pillar keyword overrides" className="mt-4">
+          <div className="grid gap-x-4 md:grid-cols-2">
+            {pillars.filter((pillar) => pillar.enabled).map((pillar) => (
+              <Field key={pillar.id} label={pillar.name} hint="Blank uses the pillar name and subtopics.">
+                <TextInput value={(radar.keywordOverrides[pillar.id] ?? []).join(", ")} onChange={(event) => setRadar({
+                  ...radar, keywordOverrides: { ...radar.keywordOverrides, [pillar.id]: list(event.target.value) },
+                })} />
+              </Field>
+            ))}
+          </div>
+        </CardSection>
+      )}
+
+      <CardSection label="Selection" className="mt-4">
+        <div className="grid gap-x-4 md:grid-cols-3">
+          <Field label="Quality threshold"><TextInput mono type="number" min={0} max={100} value={radar.qualityThreshold} onChange={(event) => setRadar({ ...radar, qualityThreshold: Math.max(0, Math.min(100, Number(event.target.value) || 0)) })} /></Field>
+          <Field label="Novelty floor"><TextInput mono type="number" min={0} max={100} value={radar.noveltyFloor} onChange={(event) => setRadar({ ...radar, noveltyFloor: Math.max(0, Math.min(100, Number(event.target.value) || 0)) })} /></Field>
+          <Field label="Bank decay hours"><TextInput mono type="number" min={1} value={radar.bankDecayHours} onChange={(event) => setRadar({ ...radar, bankDecayHours: Math.max(1, Number(event.target.value) || 1) })} /></Field>
+        </div>
+      </CardSection>
+
+      <CardSection label="Scoring weights" className="mt-4">
+        <div className="grid gap-x-4 sm:grid-cols-2 lg:grid-cols-4">
+          {RADAR_SCORE_KEYS.map((key) => (
+            <Field key={key} label={key.replace(/([A-Z])/g, " $1").toLowerCase()}>
+              <TextInput mono type="number" min={0} value={radar.weights[key]} onChange={(event) => setRadar({
+                ...radar, weights: { ...radar.weights, [key]: Math.max(0, Number(event.target.value) || 0) },
+              })} />
+            </Field>
+          ))}
+        </div>
+        <p className="type-small text-ink-3">Weights are normalized automatically; they do not need to sum to 100.</p>
+      </CardSection>
+
+      <div className="mt-4 flex items-center gap-3 border-t border-rule pt-4">
+        <Button onClick={testProviders} disabled={testing}>{testing ? "Testing" : "Test all providers"}</Button>
+        <MicroLabel>credentials optional</MicroLabel>
+      </div>
+    </Card>
+  );
+}
+
+function providerId(key: keyof RadarSettings["providers"]): string {
+  return ({ nativeModelSearch: "native-model-search", hackerNews: "feeds:hacker-news", reddit: "feeds:reddit", arxiv: "feeds:arxiv", github: "feeds:github", devCommunity: "feeds:dev-community", lobsters: "feeds:lobsters", openAlex: "feeds:openalex", rss: "feeds:rss" } as const)[key];
+}
+
 /* ------------------------------------------------------------------ model -- */
 
-function ModelSection({ settings, update }: { settings: Settings; update: (c: Partial<Settings>) => void }) {
+function ModelSection({ settings, update, overrides }: {
+  settings: Settings;
+  update: (c: Partial<Settings>) => void;
+  overrides: SettingsFormProps["modelOverrides"];
+}) {
   const toast = useToast();
   const [testing, setTesting] = useState(false);
   const [result, setResult] = useState<ConnectionResult | null>(null);
@@ -138,22 +287,24 @@ function ModelSection({ settings, update }: { settings: Settings; update: (c: Pa
 
   return (
     <Card label="Model" padding="24">
-      <Field label="Provider" hint="One adapter ships in this build. A second one is an afternoon's work, not a shipping requirement.">
+      <Field label="Provider" hint={overrides.baseUrl ? `Anthropic protocol via ${overrides.baseUrl}` : "Anthropic Messages API."}>
         <TextInput value={settings.model.provider} readOnly disabled mono />
       </Field>
 
-      <Field label="Strong model" hint="Angle generation, writing, critique, fact validation.">
+      <Field label="Strong model" hint={overrides.strong ? "Pinned by AI_MODEL_STRONG in .env." : "Research, angle generation, writing, and critique."}>
         <TextInput
           mono
-          value={settings.model.strong}
+          value={overrides.strong ?? settings.model.strong}
+          disabled={Boolean(overrides.strong)}
           onChange={(e) => update({ model: { ...settings.model, strong: e.target.value } })}
         />
       </Field>
 
-      <Field label="Fast model" hint="Scoring, classification, similarity triage.">
+      <Field label="Fast model" hint={overrides.fast ? "Pinned by AI_MODEL_FAST in .env." : "Scoring, claim validation, classification, and similarity triage."}>
         <TextInput
           mono
-          value={settings.model.fast}
+          value={overrides.fast ?? settings.model.fast}
+          disabled={Boolean(overrides.fast)}
           onChange={(e) => update({ model: { ...settings.model, fast: e.target.value } })}
         />
       </Field>
@@ -287,22 +438,39 @@ function AppearanceSection({ settings, update }: { settings: Settings; update: (
   );
 }
 
+function MemorySection({ settings, update }: { settings: Settings; update: (c: Partial<Settings>) => void }) {
+  return (
+    <Card label="Memory patterns" padding="24">
+      <Field label="Confidence floor" hint="Minimum relative difference before an observation appears. Patterns remain hidden until ten posts have metrics.">
+        <TextInput mono type="number" min={0.05} max={1} step={0.05} value={settings.memory.patternConfidenceFloor} onChange={(event) => update({ memory: { patternConfidenceFloor: Math.max(0.05, Math.min(1, Number(event.target.value) || 0.2)) } })} />
+      </Field>
+    </Card>
+  );
+}
+
 /* ---------------------------------------------------------------- persona -- */
 
 function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
   const toast = useToast();
+  const router = useRouter();
   const [busy, setBusy] = useState(false);
+  const [newPersonConfirm, setNewPersonConfirm] = useState("");
+  const NEW_PERSON_PHRASE = "start new person";
 
-  async function deletePersona() {
-    if (!window.confirm("Delete the persona, its samples, its fingerprint and every version? Your git history still has them.")) {
-      return;
-    }
+  async function startNewPerson() {
     setBusy(true);
     try {
-      const response = await fetch("/api/persona/demo", { method: "DELETE" });
+      const response = await fetch("/api/persona", {
+        method: "DELETE",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ confirm: newPersonConfirm }),
+      });
       const body = await response.json();
       toast.show(body.message ?? body.error ?? "Done.", response.ok ? "default" : "failure");
-      if (response.ok) window.location.reload();
+      if (response.ok) {
+        router.push("/brain#inbox");
+        router.refresh();
+      }
     } finally {
       setBusy(false);
     }
@@ -322,6 +490,21 @@ function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
   return (
     <Card label="Persona" padding="24">
       <CardSection>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="type-body text-ink-2">
+            Create a new person or update the current one from a ChatGPT profile. You will review the Brain diff
+            before saving.
+          </p>
+          <a
+            href="/brain#inbox"
+            className="type-body-strong inline-flex items-center rounded-control border border-rule-strong px-3 py-2 text-ink hover:bg-surface-sunken"
+          >
+            Create from ChatGPT profile
+          </a>
+        </div>
+      </CardSection>
+
+      <CardSection className="mt-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="type-body text-ink-2">
             Re-run onboarding. It edits the persona you already have and wipes nothing.
@@ -348,14 +531,30 @@ function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
 
       {hasPersona && (
         <CardSection className="mt-3">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="type-body text-ink-2">
-              Delete the persona and every version of it. Settings and runs are untouched.
-            </p>
-            <Button variant="destructive" onClick={deletePersona} disabled={busy}>
-              Delete persona
+          <p className="type-body text-ink-2">
+            Start over from a clean Brain. This deletes the current persona, samples, fingerprint, and
+            persona versions. Settings, runs, topics, sources, and writing memory stay untouched.
+          </p>
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <TextInput
+              mono
+              className="max-w-[240px]"
+              placeholder={NEW_PERSON_PHRASE}
+              aria-label={`Type ${NEW_PERSON_PHRASE} to confirm`}
+              value={newPersonConfirm}
+              onChange={(e) => setNewPersonConfirm(e.target.value)}
+            />
+            <Button
+              variant="destructive"
+              onClick={startNewPerson}
+              disabled={busy || newPersonConfirm !== NEW_PERSON_PHRASE}
+            >
+              Start over
             </Button>
           </div>
+          <p className="type-small mt-2 text-ink-3">
+            Type <span data-mono className="type-data text-ink-2">{NEW_PERSON_PHRASE}</span> to enable the button.
+          </p>
         </CardSection>
       )}
     </Card>
@@ -440,8 +639,10 @@ function DataSection({ data, settings }: { data: DataInfo; settings: Settings })
 function DangerZone() {
   const toast = useToast();
   const [confirmText, setConfirmText] = useState("");
+  const [memoryConfirmText, setMemoryConfirmText] = useState("");
   const [busy, setBusy] = useState(false);
   const CONFIRM_PHRASE = "delete all data";
+  const MEMORY_CONFIRM_PHRASE = "reset writing memory";
 
   async function post(url: string, body: unknown, successFallback: string) {
     setBusy(true);
@@ -485,6 +686,40 @@ function DangerZone() {
             Clear cache index
           </Button>
         </div>
+      </CardSection>
+
+      <CardSection className="mt-3">
+        <p className="type-body text-ink-2">
+          Reset what the writer remembers publishing and learning from. This deletes the content archive, feedback,
+          metrics, saved exports, evolution suggestions, and Today history. Your Brain, experience, writing samples,
+          sources, topics, settings, and run audit stay intact.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <TextInput
+            mono
+            className="max-w-[240px]"
+            placeholder={MEMORY_CONFIRM_PHRASE}
+            aria-label={`Type ${MEMORY_CONFIRM_PHRASE} to confirm`}
+            value={memoryConfirmText}
+            onChange={(e) => setMemoryConfirmText(e.target.value)}
+          />
+          <Button
+            variant="destructive"
+            disabled={busy || memoryConfirmText !== MEMORY_CONFIRM_PHRASE}
+            onClick={() =>
+              post(
+                "/api/data",
+                { action: "reset-memory", confirm: memoryConfirmText },
+                "Writing memory reset.",
+              )
+            }
+          >
+            Reset writing memory
+          </Button>
+        </div>
+        <p className="type-small mt-2 text-ink-3">
+          Type <span data-mono className="type-data text-ink-2">{MEMORY_CONFIRM_PHRASE}</span> to enable the button.
+        </p>
       </CardSection>
 
       <CardSection className="mt-3">

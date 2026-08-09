@@ -44,7 +44,7 @@ export function ScoreBar({ value, label, showValue = true, className }: ScoreBar
       </div>
       {showValue && (
         <span data-mono className="type-data text-ink-2 shrink-0">
-          {clamped.toFixed(2)}
+          {Math.round(clamped * SEGMENTS)}/{SEGMENTS}
         </span>
       )}
     </div>

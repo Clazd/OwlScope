@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "eval": "vitest run --config vitest.eval.config.ts --reporter=verbose",
     "test:watch": "vitest",
     "fonts": "node scripts/copy-fonts.mjs",
     "sync:pull": "node scripts/sync-pull.mjs",

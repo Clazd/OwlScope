@@ -1,0 +1,12 @@
+{
+  "id": "src_263912",
+  "topicId": "1786304216678-mv4pny",
+  "title": "Human vs. AI – Diff-based line-level provenance for text under agentic editing",
+  "url": "https://times.hntrends.net/story/49232300",
+  "domain": "times.hntrends.net",
+  "publishedAt": null,
+  "retrievedAt": "2026-08-09T20:04:26.321Z",
+  "excerpt": "A mirror of the Us vs. Them project README and Hacker News discussion, covering the same diff-based approach to line-level provenance using git history to distinguish human from agent authorship without inline markup.",
+  "sourceQuality": "unknown",
+  "providerId": "native-model-search"
+}

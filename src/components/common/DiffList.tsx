@@ -27,8 +27,8 @@ export function DiffList({ entries, className }: DiffListProps) {
 
   return (
     <dl className={cn("divide-y divide-rule", className)}>
-      {entries.map((entry) => (
-        <div key={entry.field} className="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-[160px_1fr]">
+      {entries.map((entry, index) => (
+        <div key={`${entry.field}-${index}`} className="grid gap-1 py-3 first:pt-0 last:pb-0 sm:grid-cols-[160px_1fr]">
           <dt>
             <MicroLabel strong>{entry.field}</MicroLabel>
           </dt>

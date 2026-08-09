@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "Designing reliable tool calls for production agents",
+      "url": "https://dev.to/example/reliable-tool-calls-1a2b",
+      "snippet": "A practical walkthrough of schema validation, retries, and visible failure states.",
+      "publishedAt": "2026-08-08T18:00:00.000Z"
+    }
+  ]
+}

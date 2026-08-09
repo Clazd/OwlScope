@@ -117,6 +117,20 @@ export function ExperienceSection({ experience, onChange }: ExperienceProps) {
                   className="max-w-[200px]"
                 />
               </div>
+              <TextInput
+                mono
+                value={(item.sourceUrls ?? []).join(", ")}
+                onChange={(e) =>
+                  update(item.id, {
+                    sourceUrls: e.target.value
+                      .split(",")
+                      .map((url) => url.trim())
+                      .filter(Boolean),
+                  })
+                }
+                placeholder="Source URLs, separated by commas"
+                aria-label={`Sources for ${item.item || "experience"}`}
+              />
             </div>
           </ListRow>
         ))}

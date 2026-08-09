@@ -4,8 +4,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/format/cn";
 import { MicroLabel } from "@/components/common/MicroLabel";
 
-/** The eight sections of Brain, in the order they appear. */
+/** Brain sections, in the order they appear. */
 export const BRAIN_SECTIONS = [
+  { id: "inbox", label: "Persona inbox" },
   { id: "identity", label: "Identity" },
   { id: "pillars", label: "Pillars" },
   { id: "beliefs", label: "Beliefs" },

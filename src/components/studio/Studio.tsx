@@ -33,6 +33,7 @@ interface StudioProps {
   pillars: Pillar[];
   personaName: string;
   handle: string;
+  initialSessionId?: string | null;
 }
 
 /**
@@ -42,7 +43,7 @@ interface StudioProps {
  * component holds a copy of it. That is deliberate — a refresh mid-critique
  * reloads the same session rather than throwing away work the user paid for.
  */
-export function Studio({ pillars, personaName, handle }: StudioProps) {
+export function Studio({ pillars, personaName, handle, initialSessionId = null }: StudioProps) {
   const router = useRouter();
   const toast = useToast();
 
@@ -60,7 +61,7 @@ export function Studio({ pillars, personaName, handle }: StudioProps) {
   /* ------------------------------------------------------------ resuming -- */
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(SESSION_KEY);
+    const stored = initialSessionId ?? window.localStorage.getItem(SESSION_KEY);
     if (!stored) return;
     loadSession(stored)
       .then((payload) => {
@@ -72,7 +73,7 @@ export function Studio({ pillars, personaName, handle }: StudioProps) {
       })
       // A session that no longer exists is not an error worth interrupting for.
       .catch(() => window.localStorage.removeItem(SESSION_KEY));
-  }, []);
+  }, [initialSessionId]);
 
   useEffect(() => {
     if (session) window.localStorage.setItem(SESSION_KEY, session.id);
@@ -400,8 +401,8 @@ export function Studio({ pillars, personaName, handle }: StudioProps) {
   })();
 
   return (
-    <div className={cn("flex min-h-0 grow flex-col", "lg:flex-row")}>
-      <aside className="shrink-0 border-b border-rule px-4 py-4 lg:w-[200px] lg:border-b-0 lg:border-r">
+    <div className={cn("flex min-h-0 min-w-0 grow flex-col", "lg:flex-row")}>
+      <aside className="min-w-0 max-w-full shrink-0 border-b border-rule px-4 py-4 lg:w-[200px] lg:border-b-0 lg:border-r">
         {session ? (
           <>
             <StageRail session={session} onGoTo={goTo} busy={busy !== null} />
@@ -410,7 +411,7 @@ export function Studio({ pillars, personaName, handle }: StudioProps) {
             </div>
           </>
         ) : (
-          <p className="type-small text-ink-3">Type a topic to start. Radar arrives in a later slice.</p>
+          <p className="type-small text-ink-3">Type a topic to start, or explore one from Radar.</p>
         )}
       </aside>
 

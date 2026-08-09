@@ -103,6 +103,7 @@ describe("source quality", () => {
   it("classifies aggregators and publishing platforms as aggregators", () => {
     expect(classifyQuality("https://techmeme.com/260808/p1")).toBe("aggregator");
     expect(classifyQuality("https://someone.substack.com/p/thing")).toBe("aggregator");
+    expect(classifyQuality("https://dev.to/someone/thing")).toBe("aggregator");
   });
 
   it("classifies known outlets as secondary", () => {
@@ -114,6 +115,7 @@ describe("source quality", () => {
     expect(classifyQuality("https://www.gov.uk/consultation")).toBe("primary");
     expect(classifyQuality("https://acme.io/docs/agents")).toBe("primary");
     expect(classifyQuality("https://acme.io/changelog")).toBe("primary");
+    expect(classifyQuality("https://doi.org/10.1000/example")).toBe("primary");
   });
 
   it("says unknown rather than guessing", () => {

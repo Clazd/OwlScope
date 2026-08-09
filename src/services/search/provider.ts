@@ -37,7 +37,18 @@ export interface SearchProvider {
 }
 
 /** Providers a run may use, in the order research should try them. */
-export type ProviderId = "native-model-search" | "manual-url" | "fixture";
+export type ProviderId =
+  | "native-model-search"
+  | "manual-url"
+  | "fixture"
+  | "feeds:hacker-news"
+  | "feeds:reddit"
+  | "feeds:arxiv"
+  | "feeds:github"
+  | "feeds:dev-community"
+  | "feeds:lobsters"
+  | "feeds:openalex"
+  | "feeds:rss";
 
 export function emptyResult(providerId: string, url: string): SearchResult {
   return {

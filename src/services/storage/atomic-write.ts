@@ -1,4 +1,5 @@
 import { mkdir, rename, rm, writeFile } from "node:fs/promises";
+import { randomBytes } from "node:crypto";
 import { dirname } from "node:path";
 import { assertInsideData } from "./paths";
 
@@ -35,11 +36,24 @@ export function writeQueueIdle(): Promise<void> {
 export async function atomicWriteText(file: string, contents: string): Promise<void> {
   assertInsideData(file);
   return enqueueWrite(async () => {
-    const tmp = `${file}.tmp`;
+    // A unique temporary name keeps independently bundled Next.js workers from
+    // trampling the same `.tmp` file during development. The final rename is
+    // still the only operation that changes the target.
+    const tmp = `${file}.${randomBytes(5).toString("hex")}.tmp`;
     await mkdir(dirname(file), { recursive: true });
     try {
       await writeFile(tmp, contents, "utf8");
-      await rename(tmp, file);
+      for (let attempt = 0; ; attempt += 1) {
+        try {
+          await rename(tmp, file);
+          break;
+        } catch (error) {
+          const code = (error as NodeJS.ErrnoException).code;
+          if ((code !== "EPERM" && code !== "EACCES") || attempt >= 4) throw error;
+          // Windows can briefly lock a file that another worker just read.
+          await new Promise((resolve) => setTimeout(resolve, 10 * (attempt + 1)));
+        }
+      }
     } catch (err) {
       await rm(tmp, { force: true }).catch(() => {});
       throw err;

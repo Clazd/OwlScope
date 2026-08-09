@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { AppShell } from "@/components/common/AppShell";
 import { getBudgetStatus } from "@/domain/budget/budget";
-import { readPersona } from "@/domain/persona/store";
 import { readSettings, sandboxEnabled } from "@/domain/settings/store";
+import { resolveConfiguredModels } from "@/services/ai/provider";
 import "./globals.css";
 
+const APP_NAME = "Nova";
+
 export const metadata: Metadata = {
-  title: "Persona Studio",
+  title: APP_NAME,
   description: "The office of an AI writer. Local only, file backed, human approved.",
 };
 
@@ -20,12 +22,12 @@ export const viewport: Viewport = {
 export const dynamic = "force-dynamic";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, budget, sandbox, persona] = await Promise.all([
+  const [settings, budget, sandbox] = await Promise.all([
     readSettings(),
     getBudgetStatus(),
     sandboxEnabled(),
-    readPersona(),
   ]);
+  const models = resolveConfiguredModels(settings.model);
 
   return (
     // The theme is stamped server-side from settings, so there is no flash of
@@ -33,11 +35,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" data-theme={settings.appearance.theme}>
       <body>
         <AppShell
-          personaName={persona?.name?.trim() || "Persona Studio"}
-          model={settings.model.strong}
+          brandName={APP_NAME}
+          model={models.strong}
           tokensUsed={budget.tokensUsed}
           tokensBudget={budget.tokensBudget}
           sandbox={sandbox}
+          theme={settings.appearance.theme}
         >
           {children}
         </AppShell>

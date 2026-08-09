@@ -1,0 +1,12 @@
+{
+  "id": "src_979180",
+  "topicId": "1786304216678-mv4pny",
+  "title": "EditLens: Quantifying the Extent of AI Editing in Text",
+  "url": "https://mlanthology.org/iclr/2026/thai2026iclr-editlens/",
+  "domain": "mlanthology.org",
+  "publishedAt": "2026-01-01T00:00:00.000Z",
+  "retrievedAt": "2026-08-09T20:04:26.321Z",
+  "excerpt": "An ICLR 2026 paper proposing lightweight similarity metrics and a regression model (EditLens) to quantify the magnitude of AI editing in text, achieving strong F1 scores on binary (94.7%) and ternary (90.4%) classification for distinguishing human, AI-generated, and mixed writing. The work has implications for authorship attribution, education, and policy.",
+  "sourceQuality": "unknown",
+  "providerId": "native-model-search"
+}

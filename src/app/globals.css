@@ -82,6 +82,7 @@
 
   html {
     background: var(--bg);
+    overflow-x: clip;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -89,6 +90,7 @@
     background: var(--bg);
     color: var(--ink);
     font: var(--body);
+    overflow-x: clip;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -185,9 +187,8 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
   }
 }
