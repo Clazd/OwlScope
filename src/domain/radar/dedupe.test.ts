@@ -19,6 +19,6 @@ describe("Radar deduplication", () => {
 
   it("removes tracking parameters and normalises editorial title prefixes", () => {
     expect(canonicalUrl("https://www.example.com/a/?utm_campaign=x#part")).toBe("https://example.com/a");
-    expect(normalisedTitle("Breaking: Agent Memory — Analysis")).toBe("agent memory");
+    expect(normalisedTitle("Breaking: Agent Memory - Analysis")).toBe("agent memory");
   });
 });

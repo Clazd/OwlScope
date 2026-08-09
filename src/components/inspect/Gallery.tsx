@@ -77,7 +77,7 @@ export function Gallery() {
         </Card>
       </Section>
 
-      <Section name="ScoreBar" note="Ten segments, filled in ink. Never coloured — a score is not a claim about truth.">
+      <Section name="ScoreBar" note="Ten segments, filled in ink. Never coloured - a score is not a claim about truth.">
         {[0, 0.3, 0.62, 1].map((value) => (
           <ScoreBar key={value} value={value} label="fit" className="mb-2" />
         ))}

@@ -10,7 +10,7 @@ import type { SearchOptions, SearchProvider, SearchResult } from "./provider";
 
 const log = createLogger("search/feeds");
 export const FEED_CACHE_TTL_MS = 30 * 60 * 1000;
-const USER_AGENT = "PersonaStudio-Radar/0.1 (private local research tool; contact: localhost)";
+const USER_AGENT = "GroundedVoice-Radar/0.1 (private local research tool; contact: localhost)";
 const degraded = new Map<string, string>();
 
 export const FEED_PROVIDER_IDS = [

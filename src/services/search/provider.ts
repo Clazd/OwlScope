@@ -29,7 +29,7 @@ export interface SearchProvider {
   readonly id: string;
   /**
    * Why this provider cannot run right now, or null when it can. Research
-   * reports these rather than silently returning nothing — "no evidence" and
+   * reports these rather than silently returning nothing - "no evidence" and
    * "nothing was asked" are different outcomes and must not look alike.
    */
   unavailableReason(): string | null;

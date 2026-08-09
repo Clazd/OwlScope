@@ -8,7 +8,7 @@ import { checkReassembly } from "./text";
  * writer never searches, the critic never rewrites, the validator never
  * invents. Each stage hands the next one a validated document, and these are
  * those documents. If two stages could share a schema, that is usually a sign
- * they are about to be collapsed into one prompt — which is the failure mode.
+ * they are about to be collapsed into one prompt - which is the failure mode.
  */
 
 /* ------------------------------------------------------------------ topic -- */
@@ -239,7 +239,7 @@ export type DraftsOutput = z.infer<typeof DraftsOutputSchema>;
 /**
  * Stored so the layers are computed once per content item. If an embedding
  * service is ever added it goes behind `SimilarityService` and these fields
- * gain a sibling — no caller changes.
+ * gain a sibling - no caller changes.
  */
 export const SimilarityVectorsSchema = z.object({
   /** L1: stemmed content tokens of topic and thesis. */
@@ -321,7 +321,7 @@ export type CritiqueIssue = z.infer<typeof CritiqueIssueSchema>;
 
 /**
  * The critic reports. It does not rewrite, and there is nowhere in this schema
- * to put a rewritten post — that is the enforcement, not a prompt line.
+ * to put a rewritten post - that is the enforcement, not a prompt line.
  */
 export const CritiqueOutputSchema = z.object({
   personaFit: z.enum(["strong", "acceptable", "weak"]),
@@ -444,7 +444,7 @@ export type StudioDraft = z.infer<typeof StudioDraftSchema>;
  *
  * It exists so "step backwards without losing work" survives a refresh, and so
  * a partially finished run is resumable rather than being React state that
- * evaporates. It is not the published artefact — that is the content item.
+ * evaporates. It is not the published artefact - that is the content item.
  */
 export const StudioSessionSchema = z.object({
   id: z.string().min(1),

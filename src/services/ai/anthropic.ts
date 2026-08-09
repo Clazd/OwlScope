@@ -382,7 +382,7 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
    * One completion with the web search server tool attached.
    *
    * The search runs on Anthropic's side and is billed through the existing
-   * key — there is no second secret and no search vendor to sign up with.
+   * key - there is no second secret and no search vendor to sign up with.
    *
    * What comes back is deliberately split in two: `hits` are the URLs the
    * search tool itself returned, and `text` is whatever the model wrote about

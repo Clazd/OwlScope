@@ -41,7 +41,7 @@ describe("Radar feed providers", () => {
   it("uses Reddit OAuth when credentials exist", async () => {
     process.env.REDDIT_CLIENT_ID = "client";
     process.env.REDDIT_CLIENT_SECRET = "secret";
-    process.env.REDDIT_USER_AGENT = "PersonaStudio test";
+    process.env.REDDIT_USER_AGENT = "GroundedVoice test";
     safeFetch.mockImplementation((url: string) => url.includes("access_token")
       ? reply({ access_token: "reddit-test-token", expires_in: 3600 })
       : reply({ data: { children: [{ data: { title: "Programming agents", selftext: "A useful discussion", url: "https://example.com/agents", permalink: "/r/programming/x", created_utc: 1780000000, score: 20 } }] } }));

@@ -5,10 +5,13 @@ import {
   characterCountOf,
   checkReassembly,
   countCharacters,
+  removeForbiddenPunctuation,
   overLimit,
   reassemble,
   renumber,
 } from "./text";
+
+const emDash = "\u2014";
 
 describe("reassembly", () => {
   it("joins sentences with single spaces", () => {
@@ -44,6 +47,10 @@ describe("reassembly", () => {
   it("returns the join either way, so the caller always has the authoritative text", () => {
     const check = checkReassembly("wrong", [{ text: "A." }, { text: "B." }]);
     expect(check.reassembled).toBe("A. B.");
+  });
+
+  it("normalizes punctuation the writer is not allowed to publish", () => {
+    expect(removeForbiddenPunctuation(`One ${emDash} two.`)).toBe("One - two.");
   });
 });
 

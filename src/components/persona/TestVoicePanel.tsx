@@ -28,7 +28,7 @@ interface Props {
 
 /**
  * Two or three sample posts on a topic you choose. Nothing is saved to content
- * history — this is a tuning surface, and it is the only way to see whether the
+ * history - this is a tuning surface, and it is the only way to see whether the
  * persona works before slice 3 exists.
  */
 export function TestVoicePanel({ persona, fingerprint, dirty }: Props) {

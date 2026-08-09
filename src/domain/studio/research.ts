@@ -22,7 +22,7 @@ const STAGE = "research";
  * source records, candidate angles and a freshness read.
  *
  * It does not write the post. There is nowhere in its output schema to put one,
- * which is the enforcement — a prompt line asking it not to write would be a
+ * which is the enforcement - a prompt line asking it not to write would be a
  * suggestion, and this is not.
  *
  * The order matters: search first, store the sources, then reason. The model
@@ -107,8 +107,8 @@ async function gather(input: ResearchInput): Promise<Gathered> {
   }
 
   if (resolved.sandbox) {
-    // In sandbox the search half is a fixture too, so the whole stage — not
-    // just the model call — runs with zero network.
+    // In sandbox the search half is a fixture too, so the whole stage - not
+    // just the model call - runs with zero network.
     const provider = createFixtureSearchProvider();
     try {
       const found = await provider.search(input.topic.title, { fixtureCase: input.fixtureCase, limit: 6 });

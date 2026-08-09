@@ -6,6 +6,7 @@ import { isPersonaStarted } from "@/domain/persona/defaults";
 import { readPersona } from "@/domain/persona/store";
 import { countFixtures } from "@/services/ai/sandbox";
 import { summariseData } from "@/services/storage/data-admin";
+import { gitDataSyncEnabled } from "@/services/sync/git";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ export default async function SettingsPage() {
           }}
           hasPersona={isPersonaStarted(persona)}
           pillars={persona?.pillars ?? []}
+          gitSyncEnabled={gitDataSyncEnabled()}
         />
       </PageBody>
     </>

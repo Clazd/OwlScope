@@ -16,7 +16,7 @@ fixtures/<stage>/<case>.json
 `research`, `angle`, `write`, `critique`, …). `<case>` is the scenario. Every
 stage needs a `default.json`; other cases are requested explicitly with
 `fixtureCase` and exist to exercise the paths that are hard to trigger on
-purpose — a timeout, a malformed response, an empty result.
+purpose - a timeout, a malformed response, an empty result.
 
 ## File shape
 
@@ -33,7 +33,7 @@ purpose — a timeout, a malformed response, an empty result.
 
 | Field | Required | Notes |
 |---|---|---|
-| `text` | yes | The raw completion. For structured stages this is a JSON string, exactly as a model would emit it — including any code fence you want the parser to survive. |
+| `text` | yes | The raw completion. For structured stages this is a JSON string, exactly as a model would emit it - including any code fence you want the parser to survive. |
 | `model` | no | Reported in the Inspector. Defaults to the configured model for the tier. |
 | `tokensIn` / `tokensOut` | no | Defaults to a length estimate. Set them when you want the token meter to be realistic. |
 | `latencyMs` | no | Reported as the stage latency. The sandbox sleeps for up to 120ms of it so loading states stay honest without slowing the tests down. |
@@ -51,7 +51,7 @@ provider, so they do not have a `text` field:
 ```
 
 This is what makes "the whole flow runs with zero network calls" true rather
-than aspirational — with sandbox on, the search half of research is a fixture
+than aspirational - with sandbox on, the search half of research is a fixture
 too. It is also the only way to build the awkward cases at all: an empty result
 set, a single thin forum link, a source published six hours ago.
 
@@ -117,7 +117,7 @@ node -e 'console.log("src_"+require("crypto").createHash("sha256").update(proces
 The Studio fixtures are internally consistent: `research` cites the source ids
 that `search` produces, and `drafts` cites the same ones. `src/domain/studio/
 pipeline.test.ts` runs the entire six-stage pipeline against them with no
-network access, which is what keeps them honest — a fixture that drifts out of
+network access, which is what keeps them honest - a fixture that drifts out of
 step with its schema or its source ids fails that test.
 
 Only `default` is reachable through the UI. To exercise another case, swap it

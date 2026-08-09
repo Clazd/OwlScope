@@ -3,8 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
-  // A package-lock also exists above this repo on this machine. Pinning the
-  // workspace keeps Turbopack from treating C:\Users\Administrator as root.
+  // Pin the workspace so a package-lock elsewhere on the host cannot make
+  // Turbopack infer the wrong project root.
   turbopack: { root: process.cwd() },
   // This repo documents itself in README.md; no generated agent files.
   agentRules: false,

@@ -69,7 +69,7 @@ export function IdentitySection({ persona, onChange }: Props) {
               mono
               value={persona.secondaryLanguage ?? ""}
               onChange={(e) => onChange({ secondaryLanguage: e.target.value || null })}
-              placeholder="—"
+              placeholder="-"
             />
           </Field>
         </div>
@@ -78,7 +78,7 @@ export function IdentitySection({ persona, onChange }: Props) {
           <TextInput
             value={persona.focus ?? ""}
             onChange={(e) => onChange({ focus: e.target.value || null })}
-            placeholder="—"
+            placeholder="-"
           />
         </Field>
       </Card>

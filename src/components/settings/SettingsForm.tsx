@@ -41,9 +41,10 @@ interface SettingsFormProps {
   modelOverrides: { strong: string | null; fast: string | null; baseUrl: string | null };
   hasPersona: boolean;
   pillars: Pillar[];
+  gitSyncEnabled: boolean;
 }
 
-export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides, hasPersona, pillars }: SettingsFormProps) {
+export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides, hasPersona, pillars, gitSyncEnabled }: SettingsFormProps) {
   const toast = useToast();
   const router = useRouter();
   const [settings, setSettings] = useState(initial);
@@ -99,7 +100,7 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides
       <AppearanceSection settings={settings} update={update} />
       <MemorySection settings={settings} update={update} />
       <PersonaSection hasPersona={hasPersona} />
-      <DataSection data={data} settings={settings} />
+      <DataSection data={data} settings={settings} gitSyncEnabled={gitSyncEnabled} />
       <DangerZone />
 
       {/* Sticky, so the save is reachable from any section without scrolling
@@ -377,7 +378,7 @@ function BudgetSection({ settings, update }: { settings: Settings; update: (c: P
           onChange={(e) => update({ budget: { ...budget, maxRunsPerDay: Number(e.target.value) || 1 } })}
         />
       </Field>
-      <Field label="Cooldown seconds" hint="Time between runs. This one is never overridable — it exists to stop double-fires.">
+      <Field label="Cooldown seconds" hint="Time between runs. This one is never overridable - it exists to stop double-fires.">
         <TextInput
           mono
           type="number"
@@ -563,7 +564,7 @@ function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
 
 /* ------------------------------------------------------------------- data -- */
 
-function DataSection({ data, settings }: { data: DataInfo; settings: Settings }) {
+function DataSection({ data, settings, gitSyncEnabled }: { data: DataInfo; settings: Settings; gitSyncEnabled: boolean }) {
   const toast = useToast();
   const [busy, setBusy] = useState<string | null>(null);
   const [conflicts, setConflicts] = useState<string[]>([]);
@@ -603,10 +604,10 @@ function DataSection({ data, settings }: { data: DataInfo; settings: Settings })
       </dl>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        <Button onClick={() => sync("pull")} disabled={busy !== null}>
+        <Button onClick={() => sync("pull")} disabled={busy !== null || !gitSyncEnabled}>
           {busy === "pull" ? "Pulling" : "Pull"}
         </Button>
-        <Button onClick={() => sync("push")} disabled={busy !== null}>
+        <Button onClick={() => sync("push")} disabled={busy !== null || !gitSyncEnabled}>
           {busy === "push" ? "Pushing" : "Push"}
         </Button>
         <a
@@ -616,6 +617,13 @@ function DataSection({ data, settings }: { data: DataInfo; settings: Settings })
           Export all as zip
         </a>
       </div>
+
+      {!gitSyncEnabled && (
+        <p className="type-small mt-3 text-ink-3">
+          Git data sync is off by default because this directory contains private identity, prompts, and writing history.
+          Enable it only for a private checkout and private remote.
+        </p>
+      )}
 
       {conflicts.length > 0 && (
         <div className="mt-4">
@@ -676,7 +684,7 @@ function DangerZone() {
       <CardSection className="mt-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="type-body text-ink-2">
-            Clear the cache index. Always safe — it is derived and rebuilds from the source files.
+            Clear the cache index. Always safe - it is derived and rebuilds from the source files.
           </p>
           <Button
             variant="destructive"

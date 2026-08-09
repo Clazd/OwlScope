@@ -8,7 +8,7 @@ import type { SourceQuality } from "@/domain/studio/schema";
  * implementation is a dependency and a maintenance burden; this one strips the
  * furniture and keeps the prose, which is all the researcher needs to quote
  * from. When it does a bad job the excerpt looks wrong in the source panel,
- * which is visible — not silent.
+ * which is visible - not silent.
  */
 
 /* ------------------------------------------------------------- extraction -- */
@@ -26,7 +26,7 @@ const ENTITIES: Record<string, string> = {
   "&#39;": "'",
   "&apos;": "'",
   "&nbsp;": " ",
-  "&mdash;": "—",
+  "&mdash;": "-",
   "&ndash;": "–",
   "&hellip;": "…",
   "&rsquo;": "’",
@@ -51,7 +51,7 @@ export function extractTitle(html: string): string {
 
 /**
  * The publication date, from the metadata a publisher actually sets. Null when
- * nothing says — never a guess, because "when was this published" is exactly
+ * nothing says - never a guess, because "when was this published" is exactly
  * the kind of fact the freshness check depends on.
  */
 export function extractPublishedAt(html: string): string | null {
@@ -152,8 +152,8 @@ function matches(domain: string, list: string[]): boolean {
 
 /**
  * Where a claim came from, classified so the UI can show it and the writer can
- * weight it. Primary means the source is the thing itself — a paper, a docs
- * page, a company's own announcement — not somebody's write-up of it.
+ * weight it. Primary means the source is the thing itself - a paper, a docs
+ * page, a company's own announcement - not somebody's write-up of it.
  */
 export function classifyQuality(url: string): SourceQuality {
   const domain = domainOf(url);

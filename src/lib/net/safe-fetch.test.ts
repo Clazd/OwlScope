@@ -58,7 +58,7 @@ describe("SSRF guard", () => {
     expect(SAFE_FETCH_LIMITS.maxRedirects).toBe(3);
     expect(SAFE_FETCH_LIMITS.maxBytes).toBe(2 * 1024 * 1024);
     expect(SAFE_FETCH_LIMITS.timeoutMs).toBe(10_000);
-    expect(SAFE_FETCH_LIMITS.userAgent).toMatch(/PersonaStudio/);
+    expect(SAFE_FETCH_LIMITS.userAgent).toMatch(/GroundedVoice/);
   });
 
   it("does not forward credentials to another origin after a redirect", async () => {

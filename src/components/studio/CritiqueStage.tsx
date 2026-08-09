@@ -68,7 +68,7 @@ export function CritiqueStage({
         }
       >
         Fact validation runs per sentence against the stored sources. The style critic then reports on
-        the result — it never rewrites the post.
+        the result - it never rewrites the post.
       </EmptyState>
     );
   }
@@ -97,7 +97,7 @@ export function CritiqueStage({
             </>
           ) : (
             <p data-mono className="type-data text-ink-3">
-              fingerprint not measured — analyse your samples in Brain · recommendation:{" "}
+              fingerprint not measured - analyse your samples in Brain · recommendation:{" "}
               <span className="text-ink">{critique.recommendation}</span>
             </p>
           )}

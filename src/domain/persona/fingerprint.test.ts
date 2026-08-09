@@ -19,12 +19,14 @@ const BASE: Fingerprint = {
   createdAt: "2026-08-09T00:00:00.000Z",
 };
 
+const emDash = "\u2014";
+
 function fingerprint(overrides: Partial<Fingerprint> = {}): Fingerprint {
   return { ...BASE, ...overrides };
 }
 
 describe("scoreAgainstFingerprint", () => {
-  it("makes zero model calls — every mechanical check runs in code", async () => {
+  it("makes zero model calls - every mechanical check runs in code", async () => {
     const fetchMock = vi.fn(() => {
       throw new Error("scoring must not touch the network");
     });
@@ -80,7 +82,7 @@ describe("scoreAgainstFingerprint", () => {
   });
 
   it("flags punctuation the writer never uses", () => {
-    const result = scoreAgainstFingerprint("A claim — and an aside; plus more.", fingerprint());
+    const result = scoreAgainstFingerprint(`A claim ${emDash} and an aside; plus more.`, fingerprint());
     expect(result.deviations.map((d) => d.rule)).toContain("punctuation-emDash");
     expect(result.deviations.map((d) => d.rule)).toContain("punctuation-semicolon");
   });
@@ -111,7 +113,7 @@ describe("scoreAgainstFingerprint", () => {
   });
 
   it("floors the score at zero however bad the draft is", () => {
-    const awful = `Here's the thing 🚀 #hype — we will unlock and leverage a game-changer; ${"word ".repeat(60)}...`;
+    const awful = `Here's the thing 🚀 #hype ${emDash} we will unlock and leverage a game-changer; ${"word ".repeat(60)}...`;
     const result = scoreAgainstFingerprint(awful, fingerprint());
     expect(result.score).toBe(0);
     expect(result.deviations.length).toBeGreaterThan(4);

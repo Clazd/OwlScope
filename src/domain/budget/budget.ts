@@ -71,7 +71,7 @@ export interface GateResult {
 
 /**
  * The gate every expensive action passes through. `override` is the explicit
- * button the user presses when they mean it — it skips the budget and run-count
+ * button the user presses when they mean it - it skips the budget and run-count
  * limits, but never the cooldown, which exists to stop double-fires.
  */
 export function gate(status: BudgetStatus, override: boolean): GateResult {

@@ -6,7 +6,7 @@ import type { ExperienceItem, Persona, PersonaSnapshot, Sample } from "./schema"
 import { normaliseWeights } from "./weights";
 
 /**
- * Nova — the optional demo persona.
+ * Nova - the optional demo persona.
  *
  * Loadable and fully deletable, and referenced nowhere in application
  * behaviour: nothing branches on whether the persona is Nova. It exists so a

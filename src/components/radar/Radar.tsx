@@ -255,7 +255,7 @@ function TopicCard({ topic, pillar, sources, expanded, onToggle, onExplore, onDi
             {SCORE_NAMES.map(([key, label]) => <ScoreBar key={key} label={label} value={scores[key] / 100} showValue={false} />)}
           </div>
           <CardSection label="Sources" className="mt-4">
-            {sources.length === 0 ? <p className="type-small text-ink-3">Evergreen idea — no current source required.</p> : (
+            {sources.length === 0 ? <p className="type-small text-ink-3">Evergreen idea - no current source required.</p> : (
               <ul className="space-y-2">
                 {sources.map((source) => (
                   <li key={source.id} className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">

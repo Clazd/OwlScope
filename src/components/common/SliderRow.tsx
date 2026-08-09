@@ -21,7 +21,7 @@ interface SliderRowProps {
  * A bipolar slider with both poles labelled in mono.
  *
  * Both poles are named because an unlabelled slider asks the user to guess
- * which direction is "more", and voice has no "more" — it has ends.
+ * which direction is "more", and voice has no "more" - it has ends.
  */
 export function SliderRow({
   name,

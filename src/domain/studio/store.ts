@@ -18,7 +18,7 @@ import {
  * Four collections, all through `createJsonStore`, so all four inherit atomic
  * writes, validated reads and quarantine-on-corruption.
  *
- * Topics, sources and content are one file per item — they are listed, filtered
+ * Topics, sources and content are one file per item - they are listed, filtered
  * and diffed independently, and a git diff that shows one changed post is worth
  * more than one that shows a rewritten array.
  */
@@ -31,7 +31,7 @@ export const sourceStore = createJsonStore<Source>(DIRS.sources, SourceSchema, {
   fileName: (source) => `source-${source.id}.json`,
 });
 
-/** `/data/content/2026-08-09-<id>.json` — the date makes the directory readable. */
+/** `/data/content/2026-08-09-<id>.json` - the date makes the directory readable. */
 export const contentStore = createJsonStore<ContentItem>(DIRS.content, ContentItemSchema, {
   fileName: (item) => `${dateKey(new Date(item.createdAt))}-${item.id}.json`,
 });

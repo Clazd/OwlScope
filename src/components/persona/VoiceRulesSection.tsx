@@ -22,7 +22,7 @@ export function VoiceRulesSection({ rules, onChange }: RuleProps) {
     <Section
       id="voice-rules"
       title="Voice rules"
-      intro="Hard rules about how this writer does and does not sound. The seeded ones are a starting position — delete anything you disagree with."
+      intro="Hard rules about how this writer does and does not sound. The seeded ones are a starting position - delete anything you disagree with."
       action={
         <Button onClick={() => onChange([...rules, { id: newId(), rule: "", ruleType: "never", enabled: true }])}>
           Add rule
@@ -90,7 +90,7 @@ export function ExperienceSection({ experience, onChange }: ExperienceProps) {
         {experience.length === 0 && (
           <p className="type-small text-ink-3">
             Empty. With nothing here the writer treats itself as a pure observer and never claims to have used
-            anything — which is the safe default, not a gap.
+            anything - which is the safe default, not a gap.
           </p>
         )}
 

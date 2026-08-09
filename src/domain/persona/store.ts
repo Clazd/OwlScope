@@ -103,8 +103,8 @@ export async function writeExperience(items: ExperienceItem[]): Promise<Experien
 }
 
 /**
- * Writes the whole snapshot. Ordered so that persona — the file everything else
- * is keyed to — lands last: a crash mid-save leaves stale supporting files
+ * Writes the whole snapshot. Ordered so that persona - the file everything else
+ * is keyed to - lands last: a crash mid-save leaves stale supporting files
  * rather than a persona pointing at a version that was never written.
  */
 export async function writeSnapshot(snapshot: PersonaSnapshot): Promise<PersonaSnapshot> {

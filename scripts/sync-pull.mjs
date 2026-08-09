@@ -9,6 +9,9 @@
 import { spawnSync } from "node:child_process";
 import { rmSync } from "node:fs";
 import { resolve } from "node:path";
+import { requirePrivateDataSync } from "./git-data-sync-policy.mjs";
+
+requirePrivateDataSync();
 
 function git(args) {
   return spawnSync("git", args, { stdio: "inherit", encoding: "utf8" });

@@ -44,7 +44,7 @@ interface EpistemicChipProps {
 
 /**
  * The only coloured chip in the application. When the user sees colour, they
- * are looking at a claim about truth — that is the whole organising idea of
+ * are looking at a claim about truth - that is the whole organising idea of
  * the visual system, and this component is where it is enforced.
  */
 export function EpistemicChip({ state, compact = false, className }: EpistemicChipProps) {

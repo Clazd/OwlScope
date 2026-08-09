@@ -19,6 +19,19 @@ export interface SyncResult {
   output: string;
 }
 
+export function gitDataSyncEnabled(): boolean {
+  return process.env.GIT_SYNC_DATA === "true";
+}
+
+function disabledResult(): SyncResult {
+  return {
+    ok: false,
+    message: "Git data sync is disabled. Set GIT_SYNC_DATA=true only when this checkout and its remote are private.",
+    conflicts: [],
+    output: "",
+  };
+}
+
 export function describeSyncFailure(output: string, conflicts: readonly string[]): Pick<SyncResult, "message" | "conflicts"> {
   if (conflicts.length > 0) {
     return {
@@ -58,6 +71,7 @@ async function conflictingPaths(): Promise<string[]> {
  * it is worse than one that stops.
  */
 export async function syncPull(): Promise<SyncResult> {
+  if (!gitDataSyncEnabled()) return disabledResult();
   const result = await git(["pull", "--rebase"]);
   const output = `${result.stdout}${result.stderr}`.trim();
 
@@ -74,7 +88,8 @@ export async function syncPull(): Promise<SyncResult> {
 
 /** Stages /data, commits with a timestamped message, pushes. */
 export async function syncPush(): Promise<SyncResult> {
-  const staged = await git(["add", "--", "data"]);
+  if (!gitDataSyncEnabled()) return disabledResult();
+  const staged = await git(["add", "-f", "--", "data"]);
   if (staged.code !== 0) {
     return { ok: false, message: `Could not stage /data. ${firstLine(staged.stderr)}`, conflicts: [], output: staged.stderr };
   }

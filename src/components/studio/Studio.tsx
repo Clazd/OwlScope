@@ -40,7 +40,7 @@ interface StudioProps {
  * The Studio screen: stage rail, workspace, source panel.
  *
  * All pipeline state lives on the server in the session record, and this
- * component holds a copy of it. That is deliberate — a refresh mid-critique
+ * component holds a copy of it. That is deliberate - a refresh mid-critique
  * reloads the same session rather than throwing away work the user paid for.
  */
 export function Studio({ pillars, personaName, handle, initialSessionId = null }: StudioProps) {
@@ -96,7 +96,7 @@ export function Studio({ pillars, personaName, handle, initialSessionId = null }
         return payload;
       } catch (err) {
         if (err instanceof StudioError && err.gates) {
-          // A blocked finalisation is not a failure — it is the gates working.
+          // A blocked finalisation is not a failure - it is the gates working.
           setServerGates(err.gates);
           toast.show("Blocked. See the gates below.", "failure");
           return null;
@@ -211,7 +211,7 @@ export function Studio({ pillars, personaName, handle, initialSessionId = null }
 
   /**
    * Publishing is two transitions, because the state machine has no shortcut
-   * from draft to published — the intermediate states are what make "generated
+   * from draft to published - the intermediate states are what make "generated
    * is never treated as published" true.
    */
   const markPublished = useCallback(

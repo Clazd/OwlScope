@@ -80,7 +80,7 @@ export interface StructuredResult<T> extends CompletionResult {
 /**
  * One result the provider's own search tool actually returned.
  *
- * This is the ground truth for "which URLs exist". The model never adds to it —
+ * This is the ground truth for "which URLs exist". The model never adds to it -
  * a URL that is not in this list did not come from a search, and rule 8 says it
  * does not ship.
  */

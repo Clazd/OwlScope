@@ -15,7 +15,7 @@ interface SentenceLike extends TextLike {
  * Sentence reassembly and character counting.
  *
  * Both are pure, both are counted in code, and neither is ever asked of a
- * model — for the same reason the fingerprint statistics are not. A model that
+ * model - for the same reason the fingerprint statistics are not. A model that
  * miscounts a character limit produces a post that cannot be published.
  */
 
@@ -27,6 +27,10 @@ export function reassemble(sentences: ReadonlyArray<TextLike>): string {
     .map((s) => s.text.trim())
     .filter((s) => s.length > 0)
     .join(" ");
+}
+
+export function removeForbiddenPunctuation(text: string): string {
+  return text.replace(/\u2014/g, "-");
 }
 
 /**
@@ -41,7 +45,7 @@ function canonical(text: string): string {
 
 export interface ReassemblyCheck {
   ok: boolean;
-  /** The join of the sentences — the value that is stored either way. */
+  /** The join of the sentences - the value that is stored either way. */
   reassembled: string;
   /** Populated when the check fails, for the error the stage throws. */
   detail: string;
@@ -76,7 +80,7 @@ export function checkReassembly(text: string, sentences: ReadonlyArray<TextLike>
  * counts code points rather than UTF-16 units, so an emoji outside the BMP is
  * one character and not two.
  *
- * This is deliberately not the full twitter-text weighted-length algorithm —
+ * This is deliberately not the full twitter-text weighted-length algorithm -
  * that also charges 2 for CJK ranges. Nothing in this product writes CJK today,
  * and a wrong-but-simple counter that claims to be exact would be worse than
  * one whose limits are written down.

@@ -19,7 +19,7 @@ interface CardProps {
  * A 1px rule and a 10px radius. Cards are defined by borders, never shadows.
  *
  * Never nest a Card inside a Card. When a card needs internal divisions, use
- * `CardSection`, which is a rule and a mono label — that is the whole idiom.
+ * `CardSection`, which is a rule and a mono label - that is the whole idiom.
  */
 export function Card({ children, id, label, action, padding = "16", sunken = false, className }: CardProps) {
   return (

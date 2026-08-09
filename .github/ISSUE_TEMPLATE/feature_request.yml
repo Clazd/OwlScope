@@ -1,0 +1,41 @@
+name: Feature request
+description: Propose a focused improvement consistent with the product invariants.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem should this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest useful outcome, including whether it is implemented, experimental, or planned.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Product area
+      options:
+        - Brain
+        - Radar
+        - Studio
+        - Today
+        - Memory
+        - Providers
+        - Storage and privacy
+        - Developer experience
+    validations:
+      required: true
+  - type: textarea
+    id: invariants
+    attributes:
+      label: Trust and product invariants
+      description: Explain effects on evidence, identity, memory, privacy, cost, and human approval.
+    validations:
+      required: true

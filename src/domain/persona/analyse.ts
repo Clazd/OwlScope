@@ -9,8 +9,8 @@ import { statisticsFromSamples } from "./statistics";
  * Fingerprint extraction: one call against the strong model.
  *
  * The model is asked only for what genuinely needs judgement. Everything
- * countable — sentence and post length, punctuation frequency, emoji and
- * hashtag use — is computed in code and handed to the model as grounding, so
+ * countable - sentence and post length, punctuation frequency, emoji and
+ * hashtag use - is computed in code and handed to the model as grounding, so
  * its qualitative read is anchored to numbers it did not have to count.
  */
 
@@ -23,7 +23,7 @@ function renderSamples(samples: Sample[]): string {
   const blocks: string[] = [];
   if (mine.length > 0) {
     blocks.push(
-      "POSTS THE USER WROTE — the source of their voice, vocabulary and opinions.",
+      "POSTS THE USER WROTE - the source of their voice, vocabulary and opinions.",
       ...mine.map((s, i) => `[mine ${i + 1}]\n${s.text}`),
     );
   }

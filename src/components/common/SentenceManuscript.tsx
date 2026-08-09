@@ -51,7 +51,7 @@ const TEXT: Record<EpistemicState, string> = {
  * The Evidence Margin.
  *
  * A persistent margin, not a tooltip. The whole point is that the epistemic
- * status of every sentence is visible at once, without hovering anything — a
+ * status of every sentence is visible at once, without hovering anything - a
  * tooltip would mean you can only ever see one claim's provenance at a time,
  * which is the opposite of what this screen is for.
  *
@@ -128,7 +128,7 @@ export function SentenceManuscript({
                 }}
                 tabIndex={0}
                 role="group"
-                aria-label={`${sentence.text} — ${EPISTEMIC_LABELS[sentence.state]}`}
+                aria-label={`${sentence.text} - ${EPISTEMIC_LABELS[sentence.state]}`}
                 onFocus={() => setActiveId(sentence.id)}
                 onBlur={() => setActiveId(null)}
                 onMouseEnter={() => setActiveId(sentence.id)}

@@ -41,7 +41,7 @@ export function postLengthOf(text: string): number {
 /* ----------------------------------------------------------- percentiles -- */
 
 /**
- * Linear interpolation between closest ranks — the same method as NumPy's
+ * Linear interpolation between closest ranks - the same method as NumPy's
  * default, so a hand-check against any other tool agrees.
  */
 export function percentile(sortedValues: number[], p: number): number {
@@ -68,7 +68,7 @@ function round1(n: number): number {
 
 const EMOJI = /\p{Extended_Pictographic}/u;
 const HASHTAG = /(^|\s)#[\p{L}\p{N}_]+/u;
-const EM_DASH = /—|(?:\s--\s)/;
+const EM_DASH = /\u2014|(?:\s--\s)/;
 const SEMICOLON = /;/;
 const ELLIPSIS = /\.\.\.|…/;
 const LIST_MARKER = /(^|\n)\s*(?:[-*•]|\d+[.)])\s+/;
@@ -152,7 +152,7 @@ export function computeStatistics(texts: string[]): SampleStatistics {
  * Statistics come from the user's own posts.
  *
  * "Admired" samples are a cadence reference, but they are somebody else's
- * sentence lengths — letting them move the user's p90 would make the writer
+ * sentence lengths - letting them move the user's p90 would make the writer
  * chase a rhythm the user has never actually written in. They are used only
  * when there is nothing else to go on, and the UI says which set was used.
  */

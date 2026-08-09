@@ -10,7 +10,7 @@ const log = createLogger("persona/versions");
 
 /**
  * Every save creates a new version. Versions are full snapshots, never deltas,
- * and are never overwritten or deleted — that is what makes "my posts got worse
+ * and are never overwritten or deleted - that is what makes "my posts got worse
  * last week" a debuggable claim instead of a feeling.
  */
 

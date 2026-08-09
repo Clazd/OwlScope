@@ -10,8 +10,8 @@ const PREFIX = "[studio]";
 const ORDER: Record<Level, number> = { debug: 0, info: 1, warn: 2, error: 3 };
 
 /**
- * `LOG_LEVEL` raises the floor. Unset behaves exactly as before — everything in
- * development, everything but debug in production — so this only exists for the
+ * `LOG_LEVEL` raises the floor. Unset behaves exactly as before - everything in
+ * development, everything but debug in production - so this only exists for the
  * one caller that genuinely wants quiet: a test run, where a hundred debug
  * lines bury the assertion that failed.
  */

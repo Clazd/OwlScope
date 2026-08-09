@@ -40,7 +40,7 @@ export function ResearchStage({
         }
       >
         Nothing retrieved yet. Research searches, stores what it finds as sources, and then reasons
-        about them — it never writes the post.
+        about them - it never writes the post.
       </EmptyState>
     );
   }
@@ -121,7 +121,7 @@ export function ResearchStage({
             <span data-mono className="type-data text-ink">
               {research.freshness.assessment}
             </span>{" "}
-            — {research.freshness.note}
+            - {research.freshness.note}
           </p>
         </CardSection>
 

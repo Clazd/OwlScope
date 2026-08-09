@@ -89,7 +89,7 @@ export async function resetWritingMemory(): Promise<number> {
 
 /**
  * Deletes every data file. Guarded by a typed confirmation in the UI, and by
- * the path assertion here — this function can only ever touch /data.
+ * the path assertion here - this function can only ever touch /data.
  */
 export async function deleteAllData(): Promise<number> {
   const files = await walkAll(DATA_ROOT, false);

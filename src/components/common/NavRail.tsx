@@ -42,7 +42,7 @@ interface NavRailProps {
 
 /**
  * Active state is a 2px left ink bar and a weight change from 400 to 500.
- * No filled pill, no background, no colour — the nav is chrome, and chrome does
+ * No filled pill, no background, no colour - the nav is chrome, and chrome does
  * not get to use the epistemic palette.
  */
 export function NavRail({ items, collapsed = false, className }: NavRailProps) {

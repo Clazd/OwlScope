@@ -115,7 +115,7 @@ export function analyseCadence(
     ? [...kinds].sort((a, b) => (angleDistribution[a] ?? 0) - (angleDistribution[b] ?? 0))[0] ?? null
     : null;
   const missionLine = recent.length < 5
-    ? `No diversity correction yet — only ${recent.length} published post${recent.length === 1 ? "" : "s"}.`
+    ? `No diversity correction yet - only ${recent.length} published post${recent.length === 1 ? "" : "s"}.`
     : angleDebt
       ? `Your last ${Math.max(angleDebt.runLength, angleDebt.count)} posts leaned ${angleDebt.value}. Today should make room for ${desiredAngle ?? "a different angle"}, if the evidence supports it.`
       : "Your recent cadence is varied, so no angle correction is needed today.";

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 /**
  * The run inspector. Reachable at /inspect and from the command palette, and
- * deliberately not in the nav — it is a tool for whoever is building the thing,
+ * deliberately not in the nav - it is a tool for whoever is building the thing,
  * not part of the product's six areas.
  *
  * Built in slice 1 rather than at the end, because it is what makes slice 3's

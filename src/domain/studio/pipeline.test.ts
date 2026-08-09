@@ -10,7 +10,7 @@ import type { Angle, ContentItem, ResearchRecord, Source, StudioDraft, Topic, Va
  *
  * Slices 1 and 2 shipped without one of these and said so. It is worth having:
  * the unit tests pin each stage's rules, and this pins that the stages compose
- * — that research's source ids survive into the writer's citations, that the
+ * - that research's source ids survive into the writer's citations, that the
  * validator's verdicts reach the gates, and that a finished post lands on disk
  * as a draft rather than as anything else.
  *
@@ -120,7 +120,7 @@ beforeAll(async () => {
 
 afterAll(() => rmSync(dataDir, { recursive: true, force: true }));
 
-describe("stage 1 — topic and boundaries", () => {
+describe("stage 1 - topic and boundaries", () => {
   it("lets a topic that touches nothing through", async () => {
     const check = await m.boundary.runBoundaryCheck({
       title: topic.title,
@@ -143,7 +143,7 @@ describe("stage 1 — topic and boundaries", () => {
   });
 });
 
-describe("stage 2 — research", () => {
+describe("stage 2 - research", () => {
   it("stores what it retrieved as source records", async () => {
     const result = await m.research.runResearch({ topic, recorder: recorder.recorder });
     research = result.record;
@@ -175,7 +175,7 @@ describe("stage 2 — research", () => {
   });
 });
 
-describe("stage 3 — angles", () => {
+describe("stage 3 - angles", () => {
   it("produces four to six that differ in kind, not in wording", async () => {
     const context = await m.session.loadContext();
     angles = await m.angles.runAngles({
@@ -205,7 +205,7 @@ describe("stage 3 — angles", () => {
   });
 });
 
-describe("stage 4 — drafts in the Evidence Lock shape", () => {
+describe("stage 4 - drafts in the Evidence Lock shape", () => {
   it("writes three", async () => {
     const context = await m.session.loadContext();
     drafts = await m.write.runDrafts({
@@ -252,7 +252,7 @@ describe("stage 4 — drafts in the Evidence Lock shape", () => {
   });
 });
 
-describe("stage 5 — validation, similarity, critique", () => {
+describe("stage 5 - validation, similarity, critique", () => {
   it("returns a verdict for every sentence", async () => {
     validation = await m.validate.runValidation({
       sentences: (drafts[0] as StudioDraft).sentences,
@@ -279,7 +279,7 @@ describe("stage 5 — validation, similarity, critique", () => {
     expect(result.l1.tokens.length).toBeGreaterThan(0);
   });
 
-  it("reports without rewriting — there is nowhere to put a rewrite", async () => {
+  it("reports without rewriting - there is nowhere to put a rewrite", async () => {
     const context = await m.session.loadContext();
     const critique = await m.critique.runCritique({
       text: (drafts[0] as StudioDraft).text,
@@ -300,7 +300,7 @@ describe("stage 5 — validation, similarity, critique", () => {
   });
 });
 
-describe("stage 6 — gates and finalisation", () => {
+describe("stage 6 - gates and finalisation", () => {
   it("passes the clean draft and blocks the one with an uncited fact", () => {
     const clean = m.gates.evaluateGates({
       sentences: (drafts[0] as StudioDraft).sentences,

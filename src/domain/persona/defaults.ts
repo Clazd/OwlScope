@@ -10,7 +10,7 @@ import type {
 
 /**
  * What a fresh persona starts as. Everything here is a starting point the user
- * edits or deletes — nothing in this file is enforced by application code.
+ * edits or deletes - nothing in this file is enforced by application code.
  */
 
 export const DEFAULT_SLIDERS: Sliders = {
@@ -52,7 +52,7 @@ export function stockBoundaries(enabled: BoundaryKind[] = []): Boundary[] {
 }
 
 /**
- * The seed voice rules from the brief. All deletable — they are a starting
+ * The seed voice rules from the brief. All deletable - they are a starting
  * position on what not to sound like, not a policy.
  */
 export const SEED_VOICE_RULES: Array<{ rule: string; ruleType: VoiceRule["ruleType"] }> = [

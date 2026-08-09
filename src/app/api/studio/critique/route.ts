@@ -25,7 +25,7 @@ const Body = z.object({
 });
 
 /**
- * Stage 5. Fact validation, then style critique — two calls, in that order.
+ * Stage 5. Fact validation, then style critique - two calls, in that order.
  *
  * They are separate because they answer different questions and because
  * merging them is exactly the collapse the whole design exists to prevent. The

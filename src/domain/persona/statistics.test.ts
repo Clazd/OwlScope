@@ -11,6 +11,8 @@ import {
 } from "./statistics";
 import type { Sample } from "./schema";
 
+const emDash = "\u2014";
+
 function sample(text: string, mode: Sample["mode"] = "mine"): Sample {
   return { id: `${mode}-${text.slice(0, 6)}`, text, mode, createdAt: "2026-08-09T00:00:00.000Z" };
 }
@@ -30,7 +32,7 @@ describe("splitSentences", () => {
 describe("countWords", () => {
   it("counts words, not tokens of punctuation", () => {
     expect(countWords("Good UX is usually more valuable.")).toBe(6);
-    expect(countWords("Yes — really.")).toBe(2);
+    expect(countWords(`Yes ${emDash} really.`)).toBe(2);
     expect(countWords("...")).toBe(0);
   });
 
@@ -113,13 +115,13 @@ describe("computeStatistics", () => {
   it("detects em dashes, ellipses and list markers", () => {
     // One occurrence in three posts is 33%, which is deliberately still "rare".
     // Each pattern gets its own corpus so the frequency is unambiguous.
-    expect(computeStatistics(["A thought — an aside.", "Another — like this."]).punctuation.emDash).toBe("common");
+    expect(computeStatistics([`A thought ${emDash} an aside.`, `Another ${emDash} like this.`]).punctuation.emDash).toBe("common");
     expect(computeStatistics(["Trailing off...", "And again…"]).punctuation.ellipsis).toBe("common");
     expect(computeStatistics(["- one\n- two", "1. first\n2. second"]).punctuation.listMarkers).toBe("common");
   });
 
   it("holds the line between rare and common at roughly a third of posts", () => {
-    const withDash = "A thought — an aside.";
+    const withDash = `A thought ${emDash} an aside.`;
     const plain = "Nothing unusual here.";
     expect(computeStatistics([withDash, plain, plain]).punctuation.emDash).toBe("rare");
     expect(computeStatistics([withDash, withDash, plain]).punctuation.emDash).toBe("common");

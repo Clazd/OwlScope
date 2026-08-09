@@ -14,7 +14,7 @@ export const PROVIDER_ID = "native-model-search";
  * Search through the AI provider's own web search tool.
  *
  * Billed through the existing key, so there is no second secret and no search
- * vendor. The interesting part is not the call — it is what happens to the
+ * vendor. The interesting part is not the call - it is what happens to the
  * result.
  *
  * The tool returns URLs. The model returns snippets. Those are two different

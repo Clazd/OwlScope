@@ -3,7 +3,7 @@ import type { Pillar } from "./schema";
 /**
  * Pillar weights always sum to 100 across the enabled pillars.
  *
- * Weights are soft pressure on selection, not a quota — if the best idea today
+ * Weights are soft pressure on selection, not a quota - if the best idea today
  * sits in a 10% pillar, that idea still wins. The invariant exists so the
  * numbers stay readable, not so a rotation can be enforced.
  */

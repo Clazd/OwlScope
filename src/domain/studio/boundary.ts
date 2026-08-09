@@ -20,7 +20,7 @@ const STAGE = "boundary";
  *
  * Two passes, cheapest first. The keyword pass costs nothing and catches the
  * obvious cases. The classifier runs on the fast model and only when the
- * keyword pass found nothing — because "is this topic political" genuinely
+ * keyword pass found nothing - because "is this topic political" genuinely
  * needs judgement, and a keyword list pretending to have judgement is how you
  * block an article about the politics of software licensing.
  */
@@ -57,7 +57,7 @@ export interface MechanicalHit {
  *
  * Custom boundaries match on their own text; the stock kinds match on their
  * keyword list. A custom boundary with a one-word value is a blunt instrument
- * by construction — that is the user's choice, made visible when it fires.
+ * by construction - that is the user's choice, made visible when it fires.
  */
 export function checkBoundariesMechanically(text: string, boundaries: Boundary[]): MechanicalHit[] {
   const haystack = normalise(text);

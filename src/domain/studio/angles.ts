@@ -69,10 +69,10 @@ function buildPrompt(input: AnglesInput) {
         truthfulnessBlock(),
         "",
         "For each angle:",
-        "  thesis — one sentence stating what the post would argue. Not a headline.",
-        "  whyItFits — why this writer, specifically, would make this argument.",
-        "  evidenceNeeded — which claims it depends on. If the evidence is not above, say so here.",
-        "  noveltyRisk — how close it is to the recent posts listed below, and noveltyNote saying which one.",
+        "  thesis - one sentence stating what the post would argue. Not a headline.",
+        "  whyItFits - why this writer, specifically, would make this argument.",
+        "  evidenceNeeded - which claims it depends on. If the evidence is not above, say so here.",
+        "  noveltyRisk - how close it is to the recent posts listed below, and noveltyNote saying which one.",
         "",
         "Do not write the post. Do not draft an opening line.",
       ].join("\n"),
@@ -138,7 +138,7 @@ export async function runAnglePick(input: AnglePickInput): Promise<AnglePick> {
         "ANGLES",
         ...input.angles.map(
           (angle) =>
-            `  ${angle.id} (${angle.kind}, novelty risk ${angle.noveltyRisk}): ${angle.thesis} — ${angle.whyItFits}`,
+            `  ${angle.id} (${angle.kind}, novelty risk ${angle.noveltyRisk}): ${angle.thesis} - ${angle.whyItFits}`,
         ),
       ].join("\n"),
     },

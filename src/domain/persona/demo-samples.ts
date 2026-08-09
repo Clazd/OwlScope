@@ -5,7 +5,7 @@
  * They are written to have a consistent, detectable signature: short sentences,
  * no em dashes, no semicolons, no emoji, no hashtags, concrete openings, and a
  * habit of claim-then-example with no closing call to action. That is the point
- * — a fingerprint derived from mush would not demonstrate anything.
+ * - a fingerprint derived from mush would not demonstrate anything.
  */
 export const DEMO_SAMPLES_MINE: string[] = [
   "Spent the morning reading the diff instead of the README. The README said the cache was optional. The diff said it was load-bearing. Guess which one shipped.",

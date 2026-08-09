@@ -18,7 +18,7 @@ import { normaliseWeights, redistributeWeights, setPillarEnabled } from "@/domai
 /**
  * Onboarding: one question per screen, eleven steps, five to eight minutes.
  *
- * It never asks for an X account — there is no X integration in this product.
+ * It never asks for an X account - there is no X integration in this product.
  * Partial state is saved at every step, so closing the tab loses nothing, and
  * it can be re-run later without wiping what already exists.
  */
@@ -164,7 +164,7 @@ export function Onboarding({ initial, rerun }: Props) {
         {step === "start" && (
           <StepShell
             question="Let's define who is writing."
-            help="Eleven questions, one per screen, about five minutes. Nothing here asks for an account on any platform — this app never posts for you."
+            help="Eleven questions, one per screen, about five minutes. Nothing here asks for an account on any platform - this app never posts for you."
           >
             <div className="flex flex-wrap gap-2">
               <Button onClick={() => router.push("/brain#inbox")}>
@@ -218,7 +218,7 @@ export function Onboarding({ initial, rerun }: Props) {
                   mono
                   value={draft.persona.secondaryLanguage ?? ""}
                   onChange={(e) => patchPersona({ secondaryLanguage: e.target.value || null })}
-                  placeholder="—"
+                  placeholder="-"
                 />
               </Field>
             </div>
@@ -660,7 +660,7 @@ function PreviewStep({ draft, onNext }: { draft: PersonaSnapshot; onNext: () => 
   return (
     <StepShell
       question="Here is how it sounds."
-      help="A live sample from what you have entered. If it is wrong, go back — or fix it in Brain, which is where you will do most of the tuning."
+      help="A live sample from what you have entered. If it is wrong, go back - or fix it in Brain, which is where you will do most of the tuning."
       onNext={onNext}
     >
       <Button variant="primary" onClick={preview} disabled={running}>

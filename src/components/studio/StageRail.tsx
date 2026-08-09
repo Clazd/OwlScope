@@ -48,7 +48,7 @@ interface StageRailProps {
  * in the product on the active one.
  *
  * A completed stage is a button; a pending one is not. Clicking back returns to
- * that stage without destroying later work — the pipeline only invalidates
+ * that stage without destroying later work - the pipeline only invalidates
  * downstream output when a stage actually re-runs.
  */
 export function StageRail({ session, onGoTo, busy }: StageRailProps) {

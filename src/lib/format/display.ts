@@ -17,15 +17,15 @@ export function formatMs(ms: number): string {
   return `${(ms / 1000).toFixed(2)}s`;
 }
 
-/** `Sunday, 9 August` — the date line under a page title. */
+/** `Sunday, 9 August` - the date line under a page title. */
 export function formatLongDate(date: Date): string {
   return new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long" }).format(date);
 }
 
-/** `9 Aug 14:32` — timestamps in lists, always mono. */
+/** `9 Aug 14:32` - timestamps in lists, always mono. */
 export function formatStamp(iso: string): string {
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "—";
+  if (Number.isNaN(date.getTime())) return "-";
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "short",

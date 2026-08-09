@@ -8,7 +8,7 @@ export async function GET() {
   return new Response(new Uint8Array(zip), {
     headers: {
       "content-type": "application/zip",
-      "content-disposition": `attachment; filename="persona-studio-${dateKey()}.zip"`,
+      "content-disposition": `attachment; filename="grounded-voice-${dateKey()}.zip"`,
       "content-length": String(zip.byteLength),
     },
   });

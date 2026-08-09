@@ -26,7 +26,7 @@ import { runStage } from "./stage";
  * Stage 5b. The style critic reports and does not rewrite.
  *
  * There is nowhere in `CritiqueOutput` to put a rewritten post. That is the
- * enforcement — a critic that can hand back a "fixed" version becomes the
+ * enforcement - a critic that can hand back a "fixed" version becomes the
  * writer, and the writer stops being accountable for its own draft.
  *
  * It is fed the mechanical fingerprint deviations so it names specific broken
@@ -64,7 +64,7 @@ export interface CritiqueInput {
 function validationBlock(validation: ValidationOutput | null): string {
   if (!validation) return "FACT VALIDATION\nNot run yet.";
   return [
-    "FACT VALIDATION — already decided. Do not re-litigate it; use it.",
+    "FACT VALIDATION - already decided. Do not re-litigate it; use it.",
     ...validation.sentences.map((verdict) => `  ${verdict.id}: ${verdict.support}. ${verdict.notes}`),
   ].join("\n");
 }
@@ -75,7 +75,7 @@ function similarityBlock(similarity: SimilarityResult | null): string {
     return `SIMILARITY\nRisk ${similarity.risk}. Nothing in the last ${similarity.comparedAgainst} posts overlaps.`;
   }
   return [
-    `SIMILARITY — risk ${similarity.risk}, measured against ${similarity.comparedAgainst} prior posts.`,
+    `SIMILARITY - risk ${similarity.risk}, measured against ${similarity.comparedAgainst} prior posts.`,
     ...similarity.matches.slice(0, 5).map((match) => `  ${Math.round(match.score * 100)}%: ${match.note}`),
   ].join("\n");
 }
@@ -98,10 +98,10 @@ function buildPrompt(input: CritiqueInput) {
         "fabricated experience, hype, clarity, opening strength, reader value, tone, claim certainty.",
         "",
         "Severity:",
-        "  block — this cannot ship. Fabricated experience, a claim the validation marked unsupported,",
+        "  block - this cannot ship. Fabricated experience, a claim the validation marked unsupported,",
         "          a boundary problem, or a voice that is not this writer's.",
-        "  warn  — worth fixing before posting. A weak opening, a cliché, a hedge that costs the point.",
-        "  note  — an observation. No action required.",
+        "  warn  - worth fixing before posting. A weak opening, a cliché, a hedge that costs the point.",
+        "  note  - an observation. No action required.",
         "",
         "Name the specific broken rule from the measured deviations below. Do not restate them as impressions.",
         'Do not invent a deviation that is not measured and is not visible in the text.',

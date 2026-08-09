@@ -1,4 +1,4 @@
-# Known limitations — slice 1
+# Known limitations - slice 1
 
 Honest accounting of what is not finished, what is deliberately deferred, and the two places
 where the implementation differs from the slice 1 brief.
@@ -13,8 +13,8 @@ where the implementation differs from the slice 1 brief.
 
 **1. The bottom bar is in nav order, not the order the brief lists.**
 Section H specifies "bottom bar with five items (Today, Radar, Studio, Memory, Brain)". The
-bottom bar ships with the same five items in the same order as the sidebar rail — Today,
-Brain, Radar, Studio, Memory — because an area moving position between the rail and the bar
+bottom bar ships with the same five items in the same order as the sidebar rail - Today,
+Brain, Radar, Studio, Memory - because an area moving position between the rail and the bar
 costs more than the parenthetical ordering buys. One line in `NavRail.tsx` if you want it the
 other way.
 
@@ -35,7 +35,7 @@ page. Both are in `components/common` and both appear in the gallery.
   API is explicitly out of scope; the eventual answer is the model's own search capability or
   hand-fetched URLs through the SSRF guard.
 - `services/memory/similarity.ts` ships only a lexical Jaccard baseline. The real check lands
-  with Memory and will be local — no embedding API, no vector database.
+  with Memory and will be local - no embedding API, no vector database.
 - `personaVersion` on every run is `0`. There is no persona record until slice 2.
 - The persona chip in the sidebar shows the product name. It shows the persona's name once
   there is a persona.
@@ -43,7 +43,7 @@ page. Both are in `components/common` and both appear in the gallery.
 ## Things that work but would not survive scale
 
 - **`findRunByKey` and `getBudgetStatus` read every run file.** Both are O(all runs) on every
-  expensive action. At personal scale — a few runs a day — this is nothing. At tens of
+  expensive action. At personal scale - a few runs a day - this is nothing. At tens of
   thousands of runs it wants the cache index, which already exists and is not yet used for it.
 - **`pathOf` falls back to a directory scan.** Ids map to files by filename suffix, so a
   content item whose filename carries a date needs one `readdir`. Same trade, same reasoning.
@@ -61,7 +61,7 @@ directionally right and is not a bill. Update the table when prices change.
 
 - Sandbox mode covers **provider calls only**. Nothing else in the app reaches the network,
   so that is total coverage today, but it will not automatically cover anything added later.
-- A fixture that does not match its stage's schema fails loudly and is *not* repaired — a bad
+- A fixture that does not match its stage's schema fails loudly and is *not* repaired - a bad
   fixture is an authoring mistake, not a model failure.
 
 ## Sync
@@ -74,7 +74,7 @@ directionally right and is not a bill. Update the table when prices change.
 ## Testing
 
 - 53 tests cover the storage layer, the Anthropic adapter, the sandbox provider and the SSRF
-  guard — the parts where a silent bug would corrupt data or spend money.
+  guard - the parts where a silent bug would corrupt data or spend money.
 - **There are no component or end-to-end tests.** The component gallery is the check for the
   design system, and it is a manual one. Shell rendering, the breakpoints, focus rings and
   reduced-motion behaviour were verified in a real browser during this slice but that
@@ -84,7 +84,7 @@ directionally right and is not a bill. Update the table when prices change.
 
 The spacing scale is locked to 4/8/12/16/24/32/48/64 by switching off Tailwind's dynamic
 scale. That means an off-scale utility like `w-10` **compiles to nothing at all** rather than
-erroring — the element silently loses its width. This bit once during slice 1 (the sandbox
+erroring - the element silently loses its width. This bit once during slice 1 (the sandbox
 toggle collapsed to a hairline). If a component looks structurally wrong, check its spacing
 classes against the scale first.
 
@@ -98,7 +98,7 @@ the narrower rule win at wide viewports.
   is started anywhere else. Do not put it behind a tunnel or a reverse proxy without adding
   auth first.
 - The API key lives only in `.env`, is read only in server code, and is never sent to the
-  browser or shown in the UI — not even masked.
+  browser or shown in the UI - not even masked.
 - The SSRF guard in `lib/net/safe-fetch.ts` is built and tested but **not yet used by
   anything**, because nothing fetches user-supplied URLs until slice 3. It blocks private,
   loopback, link-local and carrier-grade-NAT ranges on every redirect hop, caps redirects at
@@ -108,7 +108,7 @@ the narrower rule win at wide viewports.
 
 ---
 
-# Known limitations — slice 2 (Brain)
+# Known limitations - slice 2 (Brain)
 
 ## Deliberate deviations from the brief
 
@@ -117,7 +117,7 @@ That is where slice 1 put them, next to `globals.css` which imports them. Nothin
 
 **2. More than sentence and post length is computed in code.**
 The brief requires that the model never compute `sentenceLength` or `postLength`. The same
-reasoning — models are bad at counting — applies to punctuation frequency, emoji use and
+reasoning - models are bad at counting - applies to punctuation frequency, emoji use and
 hashtag use, so those are counted in code too and handed to the model as grounding. The model
 is left with the five fields that genuinely need judgement: `openingPatterns`,
 `avoidedOpenings`, `capitalisation`, `vocabulary` and `structuralHabits`. Computed values
@@ -127,7 +127,7 @@ always win over anything the model says about them.
 "Admired" samples are a cadence reference, but they are somebody else's sentence lengths, and
 letting them move your p90 would make the writer chase a rhythm you have never written in.
 They are used for statistics only when there are no owned samples at all, and the UI reports
-which set was used. They are never a source of vocabulary, opinions or claims — the prompt
+which set was used. They are never a source of vocabulary, opinions or claims - the prompt
 says so explicitly and separately from the owned samples.
 
 **4. Weight editing is a range input, not a bespoke drag handle.**
@@ -147,7 +147,7 @@ Neither is in an inventory; both are shared by three or more sections.
   written and exported but only consumed by Test voice so far. Slice 3's writer and critic are
   their real callers.
 - Boundaries are stored so a classifier stage can check a topic against them, but **nothing
-  checks them yet** — there is no topic pipeline until slice 3. The block is in the prompt.
+  checks them yet** - there is no topic pipeline until slice 3. The block is in the prompt.
 - `onboardingComplete` is recorded but nothing redirects a new user into onboarding. Brain's
   empty state and a Settings button are the two entry points.
 
@@ -164,7 +164,7 @@ Neither is in an inventory; both are shared by three or more sections.
 - **`previewChanges` and the client-side diff can disagree by one render.** The client computes
   the change count from its own state; the server recomputes from disk at save time and the
   version record stores the server's count. If another tab saved in between, the dialog's
-  number is the stale one. Single user, single process — but it is not impossible.
+  number is the stale one. Single user, single process - but it is not impossible.
 - Restoring a version restores the *whole* snapshot, including its fingerprint and samples. If
   you restore a version that predates your fingerprint, the fingerprint goes with it. That is
   what a full-snapshot restore means, and the confirm dialog says a new version is created,
@@ -179,18 +179,18 @@ Neither is in an inventory; both are shared by three or more sections.
   the save dialog and the onboarding flow were driven in a real browser during this slice at
   1440/1100/768/390 in both themes, but that verification is not automated.
 - `analyseFingerprint` and `runTestVoice` are exercised through the sandbox provider by hand,
-  not by a unit test. Their pure parts — prompt construction and scoring — are covered.
+  not by a unit test. Their pure parts - prompt construction and scoring - are covered.
 
 ---
 
-# Known limitations — slice 3 (Studio)
+# Known limitations - slice 3 (Studio)
 
 ## Deliberate deviations from the brief
 
 **1. There is a fourth data collection the brief does not list: `/data/studio/`.**
 The brief names topics, sources and content. Studio also writes a session record per run.
 It exists because "the user can enter at any stage and step backwards without losing work"
-is only true across a refresh if the pipeline state is on disk — React state satisfies the
+is only true across a refresh if the pipeline state is on disk - React state satisfies the
 sentence right up until someone reloads the page halfway through a critique they paid for.
 It is working state, not a published artefact: deleting `/data/studio/` loses in-progress
 runs and nothing else.
@@ -203,7 +203,7 @@ provider's existing repair path handles it with no second mechanism to keep in s
 
 **3. `native-model-search` returns the search tool's URLs and the model's snippets separately.**
 The brief's `SearchResult` has a `snippet`, and the Anthropic web search tool does not expose
-one — the page content it returns is opaque to the client. So the provider does one call that
+one - the page content it returns is opaque to the client. So the provider does one call that
 both searches and summarises, then treats the tool's URL list as the allowlist and drops any
 summarised URL that is not on it. That is a slightly odd shape for a "search provider", and it
 is what makes acceptance criterion 6 mechanical rather than aspirational.
@@ -229,8 +229,8 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
 - **The inter-run cooldown now applies between stages.** Slice 1 set a 10-second cooldown that
   is deliberately not overridable, designed for a world where one run was one user action.
   Studio makes six or more paid actions per post, so walking the pipeline at speed hits the
-  cooldown at nearly every step. The fix is one field in Settings — a personal-scale cooldown of
-  2–3 seconds still stops double-fires — but the default is wrong for this shape of work and
+  cooldown at nearly every step. The fix is one field in Settings - a personal-scale cooldown of
+  2–3 seconds still stops double-fires - but the default is wrong for this shape of work and
   changing it would alter existing installs, so it is left alone and written down here.
 - **Adding a required field to a stored schema quarantines existing records.** That is the
   storage layer working as designed, and it bit during development: adding `fingerprintScored`
@@ -240,7 +240,7 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
 - **Similarity is recomputed at finalisation, and the two verdicts are merged.** The result
   stored on a draft was measured when the draft was written, and the history moves; a post
   published in between would make a passing verdict wrong in the direction that matters. The
-  free layers re-run at finalise and their verdict is merged with the draft's — the fresh pass
+  free layers re-run at finalise and their verdict is merged with the draft's - the fresh pass
   knows about posts published since, the earlier one knows what L3 thought about the argument,
   and the worse of the two risks wins.
 - **`FIT` shows a dash, not a zero, when there is no fingerprint.** A persona that has never had
@@ -261,7 +261,7 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
 - **The Memory page is still an empty frame.** Content items are written and the history is used
   by the similarity check and the writer prompt, but there is no screen that lists them.
 - **`SimilarityService` has one implementation.** The interface exists so pgvector or a hosted
-  embedding service can become a second one without touching a caller — not because a second one
+  embedding service can become a second one without touching a caller - not because a second one
   is planned.
 
 ## Cost and correctness caveats
@@ -286,28 +286,29 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
   schema refinement, the mechanical boundary check, and readable-text extraction and source
   classification.
 - **There is now an end-to-end test.** `src/domain/studio/pipeline.test.ts` runs all six stages
-  against `/fixtures` with no network access and asserts that they compose — that research's
+  against `/fixtures` with no network access and asserts that they compose - that research's
   source ids survive into the writer's citations, that the validator's verdicts reach the gates,
   and that a finished post lands on disk as a draft. Slices 1 and 2 both noted the absence of one.
 - **There are still no component tests.** The Studio screen, the Evidence Margin and the X
-  preview were driven in a real browser during this slice at 1440/1100/768/390 in both themes —
+  preview were driven in a real browser during this slice at 1440/1100/768/390 in both themes -
   per-sentence rule colours and widths, hover dimming, arrow-key navigation, the source drawer,
   the character counter, and that the unsupported sentence is the only underlined element on the
-  page — but that verification is a script that was run, not a suite that runs.
+  page - but that verification is a script that was run, not a suite that runs.
 
 ---
 
-# Known limitations — slice 4 (Radar)
+# Known limitations - slice 4 (Radar)
 
 ## Public provider behaviour
 
-- Hacker News, Reddit, arXiv, GitHub, RSS, and Atom are unauthenticated public endpoints. Their
-  quotas and availability are controlled by those services and can change without an app
-  release. A `429` pauses that provider for the server session; any provider failure becomes a
-  warning and the rest of the scan completes.
-- GitHub's unauthenticated search allowance is intentionally treated as scarce. Radar makes one
-  search per uncached scan and does not paginate. Hacker News is queried by a small keyword set;
-  Reddit and RSS lists are capped; arXiv receives one combined category query.
+- Hacker News, Reddit, arXiv, GitHub, DEV Community, Lobsters, OpenAlex, RSS, and Atom use public
+  interfaces and work without credentials. Their quotas and availability are controlled by those
+  services and can change without an app release. A `429` pauses that provider for the server
+  session; any provider failure becomes a warning and the rest of the scan completes.
+- Optional GitHub and Reddit credentials improve rate limits or reliability; they do not unlock
+  a separate Radar feature. GitHub searches at most four configured language/topic variants per
+  uncached scan and does not paginate. Hacker News is queried by a small keyword set; Reddit,
+  DEV Community, Lobsters, and RSS lists are capped; arXiv receives one combined category query.
 - RSS/Atom parsing is deliberately small and dependency-free. It handles conventional RSS 2.0
   and Atom entries, CDATA, alternate links, summaries, and common date fields. Feeds with custom
   XML namespaces or JavaScript-generated bodies may return no candidates and will be reported.
@@ -342,7 +343,7 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
 
 ---
 
-# Known limitations — slice 5 (Today)
+# Known limitations - slice 5 (Today)
 
 ## Orchestration and reattachment
 
@@ -373,7 +374,7 @@ the pipeline test does not bury its assertions in a hundred debug lines), and
 
 ---
 
-# Known limitations — slice 6 (Memory, evolution, evals)
+# Known limitations - slice 6 (Memory, evolution, evals)
 
 ## Memory and metrics
 

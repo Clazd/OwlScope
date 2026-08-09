@@ -322,7 +322,7 @@ export function FingerprintSection({
 
         <CardSection label="adjustments beyond your samples" className="mt-4">
           <p className="type-small mb-2 text-ink-3">
-            For what samples cannot express — &ldquo;be more opinionated than my old posts were.&rdquo;
+            For what samples cannot express - &ldquo;be more opinionated than my old posts were.&rdquo;
           </p>
           {SLIDER_DIMENSIONS.map((dimension) => (
             <SliderRow
@@ -418,7 +418,7 @@ function Rows({ rows, className }: { rows: Array<[string, string]>; className?: 
           <dt>
             <MicroLabel strong>{label}</MicroLabel>
           </dt>
-          <dd className="type-body text-ink-2">{value || "—"}</dd>
+          <dd className="type-body text-ink-2">{value || "-"}</dd>
         </div>
       ))}
     </dl>

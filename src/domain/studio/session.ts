@@ -67,7 +67,7 @@ export async function saveSession(session: StudioSession): Promise<StudioSession
 }
 
 /**
- * Moving to a stage marks it active and everything before it done — but never
+ * Moving to a stage marks it active and everything before it done - but never
  * clears what a later stage already produced. Stepping back to Angles and
  * forward again must not silently throw away three drafts the user paid for.
  */
@@ -136,7 +136,7 @@ export interface StudioContext {
  * Everything a stage might need about the writer, read once.
  *
  * `recentPosts` is capped here rather than at each call site, so no prompt can
- * accidentally carry the whole archive — the cap is a property of the loader.
+ * accidentally carry the whole archive - the cap is a property of the loader.
  */
 export async function loadContext(): Promise<StudioContext> {
   const [persona, fingerprint, experience, history] = await Promise.all([

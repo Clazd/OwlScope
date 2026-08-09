@@ -32,7 +32,7 @@ export const ErrorCategorySchema = z.enum([
  * A stage records what was sent, what came back, and what it cost.
  *
  * It never records chain of thought. Structured decisions, scores, critiques
- * and operational metadata only — that rule is enforced here by there being
+ * and operational metadata only - that rule is enforced here by there being
  * nowhere to put reasoning text.
  */
 export const RunStageSchema = z.object({

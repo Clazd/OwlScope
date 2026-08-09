@@ -27,7 +27,7 @@ describe("readable text extraction", () => {
   });
 
   it("decodes the entities a real page actually contains", () => {
-    expect(decodeEntities("Tom &amp; Jerry &mdash; &#39;quoted&#39;")).toBe("Tom & Jerry — 'quoted'");
+    expect(decodeEntities("Tom &amp; Jerry &mdash; &#39;quoted&#39;")).toBe("Tom & Jerry - 'quoted'");
   });
 
   it("decodes numeric and hex references", () => {
@@ -41,7 +41,7 @@ describe("readable text extraction", () => {
 
 describe("titles and dates", () => {
   it("prefers the og:title, which publishers curate", () => {
-    const html = `<meta property="og:title" content="The real headline"><title>Site — The real headline</title>`;
+    const html = `<meta property="og:title" content="The real headline"><title>Site - The real headline</title>`;
     expect(extractTitle(html)).toBe("The real headline");
   });
 

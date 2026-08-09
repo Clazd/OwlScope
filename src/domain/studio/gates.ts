@@ -12,7 +12,7 @@ import type {
 /**
  * The quality gates. Pure, so they run on every render and in every test.
  *
- * Blocking findings stop finalisation outright. Warnings never do — they are
+ * Blocking findings stop finalisation outright. Warnings never do - they are
  * information, and a product that blocks on "the opening is weak" is a product
  * that teaches its user to click through blocks.
  */
@@ -120,7 +120,7 @@ export function evaluateGates(input: GateInput): GateReport {
     }
     for (const issue of input.critique.issues) {
       const id = `critique:${issue.type}:${issue.sentenceId ?? "post"}`;
-      const message = issue.suggestion ? `${issue.detail} — ${issue.suggestion}` : issue.detail;
+      const message = issue.suggestion ? `${issue.detail} - ${issue.suggestion}` : issue.detail;
       if (issue.severity === "block") blocking.push(finding(id, true, message, issue.sentenceId));
       else if (issue.severity === "warn") warnings.push(finding(id, false, message, issue.sentenceId));
     }
@@ -133,7 +133,7 @@ export function evaluateGates(input: GateInput): GateReport {
   }
 
   // A major mechanical deviation is a voice problem the critic did not have to
-  // notice — it is measured, not judged, so it stands on its own.
+  // notice - it is measured, not judged, so it stands on its own.
   const majors = input.fingerprintDeviations.filter((d) => d.severity === "major");
   if (majors.length >= 3) {
     blocking.push(

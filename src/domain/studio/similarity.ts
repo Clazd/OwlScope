@@ -25,7 +25,7 @@ const STAGE = "similarity";
  *
  * Layers one and two are free and run against everything. Layer three is one
  * cheap model call, sees at most eight prior posts, and only runs when the free
- * layers found something worth a second opinion — never the whole history, and
+ * layers found something worth a second opinion - never the whole history, and
  * never at all when the answer is already known.
  */
 
@@ -34,7 +34,7 @@ export interface SimilarityCheckInput {
   history: ContentItem[];
   /** Only needed by L3. The free layers make no call and record nothing. */
   recorder?: Recorder;
-  /** False when only the free layers should run — a re-check, or a live check. */
+  /** False when only the free layers should run - a re-check, or a live check. */
   allowModel?: boolean;
   fixtureCase?: string;
 }
@@ -69,7 +69,7 @@ export async function checkSimilarity(input: SimilarityCheckInput): Promise<Simi
           const prompt = [
             "Decide whether a new post makes the same argument as any of these earlier posts.",
             "",
-            "Same wording is not the question — the free layers already checked that.",
+            "Same wording is not the question - the free layers already checked that.",
             "The question is whether a reader who saw the earlier post would learn anything new from this one.",
             "",
             "NEW POST",
@@ -119,7 +119,7 @@ export async function checkSimilarity(input: SimilarityCheckInput): Promise<Simi
  * have moved, but deliberately does not pay for L3 again. Picking one result
  * over the other would lose something either way: the fresh pass knows about
  * posts published since, and the earlier one knows what a model thought about
- * the argument. So take both — every match, and the worse of the two risks.
+ * the argument. So take both - every match, and the worse of the two risks.
  */
 export function mergeSimilarity(fresh: SimilarityResult, earlier: SimilarityResult | null): SimilarityResult {
   if (!earlier) return fresh;

@@ -14,7 +14,7 @@ import { runStage } from "./stage";
  *
  * The validator never invents. It cannot add a source, cannot rewrite a
  * sentence, and cannot mark something supported by evidence that is not in
- * front of it — its output schema has room for a verdict and nothing else.
+ * front of it - its output schema has room for a verdict and nothing else.
  */
 
 const STAGE = "validate";
@@ -58,9 +58,9 @@ function buildPrompt(input: ValidateInput) {
         truthfulnessBlock(),
         "",
         "Verdicts:",
-        '  supported — a listed source states this. Name which in sourceIds.',
-        '  partial — a source touches it but does not carry it as written (wrong scope, weaker claim, older).',
-        '  unsupported — nothing listed states it, or it rests on a source that does not say it.',
+        '  supported - a listed source states this. Name which in sourceIds.',
+        '  partial - a source touches it but does not carry it as written (wrong scope, weaker claim, older).',
+        '  unsupported - nothing listed states it, or it rests on a source that does not say it.',
         "",
         "Rules:",
         "  - Judge only against the sources below. Your own knowledge is not evidence here.",

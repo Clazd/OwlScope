@@ -14,7 +14,7 @@ import type { ExperienceItem, Fingerprint, Persona } from "./schema";
 /**
  * Test voice: a topic in, two or three sample posts out.
  *
- * Nothing is saved to content history — this is a tuning surface, not a
+ * Nothing is saved to content history - this is a tuning surface, not a
  * publishing one. It is also the only way to validate slice 2 without slice 3,
  * so it uses the real prompt blocks the writer will use rather than a
  * simplified stand-in.

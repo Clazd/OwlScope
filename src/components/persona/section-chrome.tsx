@@ -29,7 +29,7 @@ interface SectionProps {
 }
 
 /**
- * A titled block on the editing surface. Not a Card — these sections carry
+ * A titled block on the editing surface. Not a Card - these sections carry
  * Cards inside them, and a bordered card inside a bordered card is the one
  * nesting the design system rules out.
  */

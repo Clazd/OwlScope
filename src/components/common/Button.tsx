@@ -11,7 +11,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /**
- * Buttons are ink. There are no coloured buttons in this product — colour means
+ * Buttons are ink. There are no coloured buttons in this product - colour means
  * epistemic status and nothing else.
  *
  * Destructive actions are --unsupported as *text only*, never a filled red

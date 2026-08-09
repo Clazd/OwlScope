@@ -34,7 +34,7 @@ const TEXT: Record<StageState, string> = {
 
 /**
  * The vertical run of stages. The active stage carries the only ambient
- * animation in the product — a 1.6s opacity pulse — and nothing else on any
+ * animation in the product - a 1.6s opacity pulse - and nothing else on any
  * screen moves on its own.
  */
 export function PipelineRail({ stages, className }: PipelineRailProps) {

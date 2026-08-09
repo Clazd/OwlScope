@@ -28,7 +28,7 @@ const RISK_TEXT: Record<Angle["noveltyRisk"], string> = {
  * Stage 3. Pick the argument, not the wording.
  *
  * Novelty risk is the one place colour appears in this list, because "you have
- * already said this" is a claim about the archive rather than a rating — it is
+ * already said this" is a claim about the archive rather than a rating - it is
  * the memory rule showing its work before anything is written.
  */
 export function AnglesStage({
@@ -50,7 +50,7 @@ export function AnglesStage({
           </Button>
         }
       >
-        Four to six angles that genuinely disagree about what matters here — not six rewordings of one
+        Four to six angles that genuinely disagree about what matters here - not six rewordings of one
         thesis.
       </EmptyState>
     );

@@ -78,7 +78,7 @@ export function Memory({ entries, feedback, patterns }: Props) {
 
       {entries.length === 0 ? (
         <EmptyState action={<Link className="type-body-strong text-ink underline underline-offset-4" href="/today">Generate today’s recommendation</Link>}>
-          Memory is empty. Accepted, rejected, and published work—and honest skip days—will appear here.
+          Memory is empty. Accepted, rejected, and published work-and honest skip days-will appear here.
         </EmptyState>
       ) : filtered.length === 0 ? (
         <EmptyState action={<Button onClick={clearFilters}>Clear filters</Button>}>No Memory entries match these filters.</EmptyState>
@@ -122,11 +122,11 @@ function MemoryTableRow({ entry, expanded, onToggle, onSource }: RowProps) {
   return <>
     <tr className={cn("border-b border-rule last:border-b-0", entry.kind === "skip" && "bg-surface-sunken text-ink-3")}>
       <td data-mono className="type-data whitespace-nowrap px-3 py-3">{shortDate(entry.date)}</td>
-      <td className="type-small px-3 py-3">{entry.pillar || "—"}</td>
-      <td data-mono className="type-data px-3 py-3">{entry.angle || "—"}</td>
+      <td className="type-small px-3 py-3">{entry.pillar || "-"}</td>
+      <td data-mono className="type-data px-3 py-3">{entry.angle || "-"}</td>
       <td data-mono className="type-micro px-3 py-3">{entry.status}</td>
-      <td data-mono className="type-data px-3 py-3">{entry.characterCount ?? "—"}</td>
-      <td data-mono className="type-data px-3 py-3">—</td>
+      <td data-mono className="type-data px-3 py-3">{entry.characterCount ?? "-"}</td>
+      <td data-mono className="type-data px-3 py-3">-</td>
       <td className="max-w-[440px] px-3 py-3"><button type="button" aria-expanded={expanded} onClick={onToggle} className="type-body block w-full text-left text-ink hover:text-ink-2"><span className="block truncate">{entry.text}</span>{entry.feedbackLabels.length > 0 && <span className="type-small mt-1 block truncate text-ink-3">↳ {entry.feedbackLabels.join(", ")}</span>}</button></td>
     </tr>
     {expanded && <tr><td colSpan={7} className="border-b border-rule bg-surface px-6 py-6"><MemoryDetail entry={entry} onSource={onSource} /></td></tr>}
@@ -136,7 +136,7 @@ function MemoryTableRow({ entry, expanded, onToggle, onSource }: RowProps) {
 interface RowProps { entry: MemoryEntry; expanded: boolean; onToggle: () => void; onSource: (id: string) => void }
 
 function MemoryCard({ entry, expanded, onToggle, onSource }: RowProps) {
-  return <article className={cn("rounded-card border border-rule bg-surface", entry.kind === "skip" && "bg-surface-sunken")}><button type="button" aria-expanded={expanded} onClick={onToggle} className="block w-full p-4 text-left"><div className="flex items-center justify-between gap-3"><MicroLabel>{shortDate(entry.date)} · {entry.status}</MicroLabel><span data-mono className="type-data text-ink-3">{entry.characterCount ?? "—"}</span></div><p className="type-body mt-2 text-ink">{entry.text}</p>{entry.kind === "content" && <p className="type-small mt-2 text-ink-3">{entry.pillar} · {entry.angle || "Unassigned"}</p>}{entry.feedbackLabels.length > 0 && <p className="type-small mt-2 text-ink-3">↳ {entry.feedbackLabels.join(", ")}</p>}</button>{expanded && <div className="border-t border-rule p-4"><MemoryDetail entry={entry} onSource={onSource} /></div>}</article>;
+  return <article className={cn("rounded-card border border-rule bg-surface", entry.kind === "skip" && "bg-surface-sunken")}><button type="button" aria-expanded={expanded} onClick={onToggle} className="block w-full p-4 text-left"><div className="flex items-center justify-between gap-3"><MicroLabel>{shortDate(entry.date)} · {entry.status}</MicroLabel><span data-mono className="type-data text-ink-3">{entry.characterCount ?? "-"}</span></div><p className="type-body mt-2 text-ink">{entry.text}</p>{entry.kind === "content" && <p className="type-small mt-2 text-ink-3">{entry.pillar} · {entry.angle || "Unassigned"}</p>}{entry.feedbackLabels.length > 0 && <p className="type-small mt-2 text-ink-3">↳ {entry.feedbackLabels.join(", ")}</p>}</button>{expanded && <div className="border-t border-rule p-4"><MemoryDetail entry={entry} onSource={onSource} /></div>}</article>;
 }
 
 function MemoryDetail({ entry, onSource }: { entry: MemoryEntry; onSource: (id: string) => void }) {

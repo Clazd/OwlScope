@@ -16,7 +16,7 @@ const SHORTCUTS: Array<{ keys: string; action: string }> = [
   { keys: "?", action: "Show this list" },
 ];
 
-/** The `?` sheet. Deliberately a plain table — it is a reference, not a tour. */
+/** The `?` sheet. Deliberately a plain table - it is a reference, not a tour. */
 export function ShortcutSheet() {
   const { shortcutsOpen, setShortcutsOpen } = useCommands();
   const closeRef = useRef<HTMLButtonElement>(null);

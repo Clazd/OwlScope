@@ -9,7 +9,7 @@ import { RunSchema, type Run, type RunKind, type RunStage } from "./schema";
 
 const log = createLogger("runs");
 
-/** `/data/runs/2026-08-09/run-<id>.json` — one file per run, foldered by day. */
+/** `/data/runs/2026-08-09/run-<id>.json` - one file per run, foldered by day. */
 export const runStore = createJsonStore<Run>(DIRS.runs, RunSchema, {
   fileName: (run) => `run-${run.id}.json`,
   subdir: (run) => dateKey(new Date(run.startedAt)),

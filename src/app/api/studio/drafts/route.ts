@@ -30,7 +30,7 @@ const Body = z.object({
 /**
  * Stage 4. Generate drafts, revise one, or select one.
  *
- * Selecting is free — it is a click, not a call — so it short-circuits before
+ * Selecting is free - it is a click, not a call - so it short-circuits before
  * the budget gate. Everything else costs money and goes through it.
  */
 export async function POST(request: Request) {

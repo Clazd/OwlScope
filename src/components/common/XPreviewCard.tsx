@@ -15,8 +15,8 @@ interface XPreviewCardProps {
  * the platform's own sans stack at 15px / 1.3125, because a preview rendered in
  * our type ramp is not an honest preview of what the post will look like.
  *
- * The character counter uses the platform's weighting — a URL counts as 23
- * characters however long it is — so the number here is the number X will show.
+ * The character counter uses the platform's weighting - a URL counts as 23
+ * characters however long it is - so the number here is the number X will show.
  *
  * There are no engagement affordances. No like button, no counts, no reply
  * icon. It is a preview, not a simulation, and inventing a number of likes

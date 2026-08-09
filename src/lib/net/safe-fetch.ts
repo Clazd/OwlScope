@@ -8,7 +8,7 @@ export const SAFE_FETCH_LIMITS = {
   maxRedirects: 3,
   maxBytes: 2 * 1024 * 1024,
   timeoutMs: 10_000,
-  userAgent: "PersonaStudio/0.1 (local research tool; +https://localhost)",
+  userAgent: "GroundedVoice/0.1 (local research tool; +https://localhost)",
 } as const;
 
 export class UnsafeUrlError extends Error {

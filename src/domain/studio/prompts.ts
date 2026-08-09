@@ -82,7 +82,7 @@ export function sourcesBlock(sources: Source[]): string {
     return "SOURCES\nNone retrieved. You have no evidence. Do not write as if you had any.";
   }
   return [
-    "SOURCES — the complete evidence. Cite by id. Nothing outside this list exists.",
+    "SOURCES - the complete evidence. Cite by id. Nothing outside this list exists.",
     ...sources.map((source) =>
       [
         `[${source.id}] ${source.title}`,
@@ -100,12 +100,12 @@ export function researchBlock(research: ResearchRecord): string {
   if (research.facts.length > 0) {
     lines.push("Established:");
     for (const fact of research.facts) {
-      const cite = fact.sourceIds.length > 0 ? ` [${fact.sourceIds.join(", ")}]` : " [no source — inference]";
+      const cite = fact.sourceIds.length > 0 ? ` [${fact.sourceIds.join(", ")}]` : " [no source - inference]";
       lines.push(`  ${fact.kind === "inference" ? "(inference) " : ""}${fact.claim}${cite}`);
     }
   }
   if (research.uncertainties.length > 0) {
-    lines.push("Not established — treat as open questions, never as fact:");
+    lines.push("Not established - treat as open questions, never as fact:");
     for (const item of research.uncertainties) lines.push(`  ${item}`);
   }
   lines.push(`Freshness: ${research.freshness.assessment}. ${research.freshness.note}`);
@@ -131,7 +131,7 @@ export function memoryBlock(posts: Array<{ text: string; createdAt: string }>): 
     return "RECENT POSTS\nNothing published yet. There is nothing to repeat.";
   }
   return [
-    `RECENT POSTS — the ${posts.length} most relevant. Do not repeat these, in wording or in argument.`,
+    `RECENT POSTS - the ${posts.length} most relevant. Do not repeat these, in wording or in argument.`,
     ...posts.slice(0, MEMORY_LIMIT).map((post) => `  (${post.createdAt.slice(0, 10)}) ${post.text}`),
   ].join("\n");
 }
@@ -150,7 +150,7 @@ export function deviationsBlock(score: number, deviations: Deviation[]): string 
     return `MEASURED VOICE DEVIATIONS\nFingerprint score ${score}/100. Nothing mechanical is out of character.`;
   }
   return [
-    `MEASURED VOICE DEVIATIONS — computed in code, not judgement. Fingerprint score ${score}/100.`,
+    `MEASURED VOICE DEVIATIONS - computed in code, not judgement. Fingerprint score ${score}/100.`,
     ...deviations.map((d) => `  [${d.severity}] ${d.rule}: ${d.message}`),
     "Refer to these specifically. Do not restate them as vague impressions.",
   ].join("\n");
@@ -159,5 +159,5 @@ export function deviationsBlock(score: number, deviations: Deviation[]): string 
 /* ---------------------------------------------------------- output schema -- */
 
 export function outputBlock(schemaName: string, shape: string): string {
-  return [`OUTPUT — a single JSON value matching ${schemaName}.`, shape, "No prose. No code fence."].join("\n");
+  return [`OUTPUT - a single JSON value matching ${schemaName}.`, shape, "No prose. No code fence."].join("\n");
 }

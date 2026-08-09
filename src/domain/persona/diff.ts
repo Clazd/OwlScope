@@ -8,7 +8,7 @@ import type { ExperienceItem, Fingerprint, Persona, PersonaSnapshot, Sample } fr
  * counts what actually differs rather than assuming the form is dirty.
  *
  * Entries are keyed by a human-readable field name because that is what the
- * user is being asked to approve — not a JSON pointer.
+ * user is being asked to approve - not a JSON pointer.
  */
 
 function scalar(entries: DiffEntry[], field: string, before: unknown, after: unknown) {

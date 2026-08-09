@@ -5,7 +5,7 @@ import { assertInsideData } from "./paths";
 
 /**
  * A single in-process write queue serialises every write in the app. That is
- * the whole concurrency story — no file locking, no advisory locks, no lockfile
+ * the whole concurrency story - no file locking, no advisory locks, no lockfile
  * cleanup after a crash. It works because there is exactly one process.
  */
 let tail: Promise<unknown> = Promise.resolve();
@@ -31,7 +31,7 @@ export function writeQueueIdle(): Promise<void> {
 /**
  * Write to `<file>.tmp`, then rename over the target. rename() is atomic within
  * a filesystem, so a reader either sees the whole old file or the whole new
- * one, never a half-written document — including when the power goes out.
+ * one, never a half-written document - including when the power goes out.
  */
 export async function atomicWriteText(file: string, contents: string): Promise<void> {
   assertInsideData(file);

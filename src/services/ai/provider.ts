@@ -21,7 +21,7 @@ export function resolveConfiguredModels(saved: Record<ModelTier, string>): Recor
 
 /**
  * The single place that decides which adapter serves a call. Feature code asks
- * for a provider and gets whichever one the current settings imply — it never
+ * for a provider and gets whichever one the current settings imply - it never
  * branches on sandbox mode itself.
  */
 export async function getProvider(): Promise<ResolvedProvider> {

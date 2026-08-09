@@ -46,7 +46,7 @@ export function RunList({ runs }: { runs: Run[] }) {
     return (
       <EmptyState>
         No runs recorded yet. Every pipeline run writes a file to /data/runs, and this is where you
-        read it back — the exact prompt, the raw response, what it parsed to, and what it cost.
+        read it back - the exact prompt, the raw response, what it parsed to, and what it cost.
       </EmptyState>
     );
   }
@@ -95,9 +95,9 @@ function RunRow({ run, open, onToggle }: { run: Run; open: boolean; onToggle: ()
               <dt className="text-ink-3">started</dt>
               <dd>{run.startedAt}</dd>
               <dt className="text-ink-3">finished</dt>
-              <dd>{run.finishedAt ?? "—"}</dd>
+              <dd>{run.finishedAt ?? "-"}</dd>
               <dt className="text-ink-3">idempotency key</dt>
-              <dd className="break-all">{run.idempotencyKey ?? "—"}</dd>
+              <dd className="break-all">{run.idempotencyKey ?? "-"}</dd>
             </dl>
           </CardSection>
 
@@ -124,7 +124,7 @@ function RunRow({ run, open, onToggle }: { run: Run; open: boolean; onToggle: ()
 
 function StageDetail({ stage }: { stage: RunStage }) {
   return (
-    <CardSection label={`${stage.stage} — ${stage.status}`}>
+    <CardSection label={`${stage.stage} - ${stage.status}`}>
       <dl data-mono className="type-data mb-3 grid grid-cols-[130px_1fr] gap-x-4 gap-y-1 text-ink-2">
         <dt className="text-ink-3">model</dt>
         <dd>{stage.model}</dd>

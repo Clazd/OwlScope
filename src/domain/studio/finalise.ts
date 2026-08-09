@@ -71,7 +71,7 @@ export async function runReasoning(input: ReasoningInput): Promise<string> {
         "Do not restate the post's content back.",
         "",
         "MATERIAL",
-        `  Angle chosen: ${input.angle.kind} — ${input.angle.thesis}`,
+        `  Angle chosen: ${input.angle.kind} - ${input.angle.thesis}`,
         `  Why it was said to fit: ${input.angle.whyItFits}`,
         `  Sources: ${input.sources.length}${
           freshest ? `, freshest published ${freshest.publishedAt} (${freshest.domain})` : ", none dated"
@@ -128,7 +128,7 @@ export interface CreateContentInput {
  * Writes the content item.
  *
  * It always starts at `draft`. Generated is never treated as published, and the
- * only way past `draft` is a transition the user asked for — there is no code
+ * only way past `draft` is a transition the user asked for - there is no code
  * path here that sets any other initial status.
  */
 export async function createContentItem(input: CreateContentInput): Promise<ContentItem> {

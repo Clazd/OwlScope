@@ -12,12 +12,12 @@ const log = createLogger("studio/stage");
  * One pipeline stage: assemble, call, validate, record.
  *
  * Every stage goes through here, which is what makes the Inspector complete
- * rather than nearly complete — there is no path to the provider that forgets
+ * rather than nearly complete - there is no path to the provider that forgets
  * to write down what it sent.
  *
  * The repair policy lives in the provider adapter: exactly one repair attempt
  * with the schema error fed back, then a loud failure. This wrapper adds the
- * other half of the brief's rule — a stage that fails does so with a usable
+ * other half of the brief's rule - a stage that fails does so with a usable
  * error and without destroying the work that came before it.
  */
 
@@ -108,7 +108,7 @@ export async function runStage<T>(req: StageRequest<T>): Promise<StageResult<T>>
 
 /**
  * The parsed output as the Inspector shows it, with the context accounting
- * beside it. Chain of thought is still never stored — this is measurement.
+ * beside it. Chain of thought is still never stored - this is measurement.
  */
 function budgetAnnotated(data: unknown, usage: SectionUsage[] | undefined, repaired: boolean): unknown {
   if (!usage && !repaired) return data;

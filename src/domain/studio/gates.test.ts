@@ -132,7 +132,7 @@ describe("quality gates", () => {
     expect(ids(report.blocking)).toContain("critic-reject");
   });
 
-  it("blocks on a weak persona fit — a voice that is not yours does not ship", () => {
+  it("blocks on a weak persona fit - a voice that is not yours does not ship", () => {
     const report = evaluateGates(
       input({
         critique: {
@@ -168,7 +168,7 @@ describe("quality gates", () => {
     );
     expect(report.canFinalise).toBe(true);
     expect(report.warnings.some((finding) => finding.message.includes("Stock phrase"))).toBe(true);
-    // A note is neither blocking nor a warning — it is an observation.
+    // A note is neither blocking nor a warning - it is an observation.
     expect(report.warnings.some((finding) => finding.message.includes("Could be shorter"))).toBe(false);
   });
 

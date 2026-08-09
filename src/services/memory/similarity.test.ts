@@ -27,7 +27,7 @@ function prior(id: string, text: string, thesis = ""): SimilarityHistoryItem {
 
 /* ------------------------------------------------------------------- L1 -- */
 
-describe("L1 — stemmed token Jaccard", () => {
+describe("L1 - stemmed token Jaccard", () => {
   it("strips stopwords and stems", () => {
     expect(tokenise("The frameworks are failing on the tasks")).toEqual(["framework", "fail", "task"]);
   });
@@ -56,7 +56,7 @@ describe("L1 — stemmed token Jaccard", () => {
 
 /* ------------------------------------------------------------------- L2 -- */
 
-describe("L2 — character trigram cosine", () => {
+describe("L2 - character trigram cosine", () => {
   it("scores identical text as 1", () => {
     const a = trigramsOf("context windows are not memory");
     expect(cosine(a.trigrams, a.norm, a.trigrams, a.norm)).toBeCloseTo(1, 5);

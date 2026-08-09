@@ -6,7 +6,7 @@ import { DraftPayloadSchema, DraftsOutputSchema } from "./schema";
  *
  * The reassembly check lives in the schema so that a draft whose flattened text
  * disagrees with its own sentences fails validation like any other malformed
- * response — which means the provider's repair-once-then-fail path handles it
+ * response - which means the provider's repair-once-then-fail path handles it
  * with no second mechanism to keep in step.
  */
 

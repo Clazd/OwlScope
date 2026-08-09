@@ -1,8 +1,8 @@
 {
-  "name": "persona-studio",
+  "name": "grounded-voice",
   "version": "0.1.0",
   "private": true,
-  "description": "The office of an AI writer. Local only, file backed, human approved.",
+  "description": "A local-first writing office grounded in identity, evidence, and memory.",
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 3000",
     "build": "next build",

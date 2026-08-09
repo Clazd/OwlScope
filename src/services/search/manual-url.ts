@@ -18,8 +18,8 @@ export const PROVIDER_ID = "manual-url";
 /**
  * The user pastes a link; the server fetches it and stores what it says.
  *
- * Every fetch goes through the SSRF guard from slice 1 — private and loopback
- * ranges blocked on every redirect hop, three redirects, 2MB, ten seconds — and
+ * Every fetch goes through the SSRF guard from slice 1 - private and loopback
+ * ranges blocked on every redirect hop, three redirects, 2MB, ten seconds - and
  * every fetched page is cached for 24 hours so re-running a topic does not
  * re-hammer somebody's server.
  *
@@ -100,7 +100,7 @@ function toResult(
 
 /**
  * As a `SearchProvider`, the query is a whitespace-separated list of URLs. It
- * never invents a query of its own — this provider only ever fetches what it
+ * never invents a query of its own - this provider only ever fetches what it
  * was handed.
  */
 export function createManualUrlProvider(): SearchProvider {

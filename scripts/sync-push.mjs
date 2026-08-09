@@ -4,12 +4,15 @@
  * Says so and stops when there is nothing to commit.
  */
 import { spawnSync } from "node:child_process";
+import { requirePrivateDataSync } from "./git-data-sync-policy.mjs";
+
+requirePrivateDataSync();
 
 function git(args, opts = {}) {
   return spawnSync("git", args, { stdio: opts.capture ? "pipe" : "inherit", encoding: "utf8" });
 }
 
-if (git(["add", "--", "data"]).status !== 0) process.exit(1);
+if (git(["add", "-f", "--", "data"]).status !== 0) process.exit(1);
 
 const staged = git(["diff", "--cached", "--name-only"], { capture: true });
 if ((staged.stdout ?? "").trim() === "") {

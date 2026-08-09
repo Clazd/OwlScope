@@ -31,7 +31,7 @@ const Body = z.object({
 
 /**
  * Stage navigation. Clicking a completed stage returns to it without destroying
- * later work — this only moves the cursor. The stages that invalidate downstream
+ * later work - this only moves the cursor. The stages that invalidate downstream
  * output do so when they re-run, not when they are looked at.
  */
 export async function POST(request: Request) {

@@ -44,7 +44,7 @@ export function PillarsSection({ pillars, onChange }: Props) {
       title="Pillars"
       intro={
         // Stated here because the number looks like a quota and is not one.
-        "Weighted interest areas. Weights are soft pressure on what gets looked at, not a quota — if the best idea today sits in a 10% pillar, that idea still wins."
+        "Weighted interest areas. Weights are soft pressure on what gets looked at, not a quota - if the best idea today sits in a 10% pillar, that idea still wins."
       }
       action={<Button onClick={addPillar}>Add pillar</Button>}
     >

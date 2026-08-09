@@ -5,7 +5,7 @@ import { deflateRawSync } from "node:zlib";
  *
  * Only what the format actually requires: local headers, a central directory
  * and an end-of-central-directory record, deflate compressed. No zip64, no
- * encryption, no directory entries — the archive is a flat list of small JSON
+ * encryption, no directory entries - the archive is a flat list of small JSON
  * files and every tool on every platform opens it.
  */
 

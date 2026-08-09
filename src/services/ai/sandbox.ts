@@ -34,7 +34,7 @@ interface Fixture {
   error?: { category: string; message: string };
   /**
    * For a web-search stage: the URLs the search tool "returned". Kept separate
-   * from `text` for the same reason as in the real adapter — these are the
+   * from `text` for the same reason as in the real adapter - these are the
    * ground truth a model-invented URL gets checked against.
    */
   hits?: WebSearchHit[];
@@ -112,7 +112,7 @@ export function createSandboxProvider(models: Record<ModelTier, string>): AIProv
     const parsed = validate(req, result.text);
     if (!parsed.ok) {
       // A fixture that does not match its schema is an authoring mistake, not a
-      // model failure, so there is no repair pass — just say which file is wrong.
+      // model failure, so there is no repair pass - just say which file is wrong.
       throw new ProviderError("schema", `Fixture ${req.stage}/${kase} does not match ${req.schemaName}.`, {
         detail: parsed.error,
       });

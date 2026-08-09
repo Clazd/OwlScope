@@ -1,4 +1,4 @@
-# Nova - compact project context
+# Grounded Voice - compact project context
 
 ## Product
 
@@ -11,10 +11,12 @@ Private, local-only office for an AI writer. It researches, verifies, checks mem
 - Human approval is mandatory; never fake evidence or publishing.
 - Feedback tunes selection, not identity. Show reasoning. Avoid content-farm behaviour.
 - Keep operation cheap.
+- Do not use em dashes in generated posts, product copy, docs, or examples.
 
 ## Architecture and design
 
 - Next.js/TypeScript app. JSON storage only under `data/`, one file per item, atomic writes, Zod-validated reads, through `createJsonStore`.
+- `data/` is private runtime state and is gitignored by default. Git data sync is an explicit private-repository opt-in.
 - Saturated colour communicates epistemic status only. Score bars stay ink-coloured.
 - IBM Plex Sans for UI, IBM Plex Mono for machine output/measurements; 1px hairlines; no card shadows or gradients.
 - Prefer existing primitives/services and preserve compatibility with prior slices.

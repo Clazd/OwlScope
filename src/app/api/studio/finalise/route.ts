@@ -36,7 +36,7 @@ const Body = z.object({
 /**
  * Stage 6. Runs the gates, writes the reasoning, stores the content item.
  *
- * The item is created as a draft. Nothing here publishes anything — that needs
+ * The item is created as a draft. Nothing here publishes anything - that needs
  * the explicit "Mark published" action, which lives in the content route.
  */
 export async function POST(request: Request) {
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
    * The stored result was measured when the draft was written, and the history
    * moves: a post published in between would make a passing verdict wrong in
    * the direction that matters. The free layers cost nothing, so there is no
-   * argument for judging against a stale answer. L3 stays off — it already ran
+   * argument for judging against a stale answer. L3 stays off - it already ran
    * at draft time and this pass exists to refresh the cheap layers, not to buy
    * a second opinion.
    */

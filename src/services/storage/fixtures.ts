@@ -5,7 +5,7 @@ import { FIXTURES_ROOT } from "./paths";
 /**
  * Reading `/fixtures`. It lives here rather than in the sandbox provider so
  * that `services/storage` really is the only place in the app that touches
- * `fs` — the rule holds with no exception to remember.
+ * `fs` - the rule holds with no exception to remember.
  *
  * Fixtures are read-only. There is no writer, by design: fixtures are authored
  * by hand and committed, never generated at runtime.

@@ -5,7 +5,7 @@ import { z } from "zod";
  *
  * Every file under /data/persona has a schema here. Reads validate, writes
  * validate, and a file that fails either is quarantined rather than crashing a
- * page — that is inherited from the storage layer, not reimplemented.
+ * page - that is inherited from the storage layer, not reimplemented.
  */
 
 /* ------------------------------------------------------------- identity -- */
@@ -160,7 +160,7 @@ export const SampleSchema = z.object({
   text: z.string().min(1),
   /**
    * "mine" is the user's own writing. "admired" belongs to someone else and is
-   * a source of cadence and structure ONLY — never of opinions or claims.
+   * a source of cadence and structure ONLY - never of opinions or claims.
    */
   mode: SampleModeSchema,
   createdAt: z.string(),

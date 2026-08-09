@@ -23,7 +23,7 @@ export function BeliefsSection({ beliefs, pillars, onChange }: Props) {
     <Section
       id="beliefs"
       title="Beliefs"
-      intro="Stances the writer may argue from. It may never invent a new permanent belief — if it is not here, it does not get asserted as a position."
+      intro="Stances the writer may argue from. It may never invent a new permanent belief - if it is not here, it does not get asserted as a position."
       action={
         <Button
           onClick={() =>
@@ -126,7 +126,7 @@ export function BoundariesSection({ boundaries, onChange }: BoundaryProps) {
     <Section
       id="boundaries"
       title="Boundaries"
-      intro="Hard blocks. A boundary is checked against a topic before anything is written, not after — so a blocked subject never reaches the writer."
+      intro="Hard blocks. A boundary is checked against a topic before anything is written, not after - so a blocked subject never reaches the writer."
       action={
         <Button
           onClick={() => onChange([...boundaries, { id: newId(), kind: "custom", value: "", enabled: true }])}

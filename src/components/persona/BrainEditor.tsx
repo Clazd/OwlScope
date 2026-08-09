@@ -32,7 +32,7 @@ interface Props {
  * The Brain editing surface.
  *
  * All state lives here as one snapshot, so the change count is computed the
- * same way the server computes it — the diff shown before a save is the diff
+ * same way the server computes it - the diff shown before a save is the diff
  * that gets saved, not an approximation of it.
  */
 export function BrainEditor({ initial, versions: initialVersions }: Props) {
@@ -137,7 +137,7 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
         {/*
           min-w-0 is load-bearing: a grid item defaults to min-width:auto, so
           without it the index grows to fit its widest content and the strip
-          never scrolls — it just pushes the page sideways.
+          never scrolls - it just pushes the page sideways.
         */}
         <div className="min-w-0 max-wide:sticky max-wide:top-0 max-wide:z-10 max-wide:-mx-6 max-wide:border-b max-wide:border-rule max-wide:bg-bg max-wide:px-6">
           <SectionIndex

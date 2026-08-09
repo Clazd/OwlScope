@@ -57,7 +57,7 @@ async function walk(dir: string): Promise<string[]> {
 
 /**
  * Rebuilds the derived index from the source files. Called on boot and after a
- * sync. The index is a convenience for counts and sizes — it is never the
+ * sync. The index is a convenience for counts and sizes - it is never the
  * source of truth, and it is never committed.
  */
 export async function rebuildIndex(): Promise<CacheIndex> {

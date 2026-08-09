@@ -12,7 +12,7 @@ interface ScoreBarProps {
 const SEGMENTS = 10;
 
 /**
- * A ten-segment bar filled in ink. Never coloured — a score is not a claim
+ * A ten-segment bar filled in ink. Never coloured - a score is not a claim
  * about truth, so it does not get to use the epistemic palette.
  *
  * Ten discrete segments rather than a continuous fill, because a score of 0.63

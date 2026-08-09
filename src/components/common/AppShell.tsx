@@ -183,7 +183,7 @@ function MobileTopBar(state: ShellState) {
 
 /**
  * Sandbox state is always visible, so fixture output can never be mistaken for
- * real output. It is a mono label, not a badge — a badge would be colour, and
+ * real output. It is a mono label, not a badge - a badge would be colour, and
  * colour is reserved.
  */
 function SandboxLabel() {

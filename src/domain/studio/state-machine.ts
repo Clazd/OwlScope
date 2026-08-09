@@ -8,7 +8,7 @@ import type { ContentStatus } from "./schema";
  *
  * Two rules matter more than the diagram. Generated is never treated as
  * published: a fresh item starts at `draft` and nothing moves it on its own.
- * And copying is not a transition at all — it is not in this file, because the
+ * And copying is not a transition at all - it is not in this file, because the
  * copy button never calls it.
  */
 

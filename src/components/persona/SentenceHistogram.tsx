@@ -3,7 +3,7 @@ import { cn } from "@/lib/format/cn";
 /**
  * A row of thin ink bars. No axis, no colour, no tooltip.
  *
- * It is there to show the shape of the distribution the numbers came from —
+ * It is there to show the shape of the distribution the numbers came from -
  * whether the writer is uniformly terse or swings between four words and forty.
  * The precise counts are in the mono figures beside it.
  */

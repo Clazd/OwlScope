@@ -10,7 +10,7 @@ interface StageSpinnerProps {
  * Named stage text plus the pulse. Never a percentage.
  *
  * A progress bar would have to invent a denominator, and an invented number is
- * the same failure as an invented source — smaller, but the same kind.
+ * the same failure as an invented source - smaller, but the same kind.
  */
 export function StageSpinner({ stage, className }: StageSpinnerProps) {
   return (

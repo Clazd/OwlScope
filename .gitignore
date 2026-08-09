@@ -1,6 +1,14 @@
 .env
-/data/.cache/
-/data/exports/
+.env.*
+!.env.example
+
+# Personal application state. Keep the directory skeleton only; real personas,
+# prompts, sources, drafts, and run traces must never enter the public repo.
+/data/**
+!/data/.gitkeep
+!/data/**/
+!/data/**/.gitkeep
+
 node_modules
 .next
 

@@ -34,7 +34,7 @@ export async function resetSettings(): Promise<Settings> {
 
 /**
  * Sandbox is on when either the env flag or the saved setting says so. The env
- * flag wins on the way up only — you can turn sandbox on from the environment
+ * flag wins on the way up only - you can turn sandbox on from the environment
  * without editing settings, but you cannot turn it off from the UI if the
  * environment demanded it.
  */

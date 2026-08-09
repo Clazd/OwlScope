@@ -98,7 +98,7 @@ export function DraftsStage({
                 <span data-mono className="type-data text-ink-3">
                   {draft.characterCount} ch · FIT{" "}
                   {/* A dash, not a zero: no fingerprint means unmeasured, not bad. */}
-                  {draft.fingerprintScored ? draft.fingerprintScore : "—"}
+                  {draft.fingerprintScored ? draft.fingerprintScore : "-"}
                 </span>
               </div>
 

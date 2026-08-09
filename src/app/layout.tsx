@@ -5,11 +5,11 @@ import { readSettings, sandboxEnabled } from "@/domain/settings/store";
 import { resolveConfiguredModels } from "@/services/ai/provider";
 import "./globals.css";
 
-const APP_NAME = "Nova";
+const APP_NAME = "Grounded Voice";
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "The office of an AI writer. Local only, file backed, human approved.",
+  description: "A local-first writing office grounded in identity, evidence, and memory.",
 };
 
 export const viewport: Viewport = {

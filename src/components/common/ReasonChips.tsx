@@ -18,7 +18,7 @@ interface ReasonChipsProps {
  * Multi-select chips shown after a rejection.
  *
  * Selection is ink, not colour: this is feedback about a choice, not a claim
- * about truth. What the user picks here tunes selection, never identity — the
+ * about truth. What the user picks here tunes selection, never identity - the
  * persona changes only when the user edits it directly.
  */
 export function ReasonChips({ reasons, selected, onChange, className }: ReasonChipsProps) {

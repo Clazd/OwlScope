@@ -63,7 +63,7 @@ interface ToggleProps {
   disabledReason?: string;
 }
 
-/** A checkbox styled as a switch. Ink when on — never a coloured toggle. */
+/** A checkbox styled as a switch. Ink when on - never a coloured toggle. */
 export function Toggle({ checked, onChange, label, description, disabled, disabledReason }: ToggleProps) {
   const id = useId();
   return (

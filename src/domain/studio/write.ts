@@ -26,7 +26,7 @@ import {
   type Topic,
 } from "./schema";
 import { runStage } from "./stage";
-import { X_LIMIT, characterCountOf, reassemble, renumber } from "./text";
+import { X_LIMIT, characterCountOf, reassemble, removeForbiddenPunctuation, renumber } from "./text";
 import { newId } from "./store";
 
 const log = createLogger("studio/write");
@@ -57,7 +57,7 @@ const OUTPUT_SHAPE = [
 ].join("\n");
 
 const SENTENCE_RULES = [
-  "SENTENCE RULES — the post is an array of sentences, not a blob of text.",
+  "SENTENCE RULES - the post is an array of sentences, not a blob of text.",
   "  - Split the post into its sentences, in order. text must be exactly those sentences joined with single spaces.",
   '  - claimType "fact" is a checkable statement about the world. It MUST cite sourceIds.',
   '  - claimType "inference" is a conclusion you drew from the evidence. Cite what it rests on.',
@@ -65,6 +65,10 @@ const SENTENCE_RULES = [
   '  - claimType "rhetorical" is a question or framing that asserts nothing. support is "n/a".',
   "  - Never mark a sentence supported unless a listed source actually carries it.",
   "  - A fact you cannot cite does not belong in the post. Drop it or write it as an opinion.",
+];
+
+const STYLE_RULES = [
+  "Do not use em dashes. Use commas, colons, parentheses, or a plain hyphen when punctuation is needed.",
 ];
 
 export interface WriteInput {
@@ -100,13 +104,14 @@ function buildPrompt(input: WriteInput) {
         "Count before returning the tool input. A longer draft is unusable and will be rejected before review.",
         "No hashtags unless the fingerprint says hashtags are common. No engagement bait, no hook templates.",
         "Do not open with a question unless the angle is a question angle.",
+        ...STYLE_RULES,
         "",
         ...SENTENCE_RULES,
         "",
-        "SELECTED ANGLE — write all drafts on this angle. Do not switch to another one.",
+        "SELECTED ANGLE - write all drafts on this angle. Do not switch to another one.",
         `  ${input.angle.kind}: ${input.angle.thesis}`,
         `  Why it fits: ${input.angle.whyItFits}`,
-        activePillar ? `  Pillar: ${activePillar.name} — ${activePillar.description}` : "",
+        activePillar ? `  Pillar: ${activePillar.name} - ${activePillar.description}` : "",
       ]
         .filter(Boolean)
         .join("\n"),
@@ -156,7 +161,7 @@ export function assembleDraft(
         : sentence.claimType === "opinion" || sentence.claimType === "rhetorical"
           ? ("n/a" as const)
           : sentence.support;
-    return { ...sentence, sourceIds: kept, support };
+    return { ...sentence, text: removeForbiddenPunctuation(sentence.text), sourceIds: kept, support };
   });
 
   const { sentences } = renumber(cleaned);
@@ -240,6 +245,7 @@ export async function runRevision(input: ReviseInput): Promise<StudioDraft> {
         "",
         `Length: at most ${X_LIMIT} characters.`,
         "Keep the angle. Do not add a claim the evidence does not carry, even to fill space.",
+        ...STYLE_RULES,
         "",
         ...SENTENCE_RULES,
         "",

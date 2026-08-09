@@ -6,8 +6,8 @@ import { countWords, postLengthOf, splitSentences } from "./statistics";
  * The two functions slice 3 calls. They live here so the writer and the critic
  * never reach into Brain's internals.
  *
- *   getFingerprintPromptBlock  — a constraint block for the writer prompt
- *   scoreAgainstFingerprint    — 0–100 plus named deviations, zero model calls
+ *   getFingerprintPromptBlock  - a constraint block for the writer prompt
+ *   scoreAgainstFingerprint    - 0–100 plus named deviations, zero model calls
  */
 
 /* --------------------------------------------------------- deviations -- */
@@ -39,7 +39,7 @@ const PENALTY: Record<DeviationSeverity, number> = { minor: 6, major: 15 };
 
 const EMOJI = /\p{Extended_Pictographic}/u;
 const HASHTAG = /(^|\s)#[\p{L}\p{N}_]+/u;
-const EM_DASH = /—|(?:\s--\s)/;
+const EM_DASH = /\u2014|(?:\s--\s)/;
 const SEMICOLON = /;/;
 const ELLIPSIS = /\.\.\.|…/;
 const LIST_MARKER = /(^|\n)\s*(?:[-*•]|\d+[.)])\s+/;
@@ -63,7 +63,7 @@ function containsWord(text: string, word: string): boolean {
 
 /**
  * Every mechanical check the fingerprint supports. These run in code and cost
- * nothing — a model call is only ever needed for the qualitative read.
+ * nothing - a model call is only ever needed for the qualitative read.
  */
 export function scoreAgainstFingerprint(text: string, fingerprint: Fingerprint | null): FingerprintScore {
   if (!fingerprint) return { score: 0, deviations: [], unscored: true };
@@ -156,7 +156,7 @@ function list(values: string[]): string {
 /**
  * The constraint block injected into the writer prompt at write time and into
  * the critic prompt at critique time. Plain text, because that is what a prompt
- * is — no JSON for the model to mis-parse back at us.
+ * is - no JSON for the model to mis-parse back at us.
  */
 export function getFingerprintPromptBlock(fingerprint: Fingerprint | null): string {
   if (!fingerprint) {
@@ -174,7 +174,7 @@ export function getFingerprintPromptBlock(fingerprint: Fingerprint | null): stri
     `Openings that fit: ${list(fingerprint.openingPatterns)}.`,
     `Openings to never use: ${list(fingerprint.avoidedOpenings)}.`,
     `Capitalisation: ${fingerprint.capitalisation || "sentence case"}.`,
-    `Punctuation — em dash: ${fingerprint.punctuation.emDash}; semicolon: ${fingerprint.punctuation.semicolon}; ellipsis: ${fingerprint.punctuation.ellipsis}; list markers: ${fingerprint.punctuation.listMarkers}.`,
+    `Punctuation - em dash: ${fingerprint.punctuation.emDash}; semicolon: ${fingerprint.punctuation.semicolon}; ellipsis: ${fingerprint.punctuation.ellipsis}; list markers: ${fingerprint.punctuation.listMarkers}.`,
     `Emoji: ${fingerprint.emojiUse}. Hashtags: ${fingerprint.hashtagUse}.`,
     `Words that fit: ${list(fingerprint.vocabulary.preferred)}.`,
     `Words to never use: ${list(fingerprint.vocabulary.absent)}.`,
@@ -207,16 +207,16 @@ export function getPersonaPromptBlock(persona: Persona): string {
     "",
     "PILLARS",
     // Stated as pressure, not quota, because that is how selection actually
-    // uses them — the best idea in a 10% pillar still wins.
+    // uses them - the best idea in a 10% pillar still wins.
     "Weights are soft pressure on what to look at, not a quota to fill.",
-    ...enabledPillars.map((p) => `  ${p.name} (${p.weight}%, ${p.freshnessPreference})${p.description ? ` — ${p.description}` : ""}`),
+    ...enabledPillars.map((p) => `  ${p.name} (${p.weight}%, ${p.freshnessPreference})${p.description ? ` - ${p.description}` : ""}`),
     "",
     "BELIEFS you may argue from. Never invent a new permanent belief.",
     ...(enabledBeliefs.length > 0
       ? enabledBeliefs.map((b) => `  [${b.strength}] ${b.statement}`)
       : ["  (none recorded)"]),
     "",
-    "BOUNDARIES — hard blocks. Refuse a topic that touches these.",
+    "BOUNDARIES - hard blocks. Refuse a topic that touches these.",
     ...(enabledBoundaries.length > 0 ? enabledBoundaries.map((b) => `  ${b.value}`) : ["  (none set)"]),
     "",
     "VOICE RULES",
@@ -248,8 +248,8 @@ export function getExperiencePromptBlock(items: Array<{ item: string; detail: st
     ].join("\n");
   }
   return [
-    "FIRST-HAND EXPERIENCE — the complete list. Nothing outside it may be claimed as first-hand.",
-    ...items.map((e) => `  ${e.item}${e.detail ? ` — ${e.detail}` : ""}${e.occurredAt ? ` (${e.occurredAt})` : ""}`),
+    "FIRST-HAND EXPERIENCE - the complete list. Nothing outside it may be claimed as first-hand.",
+    ...items.map((e) => `  ${e.item}${e.detail ? ` - ${e.detail}` : ""}${e.occurredAt ? ` (${e.occurredAt})` : ""}`),
     "Anything not on this list is observation, and must be written as observation.",
   ].join("\n");
 }

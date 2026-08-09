@@ -7,7 +7,7 @@ export type GlyphName = "today" | "brain" | "radar" | "studio" | "memory" | "set
  * at 56px. Deliberately geometric and drawn in currentColor: no icon library,
  * no icon font, nothing to keep in sync with a design tool.
  *
- * They appear only in the nav. Nowhere else in the product uses an icon —
+ * They appear only in the nav. Nowhere else in the product uses an icon -
  * empty states, buttons and headers are all words.
  */
 export function Glyph({ name, className }: { name: GlyphName; className?: string }) {
