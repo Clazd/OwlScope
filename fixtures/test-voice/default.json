@@ -1,0 +1,7 @@
+{
+  "text": "{\"posts\": [\"Most retrieval demos skip the part where the index is stale. That part decides whether anyone keeps using it.\", \"Read a postmortem this week where the root cause was a cache nobody owned. It had been load-bearing for two years.\", \"The cheapest evaluation is the one you run before shipping. Nobody has ever regretted the rollback they wrote first.\"]}",
+  "model": "sandbox-strong",
+  "tokensIn": 1450,
+  "tokensOut": 120,
+  "latencyMs": 2400
+}

@@ -35,9 +35,10 @@ interface SettingsFormProps {
   data: DataInfo;
   /** SANDBOX_MODE=true in .env pins sandbox on and the toggle off. */
   sandboxForcedByEnv: boolean;
+  hasPersona: boolean;
 }
 
-export function SettingsForm({ initial, data, sandboxForcedByEnv }: SettingsFormProps) {
+export function SettingsForm({ initial, data, sandboxForcedByEnv, hasPersona }: SettingsFormProps) {
   const toast = useToast();
   const [settings, setSettings] = useState(initial);
   const [saving, setSaving] = useState(false);
@@ -88,6 +89,7 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv }: SettingsForm
         forcedByEnv={sandboxForcedByEnv}
       />
       <AppearanceSection settings={settings} update={update} />
+      <PersonaSection hasPersona={hasPersona} />
       <DataSection data={data} settings={settings} />
       <DangerZone />
 
@@ -281,6 +283,81 @@ function AppearanceSection({ settings, update }: { settings: Settings; update: (
           ]}
         />
       </Field>
+    </Card>
+  );
+}
+
+/* ---------------------------------------------------------------- persona -- */
+
+function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+
+  async function deletePersona() {
+    if (!window.confirm("Delete the persona, its samples, its fingerprint and every version? Your git history still has them.")) {
+      return;
+    }
+    setBusy(true);
+    try {
+      const response = await fetch("/api/persona/demo", { method: "DELETE" });
+      const body = await response.json();
+      toast.show(body.message ?? body.error ?? "Done.", response.ok ? "default" : "failure");
+      if (response.ok) window.location.reload();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function loadDemo() {
+    setBusy(true);
+    try {
+      const response = await fetch("/api/persona/demo", { method: "POST" });
+      toast.show(response.ok ? "Loaded the Nova demo persona." : "The demo persona could not be loaded.", response.ok ? "default" : "failure");
+      if (response.ok) window.location.reload();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Card label="Persona" padding="24">
+      <CardSection>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="type-body text-ink-2">
+            Re-run onboarding. It edits the persona you already have and wipes nothing.
+          </p>
+          <a
+            href="/onboarding"
+            className="type-body-strong inline-flex items-center rounded-control border border-rule-strong px-3 py-2 text-ink hover:bg-surface-sunken"
+          >
+            Run onboarding
+          </a>
+        </div>
+      </CardSection>
+
+      <CardSection className="mt-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="type-body text-ink-2">
+            Load the Nova demo persona, with twenty writing samples. It replaces the current persona.
+          </p>
+          <Button onClick={loadDemo} disabled={busy}>
+            Load demo persona
+          </Button>
+        </div>
+      </CardSection>
+
+      {hasPersona && (
+        <CardSection className="mt-3">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="type-body text-ink-2">
+              Delete the persona and every version of it. Settings and runs are untouched.
+            </p>
+            <Button variant="destructive" onClick={deletePersona} disabled={busy}>
+              Delete persona
+            </Button>
+          </div>
+        </CardSection>
+      )}
     </Card>
   );
 }

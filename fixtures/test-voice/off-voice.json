@@ -1,0 +1,7 @@
+{
+  "text": "{\"posts\": [\"Here's the thing, retrieval is about to unlock a genuine game-changer for every team that wants to leverage it \\ud83d\\ude80 #AI\", \"Most retrieval demos skip the stale index. That part decides whether anyone keeps using it.\", \"A postmortem I read had a cache nobody owned; it had been load-bearing for two years \\u2014 nobody noticed.\"]}",
+  "model": "sandbox-strong",
+  "tokensIn": 1450,
+  "tokensOut": 140,
+  "latencyMs": 2400
+}

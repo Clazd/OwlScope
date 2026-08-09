@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { AppShell } from "@/components/common/AppShell";
 import { getBudgetStatus } from "@/domain/budget/budget";
+import { readPersona } from "@/domain/persona/store";
 import { readSettings, sandboxEnabled } from "@/domain/settings/store";
 import "./globals.css";
 
@@ -19,10 +20,11 @@ export const viewport: Viewport = {
 export const dynamic = "force-dynamic";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, budget, sandbox] = await Promise.all([
+  const [settings, budget, sandbox, persona] = await Promise.all([
     readSettings(),
     getBudgetStatus(),
     sandboxEnabled(),
+    readPersona(),
   ]);
 
   return (
@@ -31,7 +33,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" data-theme={settings.appearance.theme}>
       <body>
         <AppShell
-          personaName="Persona Studio"
+          personaName={persona?.name?.trim() || "Persona Studio"}
           model={settings.model.strong}
           tokensUsed={budget.tokensUsed}
           tokensBudget={budget.tokensBudget}

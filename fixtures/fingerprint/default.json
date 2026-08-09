@@ -1,0 +1,7 @@
+{
+  "text": "{\"openingPatterns\": [\"direct claim\", \"concrete observation\", \"something noticed in passing\"], \"avoidedOpenings\": [\"Here's the thing\", \"Let's be honest\", \"Unpopular opinion\", \"In today's fast-paced world\"], \"capitalisation\": \"Sentence case throughout. No title case, no all-caps for emphasis.\", \"vocabulary\": {\"preferred\": [\"shipped\", \"trade-off\", \"constraint\", \"load-bearing\", \"postmortem\", \"rollback\", \"diff\"], \"absent\": [\"leverage\", \"unlock\", \"game-changer\", \"revolutionise\", \"10x\", \"synergy\", \"disrupt\"]}, \"structuralHabits\": [\"claim then a concrete example\", \"no closing call to action\", \"ends on the observation rather than a lesson\"]}",
+  "model": "sandbox-strong",
+  "tokensIn": 2840,
+  "tokensOut": 210,
+  "latencyMs": 3100
+}

@@ -101,3 +101,78 @@ the narrower rule win at wide viewports.
   3, caps the body at 2MB and times out at 10s.
 - `/api/data` `delete-all` re-checks the typed confirmation on the server, not only in the UI,
   and every delete path asserts the target is inside `/data`.
+
+---
+
+# Known limitations — slice 2 (Brain)
+
+## Deliberate deviations from the brief
+
+**1. The brief points at `src/styles/tokens.css`; the tokens are at `src/app/tokens.css`.**
+That is where slice 1 put them, next to `globals.css` which imports them. Nothing moved.
+
+**2. More than sentence and post length is computed in code.**
+The brief requires that the model never compute `sentenceLength` or `postLength`. The same
+reasoning — models are bad at counting — applies to punctuation frequency, emoji use and
+hashtag use, so those are counted in code too and handed to the model as grounding. The model
+is left with the five fields that genuinely need judgement: `openingPatterns`,
+`avoidedOpenings`, `capitalisation`, `vocabulary` and `structuralHabits`. Computed values
+always win over anything the model says about them.
+
+**3. Fingerprint statistics come from your own posts only.**
+"Admired" samples are a cadence reference, but they are somebody else's sentence lengths, and
+letting them move your p90 would make the writer chase a rhythm you have never written in.
+They are used for statistics only when there are no owned samples at all, and the UI reports
+which set was used. They are never a source of vocabulary, opinions or claims — the prompt
+says so explicitly and separately from the owned samples.
+
+**4. Weight editing is a range input, not a bespoke drag handle.**
+It redistributes live and always sums to 100, which is what the brief asks for. A range input
+is keyboard-operable and screen-reader-legible for free; a custom drag handle would have to
+re-earn both.
+
+**5. Two extra sections exist in `components/persona`.**
+`section-chrome.tsx` (the section shell, index and list row) and `SentenceHistogram.tsx`.
+Neither is in an inventory; both are shared by three or more sections.
+
+## Stubs and scope
+
+- The voice preview in onboarding step 10 and Test voice are the same call. Neither saves
+  anything to content history, which is correct until Studio exists.
+- `getFingerprintPromptBlock`, `getPersonaPromptBlock` and `getExperiencePromptBlock` are
+  written and exported but only consumed by Test voice so far. Slice 3's writer and critic are
+  their real callers.
+- Boundaries are stored so a classifier stage can check a topic against them, but **nothing
+  checks them yet** — there is no topic pipeline until slice 3. The block is in the prompt.
+- `onboardingComplete` is recorded but nothing redirects a new user into onboarding. Brain's
+  empty state and a Settings button are the two entry points.
+
+## Sharp edges
+
+- **Onboarding's "things to avoid" step overwrites its own rules on every keystroke.**
+  Rules it adds are keyed `onboarding-N` and rebuilt from the textarea each time, so editing
+  the textarea replaces them wholesale. Seeded rules are untouched. It is the simplest correct
+  behaviour for a one-shot wizard field, but it means you cannot edit those rules individually
+  until you reach Brain.
+- **Onboarding autosaves create a version per step.** Resumability is per-step persistence, and
+  every persistence goes through the same save path, so a full run leaves ~10 versions behind.
+  They are all restorable and cost a few KB each; it is noisier than a human would be.
+- **`previewChanges` and the client-side diff can disagree by one render.** The client computes
+  the change count from its own state; the server recomputes from disk at save time and the
+  version record stores the server's count. If another tab saved in between, the dialog's
+  number is the stale one. Single user, single process — but it is not impossible.
+- Restoring a version restores the *whole* snapshot, including its fingerprint and samples. If
+  you restore a version that predates your fingerprint, the fingerprint goes with it. That is
+  what a full-snapshot restore means, and the confirm dialog says a new version is created,
+  but it can still surprise.
+
+## Testing
+
+- 80 new tests cover the parts where a silent bug corrupts data or lies to the user: statistics
+  (including a hand-counted fixture and an independent percentile check), weight redistribution
+  (including a 200-drag invariant run), fingerprint scoring, diff generation and versioning.
+- **There are still no component or end-to-end tests.** The Brain layout, the section index,
+  the save dialog and the onboarding flow were driven in a real browser during this slice at
+  1440/1100/768/390 in both themes, but that verification is not automated.
+- `analyseFingerprint` and `runTestVoice` are exercised through the sandbox provider by hand,
+  not by a unit test. Their pure parts — prompt construction and scoring — are covered.

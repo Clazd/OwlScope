@@ -9,11 +9,12 @@ hands you a finished post with its reasoning attached. You approve and publish b
 **It is not a tweet generator.** A tweet generator answers "give me something to post."
 This answers "is there anything worth posting today, and if so, why this."
 
-> **Status: slice 1 of 3 — foundation and design system.**
-> The shell, the design system, the storage layer, the provider adapter, sandbox mode,
-> settings and the run inspector are complete and working. The product features — persona,
-> radar, studio, memory — arrive in later slices. The five area pages are deliberately
-> finished frames with empty states, not stubs waiting to be styled.
+> **Status: slice 2 of 3 — Brain.**
+> Slice 1 shipped the shell, design system, storage layer, provider adapter, sandbox mode,
+> settings and run inspector. Slice 2 adds Brain: the structured, versioned source of truth
+> for the AI identity, plus onboarding, the voice fingerprint and a working voice test.
+> Radar, Studio, Today and Memory arrive in slice 3; those pages are deliberately finished
+> frames with empty states, not stubs waiting to be styled.
 
 ---
 
@@ -51,7 +52,7 @@ You can run the whole app with no API key at all by setting `SANDBOX_MODE=true`.
 |---|---|
 | `npm run dev` | Dev server, bound to `127.0.0.1` |
 | `npm run build` / `npm start` | Production build and serve, also localhost-only |
-| `npm test` | Storage, provider, sandbox and SSRF-guard tests |
+| `npm test` | Storage, provider, sandbox, SSRF-guard and persona-domain tests |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint, including the "no `fs` outside `services/storage`" rule |
 | `npm run sync:pull` | `git pull --rebase`, then drop the derived cache index |
@@ -68,6 +69,51 @@ Next.js App Router with TypeScript. Route handlers do the server work, so the AP
 reaches the browser. No ORM, no database, no auth library, no state management library —
 React state and route handlers are enough for one user on one machine.
 
+### Brain: the persona record
+
+Brain is a structured record, not one giant system-prompt textarea. It holds identity,
+weighted pillars, beliefs, boundaries, voice rules, an experience log, writing samples and a
+derived voice fingerprint — each with its own Zod schema under `/data/persona/`.
+
+Three parts of it are load-bearing for everything later:
+
+- **The voice fingerprint.** Sliders alone produce beige output. Paste 15–40 real posts and
+  the fingerprint learns the rhythm sliders cannot express. Everything countable — sentence
+  and post length, punctuation frequency, emoji and hashtag use — is **computed in code and
+  never by the model**, because models are bad at counting; the model receives those numbers
+  as grounding and returns only the qualitative read. Every field is editable, and once you
+  touch one, re-analysis asks before replacing your edits.
+- **The experience log.** The writer may only claim first-hand experience that appears here.
+  Everything else is written as observation. That closes the fake-experience hole
+  structurally rather than with a prompt line a model can drift past.
+- **Versioning.** Every save is a full snapshot at `/data/persona/versions/vNNN.json`, and
+  every generated post records the version that wrote it. Saving shows a field-level diff
+  first — "6 changes will create version 4" — and restoring an old version writes it forward
+  as a new one. History is append-only and never overwritten.
+
+Two functions are exported for slice 3 to call without touching Brain's internals:
+
+```ts
+getFingerprintPromptBlock(fingerprint)   // constraint block for the writer prompt
+scoreAgainstFingerprint(text, fingerprint) // 0–100 plus named deviations, zero model calls
+```
+
+`scoreAgainstFingerprint` is entirely mechanical, so it costs nothing and can run on every
+draft. Its deviations are specific enough to act on: not "the tone is off" but
+`Sentence 2 is 41 words, outside your p90 of 24.` or
+`Opening matches your avoided pattern "Here's the thing".`
+
+**Test voice** takes a topic and returns two or three sample posts, each scored against the
+fingerprint with its deviations named. Nothing is saved to content history — it is a tuning
+surface, and the only way to validate a persona before slice 3 exists.
+
+**Onboarding** is eleven steps, one question per screen, about five minutes. It is resumable
+(partial state saves at every step), re-runnable from Settings without wiping anything, and
+never asks for an account on any platform. The first screen offers the **Nova demo persona**,
+a complete worked example with twenty writing samples, so you can see the product working
+before investing in configuration. It loads and deletes cleanly and nothing in the app
+branches on whether the persona is Nova.
+
 ### Storage is git-tracked JSON files
 
 There is no database. All application data lives under `/data`, one file per item:
@@ -75,7 +121,7 @@ There is no database. All application data lives under `/data`, one file per ite
 ```
 /data
   settings.json
-  persona/     persona.json, fingerprint.json, samples.json, experience.json, versions/
+  persona/     persona.json, fingerprint.json, samples.json, experience.json, versions/vNNN.json
   topics/      topic-<id>.json
   content/     2026-08-09-<id>.json
   sources/     source-<id>.json
@@ -208,8 +254,8 @@ src/
   app/            routes, api handlers, tokens.css, globals.css
   components/
     common/       the component inventory — later slices import, and build nothing
-    settings/ inspect/
-  domain/         settings, budget
+    persona/ settings/ inspect/
+  domain/         persona (schema, statistics, fingerprint, weights, diff, versions), settings, budget
   services/
     ai/           provider.ts, anthropic.ts, sandbox.ts, pricing.ts
     storage/      json-store.ts, atomic-write.ts, index-cache.ts, quarantine.ts, zip.ts

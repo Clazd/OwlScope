@@ -56,5 +56,13 @@ purpose — a timeout, a malformed response, an empty result.
 | `connection` | `default` | The Settings "test connection" happy path |
 | `connection` | `slow` | A response that reports 4.2s latency |
 | `connection` | `unreachable` | Provider network failure |
+| `fingerprint` | `default` | A qualitative voice fingerprint for the demo samples |
+| `fingerprint` | `malformed` | Preamble plus broken JSON, for the repair path |
+| `test-voice` | `default` | Three posts that match the demo fingerprint and score 100 |
+| `test-voice` | `off-voice` | Three posts that break it, so the deviation UI has something to show |
 | `research` | `default` | A minimal structured response |
 | `research` | `malformed` | Preamble plus broken JSON, for the repair path |
+
+Only `default` is reachable through the UI today: no caller passes `fixtureCase`
+yet. To exercise a non-default case, swap it over `default.json` temporarily,
+or pass `fixtureCase` from the calling domain service.

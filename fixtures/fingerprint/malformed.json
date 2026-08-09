@@ -1,0 +1,7 @@
+{
+  "text": "Sure! Here is the fingerprint you asked for:\n{\"openingPatterns\": [\"direct claim\"],}",
+  "model": "sandbox-strong",
+  "tokensIn": 2840,
+  "tokensOut": 24,
+  "latencyMs": 900
+}

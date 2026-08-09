@@ -2,13 +2,20 @@ import { PageBody } from "@/components/common/PageBody";
 import { PageHeader } from "@/components/common/PageHeader";
 import { SettingsForm } from "@/components/settings/SettingsForm";
 import { readSettings, sandboxFromEnv } from "@/domain/settings/store";
+import { isPersonaStarted } from "@/domain/persona/defaults";
+import { readPersona } from "@/domain/persona/store";
 import { countFixtures } from "@/services/ai/sandbox";
 import { summariseData } from "@/services/storage/data-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const [settings, summary, fixtures] = await Promise.all([readSettings(), summariseData(), countFixtures()]);
+  const [settings, summary, fixtures, persona] = await Promise.all([
+    readSettings(),
+    summariseData(),
+    countFixtures(),
+    readPersona(),
+  ]);
 
   return (
     <>
@@ -18,6 +25,7 @@ export default async function SettingsPage() {
           initial={settings}
           data={{ ...summary, fixtures }}
           sandboxForcedByEnv={sandboxFromEnv()}
+          hasPersona={isPersonaStarted(persona)}
         />
       </PageBody>
     </>
