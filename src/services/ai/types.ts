@@ -76,10 +76,43 @@ export interface StructuredResult<T> extends CompletionResult {
   repaired: boolean;
 }
 
+/**
+ * One result the provider's own search tool actually returned.
+ *
+ * This is the ground truth for "which URLs exist". The model never adds to it —
+ * a URL that is not in this list did not come from a search, and rule 8 says it
+ * does not ship.
+ */
+export interface WebSearchHit {
+  url: string;
+  title: string;
+  /** The provider's relative age string, e.g. "6 hours ago". Null when absent. */
+  pageAge: string | null;
+}
+
+export interface WebSearchRequest extends CompletionRequest {
+  /** Max searches the model may run for this request. */
+  maxSearches?: number;
+}
+
+export interface WebSearchResponse extends CompletionResult {
+  /** Every URL the search tool returned, across every search it ran. */
+  hits: WebSearchHit[];
+  /** How many searches the tool actually performed. */
+  searchCount: number;
+  /** Set when the tool itself errored, e.g. `max_uses_exceeded`. */
+  toolError: string | null;
+}
+
 export interface AIProvider {
   readonly name: string;
   complete(req: CompletionRequest): Promise<CompletionResult>;
   completeStructured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>>;
-  /** Whether this provider can do its own web search. Stubbed false in slice 1. */
+  /** Whether this provider can run the web search server tool. */
   searchCapability(): { supported: boolean };
+  /**
+   * One completion with the provider's own web search tool attached. Present
+   * only when `searchCapability().supported` is true.
+   */
+  webSearch?(req: WebSearchRequest): Promise<WebSearchResponse>;
 }

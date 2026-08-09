@@ -16,6 +16,9 @@ import {
   type ModelTier,
   type StructuredRequest,
   type StructuredResult,
+  type WebSearchHit,
+  type WebSearchRequest,
+  type WebSearchResponse,
 } from "./types";
 
 const log = createLogger("ai/sandbox");
@@ -29,6 +32,14 @@ interface Fixture {
   model?: string;
   /** Set to make the fixture exercise an error path instead of a happy path. */
   error?: { category: string; message: string };
+  /**
+   * For a web-search stage: the URLs the search tool "returned". Kept separate
+   * from `text` for the same reason as in the real adapter — these are the
+   * ground truth a model-invented URL gets checked against.
+   */
+  hits?: WebSearchHit[];
+  searchCount?: number;
+  toolError?: string | null;
 }
 
 async function loadFixture(stage: string, kase: string): Promise<Fixture> {
@@ -109,10 +120,29 @@ export function createSandboxProvider(models: Record<ModelTier, string>): AIProv
     return { ...result, data: parsed.data, repaired: false };
   }
 
+  /**
+   * The search half of the sandbox. Fixtures carry the hit list, so the whole
+   * research stage runs with no network call and the "no provider returned
+   * anything" path is a fixture rather than an unplugged cable.
+   */
+  async function webSearch(req: WebSearchRequest): Promise<WebSearchResponse> {
+    const kase = req.fixtureCase ?? "default";
+    const fixture = await loadFixture(req.stage, kase);
+    const result = await complete(req);
+    return {
+      ...result,
+      hits: fixture.hits ?? [],
+      searchCount: fixture.searchCount ?? (fixture.hits?.length ? 1 : 0),
+      toolError: fixture.toolError ?? null,
+    };
+  }
+
   return {
     name: "sandbox",
     complete,
     completeStructured,
-    searchCapability: () => ({ supported: false }),
+    webSearch,
+    // Sandbox can serve search, so research runs end to end with no network.
+    searchCapability: () => ({ supported: true }),
   };
 }

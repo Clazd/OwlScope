@@ -1,0 +1,7 @@
+{
+  "text": "{\"matches\": []}",
+  "model": "sandbox-fast",
+  "tokensIn": 1100,
+  "tokensOut": 30,
+  "latencyMs": 1200
+}

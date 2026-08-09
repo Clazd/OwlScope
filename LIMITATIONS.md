@@ -176,3 +176,117 @@ Neither is in an inventory; both are shared by three or more sections.
   1440/1100/768/390 in both themes, but that verification is not automated.
 - `analyseFingerprint` and `runTestVoice` are exercised through the sandbox provider by hand,
   not by a unit test. Their pure parts — prompt construction and scoring — are covered.
+
+---
+
+# Known limitations — slice 3 (Studio)
+
+## Deliberate deviations from the brief
+
+**1. There is a fourth data collection the brief does not list: `/data/studio/`.**
+The brief names topics, sources and content. Studio also writes a session record per run.
+It exists because "the user can enter at any stage and step backwards without losing work"
+is only true across a refresh if the pipeline state is on disk — React state satisfies the
+sentence right up until someone reloads the page halfway through a critique they paid for.
+It is working state, not a published artefact: deleting `/data/studio/` loses in-progress
+runs and nothing else.
+
+**2. The reassembly check lives in the Zod schema, not in a separate assertion.**
+The brief says a draft whose flattened text does not reassemble is "a validation failure",
+and separately that a validation failure gets one repair attempt then fails loudly. Putting
+the check inside `DraftPayloadSchema.superRefine` makes those the same sentence: the
+provider's existing repair path handles it with no second mechanism to keep in step.
+
+**3. `native-model-search` returns the search tool's URLs and the model's snippets separately.**
+The brief's `SearchResult` has a `snippet`, and the Anthropic web search tool does not expose
+one — the page content it returns is opaque to the client. So the provider does one call that
+both searches and summarises, then treats the tool's URL list as the allowlist and drops any
+summarised URL that is not on it. That is a slightly odd shape for a "search provider", and it
+is what makes acceptance criterion 6 mechanical rather than aspirational.
+
+**4. Source ids are derived from the URL, not random.**
+`src_` plus the first six hex characters of the URL's SHA-256. Two reasons: the same page keeps
+the same id across runs and machines, so a git diff of `/data` stays readable; and the sandbox
+fixtures can cite a source by id and actually match, which is what makes the offline pipeline
+coherent rather than merely runnable.
+
+**5. The character counter is not the full `twitter-text` algorithm.**
+It counts code points and weights URLs at 23, which covers everything this product writes. The
+real algorithm also charges 2 per character for CJK ranges. A wrong-but-simple counter whose
+limits are written down is better than one that claims to be exact and is not.
+
+**6. Two small changes outside Studio's footprint.**
+`lib/logging/log.ts` gained a `LOG_LEVEL` env var (unset behaves exactly as before; it exists so
+the pipeline test does not bury its assertions in a hundred debug lines), and
+`services/ai/types.ts` gained an optional `webSearch` method on `AIProvider`.
+
+## Sharp edges worth knowing about
+
+- **The inter-run cooldown now applies between stages.** Slice 1 set a 10-second cooldown that
+  is deliberately not overridable, designed for a world where one run was one user action.
+  Studio makes six or more paid actions per post, so walking the pipeline at speed hits the
+  cooldown at nearly every step. The fix is one field in Settings — a personal-scale cooldown of
+  2–3 seconds still stops double-fires — but the default is wrong for this shape of work and
+  changing it would alter existing installs, so it is left alone and written down here.
+- **Adding a required field to a stored schema quarantines existing records.** That is the
+  storage layer working as designed, and it bit during development: adding `fingerprintScored`
+  to `StudioDraft` quarantined every in-flight session. Sessions are disposable so the cost is
+  a re-run. `ContentItemSchema` deliberately did not change for the same fix, because there the
+  cost would be posts.
+- **Similarity is recomputed at finalisation, and the two verdicts are merged.** The result
+  stored on a draft was measured when the draft was written, and the history moves; a post
+  published in between would make a passing verdict wrong in the direction that matters. The
+  free layers re-run at finalise and their verdict is merged with the draft's — the fresh pass
+  knows about posts published since, the earlier one knows what L3 thought about the argument,
+  and the worse of the two risks wins.
+- **`FIT` shows a dash, not a zero, when there is no fingerprint.** A persona that has never had
+  its samples analysed scores 0, which reads as "your voice is wrong" when it means "nobody has
+  measured your voice". The gates skip the low-score warning in that case too.
+- **The manuscript's arrow-key navigation is per-sentence, not per-word.** `↑ ↓` (and `← →`)
+  move between sentences. Inside a sentence the browser's own text selection applies, which is
+  what you want for copying a phrase.
+
+## Stubs and scope
+
+- **Radar does not exist**, so topics come from a text box. `sourceType` is always `manual` and
+  `scoreComponents` is always null. The schema has room for both.
+- **The pillar on a topic is chosen by hand.** Weights are shown in the picker and passed to the
+  prompts as soft pressure, but nothing selects a pillar for you until Radar.
+- **Nothing reads `/data/metrics/`.** Feedback tunes selection in a later slice; the reject
+  reasons are recorded on the content item and go nowhere else yet.
+- **The Memory page is still an empty frame.** Content items are written and the history is used
+  by the similarity check and the writer prompt, but there is no screen that lists them.
+- **`SimilarityService` has one implementation.** The interface exists so pgvector or a hosted
+  embedding service can become a second one without touching a caller — not because a second one
+  is planned.
+
+## Cost and correctness caveats
+
+- **The context budget is measured in characters over four.** It is an estimate, deliberately: a
+  real tokeniser is a dependency and the budget only has to stop a section running away. The
+  Inspector shows the provider's real counts afterwards.
+- **`findRunByKey` and `getBudgetStatus` still read every run file**, and Studio makes more runs
+  per post than slice 1 anticipated. At personal scale this is nothing; the cache index exists
+  and is still not used for it.
+- **Boundary keyword lists are English and blunt.** A custom boundary shorter than three
+  characters is ignored outright rather than firing on half the language, and the classifier is
+  what actually decides the ambiguous cases.
+- **The readable-text extractor is a tag stripper, not Readability.** It drops scripts, styles
+  and page furniture and keeps the prose. A page that renders its content with JavaScript yields
+  nothing, and says so rather than storing an empty source.
+
+## Testing
+
+- **271 tests**, of which 66 are new in this slice: the state machine, the three similarity
+  layers, character counting and sentence reassembly, the quality gates, the Evidence Lock
+  schema refinement, the mechanical boundary check, and readable-text extraction and source
+  classification.
+- **There is now an end-to-end test.** `src/domain/studio/pipeline.test.ts` runs all six stages
+  against `/fixtures` with no network access and asserts that they compose — that research's
+  source ids survive into the writer's citations, that the validator's verdicts reach the gates,
+  and that a finished post lands on disk as a draft. Slices 1 and 2 both noted the absence of one.
+- **There are still no component tests.** The Studio screen, the Evidence Margin and the X
+  preview were driven in a real browser during this slice at 1440/1100/768/390 in both themes —
+  per-sentence rule colours and widths, hover dimming, arrow-key navigation, the source drawer,
+  the character counter, and that the unsupported sentence is the only underlined element on the
+  page — but that verification is a script that was run, not a suite that runs.

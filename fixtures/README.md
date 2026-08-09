@@ -38,6 +38,30 @@ purpose — a timeout, a malformed response, an empty result.
 | `tokensIn` / `tokensOut` | no | Defaults to a length estimate. Set them when you want the token meter to be realistic. |
 | `latencyMs` | no | Reported as the stage latency. The sandbox sleeps for up to 120ms of it so loading states stay honest without slowing the tests down. |
 | `error` | no | `{ "category": "...", "message": "..." }`. When present the call throws instead of returning, which is how error states get built without unplugging anything. |
+| `hits` | no | Web-search stages only: `[{ "url", "title", "pageAge" }]`, standing in for what the provider's search tool returned. |
+| `searchCount` / `toolError` | no | Web-search stages only. `toolError` exercises the `max_uses_exceeded` path. |
+
+### Search fixtures are a different shape
+
+`fixtures/search/*.json` are read by the **search provider**, not by the AI
+provider, so they do not have a `text` field:
+
+```json
+{ "results": [ { "title": "…", "url": "https://…", "snippet": "…", "publishedAt": "…" } ] }
+```
+
+This is what makes "the whole flow runs with zero network calls" true rather
+than aspirational — with sandbox on, the search half of research is a fixture
+too. It is also the only way to build the awkward cases at all: an empty result
+set, a single thin forum link, a source published six hours ago.
+
+**Source ids are derived from the URL** (`src_` plus the first six hex
+characters of its SHA-256), so a fixture in a later stage can cite `src_ca5dcd`
+and actually match the source the search fixture produced. Compute one with:
+
+```bash
+node -e 'console.log("src_"+require("crypto").createHash("sha256").update(process.argv[1]).digest("hex").slice(0,6))' "https://example.com/thing"
+```
 
 ## Rules
 
@@ -60,9 +84,28 @@ purpose — a timeout, a malformed response, an empty result.
 | `fingerprint` | `malformed` | Preamble plus broken JSON, for the repair path |
 | `test-voice` | `default` | Three posts that match the demo fingerprint and score 100 |
 | `test-voice` | `off-voice` | Three posts that break it, so the deviation UI has something to show |
-| `research` | `default` | A minimal structured response |
+| `search` | `default` | Three sources: one secondary outlet, one paper, one forum thread |
+| `search` | `empty` | No results, for the "research is unavailable" path |
+| `boundary` | `default` | A topic that touches nothing |
+| `boundary` | `blocked` | A topic inside the politics boundary |
+| `research` | `default` | Facts, inferences, uncertainties and a freshness read over the search fixture |
+| `research` | `insufficient` | Evidence that will not carry a factual post |
 | `research` | `malformed` | Preamble plus broken JSON, for the repair path |
+| `angles` | `default` | Five angles across five kinds |
+| `angle-pick` | `default` | The AI choosing one, with its reasoning |
+| `drafts` | `default` | Three drafts; the third deliberately claims an uncited fact |
+| `revise` | `default` | One revised draft, for every revision action |
+| `validate` | `default` | Per-sentence verdicts that clear the first draft |
+| `critique` | `default` | One warn and one note, recommendation `accept` |
+| `similarity` | `default` | An empty L3 judgement |
+| `reasoning` | `default` | The first-person reasoning block |
 
-Only `default` is reachable through the UI today: no caller passes `fixtureCase`
-yet. To exercise a non-default case, swap it over `default.json` temporarily,
-or pass `fixtureCase` from the calling domain service.
+The Studio fixtures are internally consistent: `research` cites the source ids
+that `search` produces, and `drafts` cites the same ones. `src/domain/studio/
+pipeline.test.ts` runs the entire six-stage pipeline against them with no
+network access, which is what keeps them honest — a fixture that drifts out of
+step with its schema or its source ids fails that test.
+
+Only `default` is reachable through the UI. To exercise another case, swap it
+over `default.json` temporarily, or pass `fixtureCase` from the calling domain
+service.

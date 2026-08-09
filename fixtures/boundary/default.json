@@ -1,0 +1,7 @@
+{
+  "text": "{\"blocked\":false,\"boundaryValues\":[],\"explanation\":\"\"}",
+  "model": "sandbox-fast",
+  "tokensIn": 340,
+  "tokensOut": 24,
+  "latencyMs": 420
+}

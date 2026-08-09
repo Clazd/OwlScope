@@ -1,7 +1,7 @@
 {
-  "text": "{\"claims\":[{\"text\":\"Placeholder claim used by the component gallery.\",\"status\":\"partial\",\"sourceIds\":[]}]}",
+  "text": "{\"facts\": [{\"claim\": \"Six of eight surveyed agent frameworks lost track of their objective on tasks longer than forty tool calls.\", \"sourceIds\": [\"src_ca5dcd\"], \"kind\": \"from-source\"}, {\"claim\": \"A controlled evaluation found no correlation between context window size and task completion past thirty steps.\", \"sourceIds\": [\"src_83a6b4\"], \"kind\": \"from-source\"}, {\"claim\": \"Agents given an external scratchpad completed 2.3 times more long-horizon tasks than agents given four times the context.\", \"sourceIds\": [\"src_83a6b4\"], \"kind\": \"from-source\"}, {\"claim\": \"The failure is about where state lives rather than how much the model can see at once.\", \"sourceIds\": [\"src_ca5dcd\", \"src_83a6b4\"], \"kind\": \"inference\"}], \"uncertainties\": [\"Which specific frameworks were in the survey. The report names the count but not the products.\", \"Whether the scratchpad result holds outside the benchmark's task distribution.\", \"The forum thread is practitioner anecdote and was not controlled for anything.\"], \"freshness\": {\"assessment\": \"current\", \"note\": \"The paper is two days old and the report is from this morning.\"}, \"insufficient\": false, \"insufficientReason\": \"\"}",
   "model": "sandbox-strong",
-  "tokensIn": 820,
-  "tokensOut": 96,
-  "latencyMs": 610
+  "tokensIn": 2400,
+  "tokensOut": 420,
+  "latencyMs": 5100
 }

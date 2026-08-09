@@ -19,6 +19,8 @@ export const DIRS = {
   persona: resolve(DATA_ROOT, "persona"),
   personaVersions: resolve(DATA_ROOT, "persona", "versions"),
   topics: resolve(DATA_ROOT, "topics"),
+  /** In-progress Studio runs. Working state, not the published artefact. */
+  studio: resolve(DATA_ROOT, "studio"),
   content: resolve(DATA_ROOT, "content"),
   sources: resolve(DATA_ROOT, "sources"),
   runs: resolve(DATA_ROOT, "runs"),

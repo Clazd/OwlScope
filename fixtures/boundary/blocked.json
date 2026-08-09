@@ -1,0 +1,7 @@
+{
+  "text": "{\"blocked\":true,\"boundaryValues\":[\"Politics\"],\"explanation\":\"Writing about this would mean taking a position on an election result.\"}",
+  "model": "sandbox-fast",
+  "tokensIn": 350,
+  "tokensOut": 38,
+  "latencyMs": 460
+}

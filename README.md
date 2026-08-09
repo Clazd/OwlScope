@@ -9,12 +9,13 @@ hands you a finished post with its reasoning attached. You approve and publish b
 **It is not a tweet generator.** A tweet generator answers "give me something to post."
 This answers "is there anything worth posting today, and if so, why this."
 
-> **Status: slice 2 of 3 — Brain.**
+> **Status: slice 3 — Studio.**
 > Slice 1 shipped the shell, design system, storage layer, provider adapter, sandbox mode,
-> settings and run inspector. Slice 2 adds Brain: the structured, versioned source of truth
-> for the AI identity, plus onboarding, the voice fingerprint and a working voice test.
-> Radar, Studio, Today and Memory arrive in slice 3; those pages are deliberately finished
-> frames with empty states, not stubs waiting to be styled.
+> settings and run inspector. Slice 2 added Brain: the structured, versioned source of truth
+> for the AI identity. Slice 3 is the one that makes the product useful — type a topic, get a
+> finished, evidence-checked, voice-matched post you can copy. Radar, Today and Memory arrive
+> later; those pages are deliberately finished frames with empty states, not stubs waiting to
+> be styled.
 
 ---
 
@@ -52,7 +53,7 @@ You can run the whole app with no API key at all by setting `SANDBOX_MODE=true`.
 |---|---|
 | `npm run dev` | Dev server, bound to `127.0.0.1` |
 | `npm run build` / `npm start` | Production build and serve, also localhost-only |
-| `npm test` | Storage, provider, sandbox, SSRF-guard and persona-domain tests |
+| `npm test` | Storage, provider, sandbox, SSRF-guard, persona, Studio and full-pipeline tests |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint, including the "no `fs` outside `services/storage`" rule |
 | `npm run sync:pull` | `git pull --rebase`, then drop the derived cache index |
@@ -114,6 +115,157 @@ a complete worked example with twenty writing samples, so you can see the produc
 before investing in configuration. It loads and deletes cleanly and nothing in the app
 branches on whether the persona is Nova.
 
+### Studio: the six stages
+
+Studio is the pipeline. You type a topic and it comes out the other end as a post, having
+been checked at every step by a stage that can only do one thing.
+
+```
+Persona context ──→ Research ──→ Angles ──→ Fact validation ──→ Writing
+                                                                   │
+                                    Similarity check ←── Style critique
+                                            │
+                                    Final candidate ──→ HUMAN ──→ manual post on X
+```
+
+**Stage separation is the whole design.** The researcher never writes posts. The writer never
+searches. The critic never rewrites. The validator never invents. This is not enforced by
+asking nicely in a prompt — it is enforced by the output schemas. `ResearchOutput` has nowhere
+to put a draft. `CritiqueOutput` has nowhere to put a rewritten post. A model cannot drift past
+a field that does not exist.
+
+Every stage output is Zod-validated before the next one consumes it. On failure: one repair
+attempt with the schema error fed back, then the stage fails loudly with a usable error and
+the work already done is preserved.
+
+**The boundary check runs first.** A topic that touches a persona boundary is blocked in stage
+one, and there is no code path from there to the writer. Two passes, cheapest first: a free
+keyword check, then a fast-model classifier only when the keyword pass found nothing — because
+"is this political" needs judgement, and a keyword list pretending to have judgement is how you
+block an article about software licensing. If the check cannot run, it fails closed.
+
+### The Evidence Lock
+
+**A draft is an array of sentences, not a blob of text.** Everything in Studio depends on it:
+
+```json
+{
+  "id": "s1",
+  "text": "Most agent frameworks fail on long tasks because context windows are not memory.",
+  "claimType": "fact",
+  "sourceIds": ["src_ca5dcd"],
+  "support": "supported"
+}
+```
+
+- The fact validator works per sentence instead of on a wall of text, which is why it works at
+  all. Asked to check a paragraph, a model produces a paragraph of hedging. Asked "does
+  `src_83a6b4` carry sentence s1", it answers.
+- Finalisation is blocked by any sentence that states a fact nothing supports.
+- The margin can annotate sentence by sentence, which is the app's signature interaction.
+
+A flattened `text` is stored alongside for copying, and it must be exactly the sentences joined
+with spaces. That check lives *in the Zod schema*, so a draft that disagrees with itself fails
+validation like any other malformed response and goes down the same repair-once-then-fail path.
+Character counts and sentence ids are recomputed in code, never trusted — models cannot count,
+and a duplicated sentence id would silently break every cross-reference in the UI.
+
+### Research, and what happens when there is nothing
+
+Research goes through a `SearchProvider`. Three ship in this slice:
+
+- **`native-model-search`** uses the AI provider's own web search tool. Billed through the
+  existing key: no second secret, no search vendor. The interesting part is not the call. The
+  search tool returns URLs and the model returns snippets; those are two different kinds of
+  thing and they are kept apart. **A URL the model produced that no search returned is dropped
+  and logged.** That is rule 8 made mechanical rather than requested politely.
+- **`manual-url`** fetches a link you paste, through the SSRF guard from slice 1 — private and
+  loopback ranges blocked on every redirect hop, three redirects, 2MB, ten seconds. Pages are
+  cached in `/data/.cache/pages/` for 24 hours.
+- **`fixture`** serves `/fixtures/search/*.json` in sandbox mode, so the whole of research —
+  not just the model call — runs with zero network.
+
+If no provider returns anything for a current-events topic, the pipeline says so and refuses to
+write as if it had evidence. "Nothing worth posting" is a designed success state; filling the
+gap from model recall is not.
+
+### Similarity, without an embedding API
+
+Three layers, cheapest first, no external call until layer three:
+
+| Layer | Method | Cost | Catches |
+|---|---|---|---|
+| L1 | Stemmed token Jaccard over topic and thesis | Free | Obvious duplicates |
+| L2 | Character-trigram cosine over the post, plus a separate opening comparison | Free | Reworded repeats and reused hooks |
+| L3 | Fast model over the closest survivors | One cheap call | The same argument in different words |
+
+Character trigrams rather than word tokens, because that is what survives a rewrite: "context
+windows are not memory" and "context windows aren't memory" share almost every trigram and
+about half their word tokens.
+
+**L3 never sees more than eight prior posts, and often does not run at all** — not when the
+free layers are already certain, and not when nothing is remotely close. L1 and L2 vectors are
+stored on each content item so the check is computed once. If an embedding service is ever
+added it becomes a fourth implementation behind `SimilarityService` and no caller changes.
+
+### Quality gates
+
+Blocking: an unsupported factual claim, high similarity, a boundary violation, fabricated
+experience, a materially inconsistent voice, stale information presented as current, or a
+critic recommendation of reject. Warnings never block — a product that blocks on "the opening
+is weak" teaches its user to click through blocks.
+
+The unsupported-claim gate is the only one an override can clear, the override is recorded on
+the content item, and it names the sentences it covers — so confirming one unsupported claim
+does not silently clear the next one the writer produces.
+
+### The Evidence Margin
+
+The Final stage renders the post as an annotated manuscript: Newsreader at 19px, a 200px right
+margin, and a 3px rule per sentence in its epistemic colour. Hovering or focusing a sentence
+raises its annotation and dims the others; arrow keys move between sentences; clicking a margin
+annotation opens the source.
+
+**It is a persistent margin, not a tooltip.** A tooltip would mean you can only see one claim's
+provenance at a time, which is the opposite of what the screen is for. On mobile it collapses to
+a tappable epistemic dot that opens a bottom sheet.
+
+A sentence nothing supports is underlined in `--unsupported`, and **nothing else in the product
+is underlined**, so it cannot be missed.
+
+The Preview toggle shows an X-accurate card: the platform's own sans stack at 15px — the one
+deliberate type exception in the product — and the platform's character weighting, where a URL
+counts as 23 characters however long it is. No like buttons, no engagement counts. It is a
+preview, not a simulation, and an invented number of likes is the same class of lie as an
+invented source.
+
+### Publishing is a state machine, enforced server-side
+
+```
+draft → reviewing → accepted → published
+alternates: rejected · archived
+```
+
+Generated is never treated as published: a finalised post starts at `draft` and nothing moves it
+on its own. **Copying is not a transition and is not in that file** — the copy button writes to
+the clipboard and touches no route at all, so it cannot change a status by accident. Only "Mark
+published" sets `publishedAt`, and it optionally records the public URL.
+
+### Prompt architecture
+
+Composable modules assembled per task, never one concatenated blob — because the stages
+genuinely need different subsets. The researcher gets no voice fingerprint. The writer gets the
+experience log only when the topic could invite a first-hand claim; sending it to a model
+writing about something abstract is an invitation to work one in.
+
+The truthfulness core is a single exported constant included verbatim in every factual task, so
+"identical everywhere" is a fact about the code rather than a promise in a document.
+
+A context assembler gives each section an explicit token budget — persona 800, memory 1500,
+evidence 2500, instructions 1200, output 800 — trims at a labelled boundary rather than
+silently, and logs what each stage actually spent. Memory is capped at 30 posts by the loader,
+so no prompt can accidentally carry the whole archive.
+
 ### Storage is git-tracked JSON files
 
 There is no database. All application data lives under `/data`, one file per item:
@@ -123,6 +275,7 @@ There is no database. All application data lives under `/data`, one file per ite
   settings.json
   persona/     persona.json, fingerprint.json, samples.json, experience.json, versions/vNNN.json
   topics/      topic-<id>.json
+  studio/      session-<id>.json — in-progress Studio runs
   content/     2026-08-09-<id>.json
   sources/     source-<id>.json
   runs/        2026-08-09/run-<id>.json
@@ -240,6 +393,11 @@ switch work and what keeps colour meaning one thing.
 | `G` then `T` / `B` / `R` / `S` / `M` | Go to Today, Brain, Radar, Studio, Memory |
 | `Esc` | Close drawer, sheet, or palette |
 | `?` | Show the shortcut list |
+| `C` | Copy the final post |
+| `P` | Mark published |
+| `X` | Reject |
+| `↑ ↓` | Move between sentences in the manuscript |
+| `1`–`6` | Jump to a completed Studio stage |
 
 The palette is registry-based: a later slice registers its commands with
 `useRegisterCommands` from its own page and the palette picks them up with no edits to the
@@ -255,13 +413,15 @@ src/
   components/
     common/       the component inventory — later slices import, and build nothing
     persona/ settings/ inspect/
-  domain/         persona (schema, statistics, fingerprint, weights, diff, versions), settings, budget
+  domain/         persona (schema, statistics, fingerprint, weights, diff, versions),
+                  studio (schema, research, angles, write, validate, critique, similarity,
+                          gates, state-machine, finalise, prompts, context), settings, budget
   services/
     ai/           provider.ts, anthropic.ts, sandbox.ts, pricing.ts
     storage/      json-store.ts, atomic-write.ts, index-cache.ts, quarantine.ts, zip.ts
     runs/         recorder.ts, schema.ts
-    search/       provider.ts (stub until slice 3)
-    memory/       similarity.ts (stub)
+    search/       provider.ts, native.ts, manual-url.ts, fixture.ts, extract.ts
+    memory/       similarity.ts — the three-layer check
     sync/         git.ts
   lib/            validation, logging, format, net (SSRF guard), boot
 data/             application data, one file per item

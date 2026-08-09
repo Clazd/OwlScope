@@ -117,13 +117,40 @@ export function Gallery() {
         </EmptyState>
       </Section>
 
-      <Section name="SentenceManuscript" note="Stub. The Evidence Margin renderer lands in slice 3.">
+      <Section
+        name="SentenceManuscript"
+        note="The Evidence Margin. Hover or focus a sentence; arrow keys move between them. The unsupported sentence is the only underlined text in the product."
+      >
         <SentenceManuscript
           sentences={[
-            { id: "1", text: "Regulators published the consultation on Tuesday.", state: "supported", sourceCount: 2 },
-            { id: "2", text: "Most mid-sized firms are unprepared for it.", state: "partial", sourceCount: 1 },
-            { id: "3", text: "It will halve compliance costs within a year.", state: "unsupported", sourceCount: 0 },
-            { id: "4", text: "I think the timing is the interesting part.", state: "opinion" },
+            {
+              id: "s1",
+              text: "Regulators published the consultation on Tuesday.",
+              state: "supported",
+              sources: [
+                { id: "src_a", domain: "gov.uk", age: "6h", quality: "primary" },
+                { id: "src_b", domain: "reuters.com", age: "5h", quality: "secondary" },
+              ],
+            },
+            {
+              id: "s2",
+              text: "Most mid-sized firms are unprepared for it.",
+              state: "partial",
+              sources: [{ id: "src_c", domain: "news.yc", age: "9h", quality: "forum" }],
+            },
+            {
+              id: "s3",
+              text: "It will halve compliance costs within a year.",
+              state: "unsupported",
+              sources: [],
+            },
+            {
+              id: "s4",
+              text: "I think the timing is the interesting part.",
+              state: "opinion",
+              sources: [],
+              stance: "constraints beat scale",
+            },
           ]}
         />
       </Section>

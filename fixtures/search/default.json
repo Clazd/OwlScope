@@ -1,0 +1,22 @@
+{
+  "results": [
+    {
+      "title": "Agent frameworks keep failing the long-task test",
+      "url": "https://www.theverge.com/2026/8/8/agent-frameworks-long-tasks",
+      "snippet": "Six of the eight frameworks surveyed lost track of their original objective on tasks running longer than forty tool calls. The report attributes the failures to context handling rather than model capability.",
+      "publishedAt": "2026-08-08T06:00:00.000Z"
+    },
+    {
+      "title": "Context length is not memory: an evaluation of persistence in tool-using agents",
+      "url": "https://arxiv.org/abs/2608.01234",
+      "snippet": "We find no correlation between context window size and task completion beyond 30 steps. Agents given an external scratchpad completed 2.3x more long-horizon tasks than agents given four times the context.",
+      "publishedAt": "2026-08-06T00:00:00.000Z"
+    },
+    {
+      "title": "Ask HN: why do our agents forget what they were doing?",
+      "url": "https://news.ycombinator.com/item?id=44821003",
+      "snippet": "Thread of practitioners reporting the same failure shape. Several report that writing state to a file between steps fixed it where a larger model did not.",
+      "publishedAt": "2026-08-08T23:00:00.000Z"
+    }
+  ]
+}

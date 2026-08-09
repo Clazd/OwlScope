@@ -1,0 +1,7 @@
+{
+  "text": "{\"facts\": [], \"uncertainties\": [\"Nothing retrieved addresses the claim.\"], \"freshness\": {\"assessment\": \"current\", \"note\": \"No dated source was retrieved.\"}, \"insufficient\": true, \"insufficientReason\": \"The only page retrieved is a forum thread with no primary reporting behind it. There is nothing here to write a factual post from.\"}",
+  "model": "sandbox-strong",
+  "tokensIn": 900,
+  "tokensOut": 140,
+  "latencyMs": 2100
+}

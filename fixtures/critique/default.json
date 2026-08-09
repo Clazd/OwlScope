@@ -1,0 +1,7 @@
+{
+  "text": "{\"personaFit\": \"strong\", \"genericness\": \"low\", \"factualRisk\": \"low\", \"issues\": [{\"sentenceId\": \"s3\", \"severity\": \"note\", \"type\": \"brevity\", \"detail\": \"The two closing sentences could be one.\", \"suggestion\": \"Consider joining s3 and s4 with a colon.\"}, {\"sentenceId\": null, \"severity\": \"warn\", \"type\": \"claim-certainty\", \"detail\": \"The opening states as settled something the evidence supports but does not prove.\", \"suggestion\": \"Either cite it in the sentence or soften it to a reading of the evidence.\"}], \"recommendation\": \"accept\"}",
+  "model": "sandbox-strong",
+  "tokensIn": 3400,
+  "tokensOut": 310,
+  "latencyMs": 5200
+}

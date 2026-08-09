@@ -1,30 +1,52 @@
 /**
- * Search provider — stub in slice 1.
+ * The search boundary.
  *
- * Research lands in slice 3. The interface is here so that when it does, no
- * caller has to be rewritten. There is deliberately no implementation: adding
- * a paid search API is explicitly out of scope, and the eventual answer is
- * either the model's own search capability or hand-fetched URLs through
- * `lib/net/safe-fetch`.
+ * Three implementations ship in slice 3 and the rest arrive later; the point of
+ * the interface is that adding one never touches a caller. Note what is absent:
+ * no provider returns a claim, an angle, or a sentence. A provider returns
+ * URLs and the text at them. Everything a model concludes from that happens in
+ * a stage that can be inspected separately.
  */
 
-export interface SearchHit {
-  url: string;
+export interface SearchResult {
   title: string;
+  url: string;
+  domain: string;
   snippet: string;
   publishedAt: string | null;
+  retrievedAt: string;
+  providerId: string;
+}
+
+export interface SearchOptions {
+  /** Upper bound on results. Providers may return fewer, never more. */
+  limit?: number;
+  /** Fixture case, for the sandbox provider and the tests. */
+  fixtureCase?: string;
 }
 
 export interface SearchProvider {
-  readonly name: string;
-  search(query: string, limit?: number): Promise<SearchHit[]>;
+  readonly id: string;
+  /**
+   * Why this provider cannot run right now, or null when it can. Research
+   * reports these rather than silently returning nothing — "no evidence" and
+   * "nothing was asked" are different outcomes and must not look alike.
+   */
+  unavailableReason(): string | null;
+  search(query: string, opts?: SearchOptions): Promise<SearchResult[]>;
 }
 
-export function createSearchProvider(): SearchProvider {
+/** Providers a run may use, in the order research should try them. */
+export type ProviderId = "native-model-search" | "manual-url" | "fixture";
+
+export function emptyResult(providerId: string, url: string): SearchResult {
   return {
-    name: "unavailable",
-    async search() {
-      throw new Error("Search is not implemented until slice 3.");
-    },
+    title: url,
+    url,
+    domain: "",
+    snippet: "",
+    publishedAt: null,
+    retrievedAt: new Date().toISOString(),
+    providerId,
   };
 }

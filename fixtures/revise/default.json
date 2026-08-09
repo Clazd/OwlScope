@@ -1,0 +1,7 @@
+{
+  "text": "{\"drafts\": [{\"text\": \"Agents with a scratchpad completed 2.3 times more long-horizon tasks than agents given four times the context. That is the whole finding, and it points at where state lives rather than how much a model can see. We keep buying the wrong lever.\", \"sentences\": [{\"id\": \"s1\", \"text\": \"Agents with a scratchpad completed 2.3 times more long-horizon tasks than agents given four times the context.\", \"claimType\": \"fact\", \"sourceIds\": [\"src_83a6b4\"], \"support\": \"supported\"}, {\"id\": \"s2\", \"text\": \"That is the whole finding, and it points at where state lives rather than how much a model can see.\", \"claimType\": \"inference\", \"sourceIds\": [\"src_83a6b4\"], \"support\": \"supported\"}, {\"id\": \"s3\", \"text\": \"We keep buying the wrong lever.\", \"claimType\": \"opinion\", \"sourceIds\": [], \"support\": \"n/a\"}], \"toneTags\": [\"direct\", \"opinionated\"]}]}",
+  "model": "sandbox-strong",
+  "tokensIn": 2600,
+  "tokensOut": 210,
+  "latencyMs": 3900
+}

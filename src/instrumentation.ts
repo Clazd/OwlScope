@@ -7,10 +7,11 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
 
-  const [{ createLogger }, { assertLocalhost }, { rebuildIndex }] = await Promise.all([
+  const [{ createLogger }, { assertLocalhost }, { rebuildIndex }, { pruneCachedPages }] = await Promise.all([
     import("@/lib/logging/log"),
     import("@/lib/boot/localhost"),
     import("@/services/storage/index-cache"),
+    import("@/services/storage/page-cache"),
   ]);
 
   const log = createLogger("boot");
@@ -24,5 +25,14 @@ export async function register() {
     log.info(`data ready: ${index.totalFiles} files`);
   } catch (err) {
     log.error("could not build the cache index; the app will read source files directly", err);
+  }
+
+  // Fetched pages expire after 24 hours. Dropping them on boot keeps the cache
+  // from growing without bound; a miss costs one re-fetch and nothing else.
+  try {
+    const dropped = await pruneCachedPages();
+    if (dropped > 0) log.info(`dropped ${dropped} expired cached page(s)`);
+  } catch (err) {
+    log.warn(`could not prune the page cache: ${(err as Error).message}`);
   }
 }

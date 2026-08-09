@@ -133,8 +133,9 @@ describe("anthropic adapter", () => {
     vi.useRealTimers();
   });
 
-  it("has no search capability in this slice", () => {
-    expect(provider().searchCapability()).toEqual({ supported: false });
+  it("reports web search as available, since slice 3 wires the server tool", () => {
+    expect(provider().searchCapability()).toEqual({ supported: true });
+    expect(typeof provider().webSearch).toBe("function");
   });
 });
 

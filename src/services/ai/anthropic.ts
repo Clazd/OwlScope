@@ -11,6 +11,9 @@ import {
   type ModelTier,
   type StructuredRequest,
   type StructuredResult,
+  type WebSearchHit,
+  type WebSearchRequest,
+  type WebSearchResponse,
 } from "./types";
 
 const log = createLogger("ai/anthropic");
@@ -19,6 +22,8 @@ const API_VERSION = "2023-06-01";
 const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_MAX_TOKENS = 1024;
 const MAX_ATTEMPTS = 3;
+/** How many times a paused server-tool turn may be resumed before giving up. */
+const MAX_SEARCH_CONTINUATIONS = 3;
 
 export interface AnthropicConfig {
   apiKey: string;
@@ -26,10 +31,53 @@ export interface AnthropicConfig {
   models: Record<ModelTier, string>;
 }
 
+/** One entry inside a `web_search_tool_result` block's content array. */
+interface AnthropicSearchResult {
+  type?: string;
+  url?: string;
+  title?: string;
+  page_age?: string | null;
+}
+
+interface AnthropicBlock {
+  type: string;
+  text?: string;
+  /** On `web_search_tool_result`: the result list, or an error object. */
+  content?: AnthropicSearchResult[] | { type?: string; error_code?: string };
+  name?: string;
+}
+
 interface AnthropicMessage {
-  content?: Array<{ type: string; text?: string }>;
+  content?: AnthropicBlock[];
   usage?: { input_tokens?: number; output_tokens?: number };
   model?: string;
+  stop_reason?: string;
+}
+
+/** A tool definition as the API expects it. Only server tools are used here. */
+type ServerTool = Record<string, unknown>;
+
+/**
+ * Dynamic-filtering web search runs on the current model families and falls
+ * back to the basic tool everywhere else. Getting this wrong is a 400 rather
+ * than a silent degradation, so the list is explicit rather than a guess.
+ */
+const DYNAMIC_SEARCH_MODELS = [
+  "claude-opus-5",
+  "claude-opus-4-8",
+  "claude-opus-4-7",
+  "claude-opus-4-6",
+  "claude-sonnet-5",
+  "claude-sonnet-4-6",
+  "claude-fable-5",
+  "claude-mythos-5",
+];
+
+export function webSearchToolType(model: string): string {
+  const name = model.toLowerCase();
+  return DYNAMIC_SEARCH_MODELS.some((m) => name.startsWith(m))
+    ? "web_search_20260209"
+    : "web_search_20250305";
 }
 
 function categorise(status: number): ErrorCategory {
@@ -52,14 +100,27 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     throw new ProviderError("config", "No AI_API_KEY is set. Add it to .env, or turn on sandbox mode.");
   }
 
-  async function callOnce(req: CompletionRequest, model: string): Promise<CompletionResult> {
+  interface RawCall {
+    result: CompletionResult;
+    /** Kept so the caller can read tool-result blocks the text join drops. */
+    payload: AnthropicMessage;
+  }
+
+  interface CallOptions {
+    tools?: ServerTool[];
+    /** Overrides the single-user-turn default, for resuming a paused turn. */
+    messages?: Array<{ role: string; content: unknown }>;
+  }
+
+  async function callRaw(req: CompletionRequest, model: string, options: CallOptions = {}): Promise<RawCall> {
     const started = Date.now();
     const body = {
       model,
       max_tokens: req.maxTokens ?? DEFAULT_MAX_TOKENS,
       temperature: req.temperature ?? 1,
       ...(req.system ? { system: req.system } : {}),
-      messages: [{ role: "user", content: req.prompt }],
+      ...(options.tools ? { tools: options.tools } : {}),
+      messages: options.messages ?? [{ role: "user", content: req.prompt }],
     };
 
     let response: Response;
@@ -112,16 +173,23 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     const usedModel = payload.model ?? model;
 
     return {
-      text,
-      prompt: req.prompt,
-      system: req.system,
-      tokensIn,
-      tokensOut,
-      latencyMs: Date.now() - started,
-      model: usedModel,
-      costEstimate: estimateCost(usedModel, tokensIn, tokensOut),
-      sandbox: false,
+      result: {
+        text,
+        prompt: req.prompt,
+        system: req.system,
+        tokensIn,
+        tokensOut,
+        latencyMs: Date.now() - started,
+        model: usedModel,
+        costEstimate: estimateCost(usedModel, tokensIn, tokensOut),
+        sandbox: false,
+      },
+      payload,
     };
+  }
+
+  async function callOnce(req: CompletionRequest, model: string): Promise<CompletionResult> {
+    return (await callRaw(req, model)).result;
   }
 
   /**
@@ -191,13 +259,107 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     return { ...merged, data: secondAttempt.data, repaired: true };
   }
 
+  /**
+   * One completion with the web search server tool attached.
+   *
+   * The search runs on Anthropic's side and is billed through the existing
+   * key — there is no second secret and no search vendor to sign up with.
+   *
+   * What comes back is deliberately split in two: `hits` are the URLs the
+   * search tool itself returned, and `text` is whatever the model wrote about
+   * them. Callers treat the first as fact and the second as claims, which is
+   * how a model-invented URL gets caught instead of shipped.
+   */
+  async function webSearch(req: WebSearchRequest): Promise<WebSearchResponse> {
+    const model = config.models[req.tier];
+    if (!model) {
+      throw new ProviderError("config", `No ${req.tier} model configured. Set it in Settings.`);
+    }
+
+    const tools: ServerTool[] = [
+      {
+        type: webSearchToolType(model),
+        name: "web_search",
+        ...(req.maxSearches ? { max_uses: req.maxSearches } : {}),
+      },
+    ];
+
+    const hits: WebSearchHit[] = [];
+    const seen = new Set<string>();
+    const texts: string[] = [];
+    let searchCount = 0;
+    let toolError: string | null = null;
+    let tokensIn = 0;
+    let tokensOut = 0;
+    let latencyMs = 0;
+    let costEstimate = 0;
+    let usedModel = model;
+
+    // The server runs its own sampling loop and pauses at its iteration limit.
+    // Resuming is just re-sending the assistant turn; the cap stops a runaway
+    // search from quietly becoming an expensive one.
+    const messages: Array<{ role: string; content: unknown }> = [
+      { role: "user", content: req.prompt },
+    ];
+
+    for (let turn = 0; turn <= MAX_SEARCH_CONTINUATIONS; turn += 1) {
+      const { result, payload } = await callRaw(req, model, { tools, messages });
+
+      tokensIn += result.tokensIn;
+      tokensOut += result.tokensOut;
+      latencyMs += result.latencyMs;
+      costEstimate += result.costEstimate;
+      usedModel = result.model;
+      if (result.text) texts.push(result.text);
+
+      for (const block of payload.content ?? []) {
+        if (block.type === "server_tool_use" && block.name === "web_search") {
+          searchCount += 1;
+          continue;
+        }
+        if (block.type !== "web_search_tool_result") continue;
+        const content = block.content;
+        // A tool error is an object, a success is a list. Branch before indexing.
+        if (!Array.isArray(content)) {
+          toolError = content?.error_code ?? "unknown";
+          continue;
+        }
+        for (const entry of content) {
+          if (entry.type !== "web_search_result" || !entry.url) continue;
+          if (seen.has(entry.url)) continue;
+          seen.add(entry.url);
+          hits.push({ url: entry.url, title: entry.title ?? entry.url, pageAge: entry.page_age ?? null });
+        }
+      }
+
+      if (payload.stop_reason !== "pause_turn") break;
+      // No "continue" message: the trailing server_tool_use tells the API to resume.
+      messages.push({ role: "assistant", content: payload.content ?? [] });
+      log.debug(`${req.stage} paused after ${searchCount} searches; resuming`);
+    }
+
+    return {
+      text: texts.join("\n"),
+      prompt: req.prompt,
+      system: req.system,
+      hits,
+      searchCount,
+      toolError,
+      tokensIn,
+      tokensOut,
+      latencyMs,
+      model: usedModel,
+      costEstimate,
+      sandbox: false,
+    };
+  }
+
   return {
     name: "anthropic",
     complete,
     completeStructured,
-    // No web search in slice 1. The interface exists so slice 3 has somewhere
-    // to put it, not so three providers ship now.
-    searchCapability: () => ({ supported: false }),
+    webSearch,
+    searchCapability: () => ({ supported: true }),
   };
 }
 

@@ -1,0 +1,7 @@
+{
+  "text": "{\"reasoning\": \"I took the technical angle because your last two posts were both explanations and this one argues from the mechanism instead. The claim about window size and completion comes from a paper published two days ago, not from the forum thread. Nothing in your last thirty posts covers agent state, so there is no overlap to worry about.\"}",
+  "model": "sandbox-fast",
+  "tokensIn": 1400,
+  "tokensOut": 110,
+  "latencyMs": 1900
+}
