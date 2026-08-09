@@ -1,0 +1,7 @@
+{
+  "text": "Sure! Here is the JSON you asked for: {\"claims\": [ }",
+  "model": "sandbox-strong",
+  "tokensIn": 820,
+  "tokensOut": 22,
+  "latencyMs": 240
+}

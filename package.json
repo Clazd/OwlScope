@@ -1,0 +1,43 @@
+{
+  "name": "persona-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The office of an AI writer. Local only, file backed, human approved.",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1 -p 3000",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "fonts": "node scripts/copy-fonts.mjs",
+    "sync:pull": "node scripts/sync-pull.mjs",
+    "sync:push": "node scripts/sync-push.mjs",
+    "postinstall": "node scripts/copy-fonts.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "server-only": "^0.0.1",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@fontsource/newsreader": "5.3.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.18.1",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "9.39.0",
+    "eslint-config-next": "16.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=20.9"
+  }
+}

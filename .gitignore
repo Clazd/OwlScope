@@ -1,0 +1,11 @@
+.env
+/data/.cache/
+node_modules
+.next
+
+# build + tooling noise
+/out
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+npm-debug.log*

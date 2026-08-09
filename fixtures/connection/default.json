@@ -1,0 +1,7 @@
+{
+  "text": "ready",
+  "model": "sandbox-fast",
+  "tokensIn": 14,
+  "tokensOut": 1,
+  "latencyMs": 38
+}

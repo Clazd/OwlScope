@@ -1,0 +1,201 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/*
+ * Map the tokens into the Tailwind theme. `inline` means the generated
+ * utilities reference the CSS variables rather than copying their values, so
+ * flipping `data-theme` on <html> retints the whole app with no re-render.
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+
+  --color-supported: var(--supported);
+  --color-partial: var(--partial);
+  --color-unsupported: var(--unsupported);
+  --color-opinion: var(--opinion);
+
+  --color-supported-tint: var(--supported-tint);
+  --color-partial-tint: var(--partial-tint);
+  --color-unsupported-tint: var(--unsupported-tint);
+  --color-opinion-tint: var(--opinion-tint);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
+
+  /*
+   * The spacing scale is 4, 8, 12, 16, 24, 32, 48, 64 and nothing else.
+   * Setting --spacing to initial disables Tailwind's dynamic scale, so
+   * `p-5` or `gap-7` fail to compile instead of quietly shipping.
+   */
+  --spacing: initial;
+  --spacing-0: 0px;
+  --spacing-px: 1px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  --radius-control: var(--radius-control);
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+
+  --shadow-pop: var(--shadow-pop);
+
+  --container-reading: var(--reading-column);
+}
+
+/*
+ * The rail expands to labels here. Tailwind has no 1100px stop by default.
+ *
+ * Two things about this declaration are load-bearing:
+ *   - it must live in a plain @theme block, not the `inline` one above, because
+ *     a breakpoint becomes a media query at build time and a media query cannot
+ *     read a var();
+ *   - it must be in rem, like Tailwind's own breakpoints. Variants are sorted
+ *     by value, and a px value sorts ahead of every rem one, which would emit
+ *     `wide:` before `md:` and let the narrower rule win at 1440px.
+ *
+ * 68.75rem is 1100px at the default root size.
+ */
+@theme {
+  --breakpoint-wide: 68.75rem;
+}
+
+/* ----------------------------------------------------------------- base -- */
+
+@layer base {
+  * {
+    border-color: var(--rule);
+  }
+
+  html {
+    background: var(--bg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: var(--body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Focus is always visible and never removed. */
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* Numeric UI reads better aligned; mono is already tabular but be explicit. */
+  [data-mono] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* -------------------------------------------------------- type utilities -- */
+
+@utility type-display {
+  font: var(--display);
+  letter-spacing: -0.02em;
+}
+@utility type-h1 {
+  font: var(--h1);
+  letter-spacing: -0.015em;
+}
+@utility type-h2 {
+  font: var(--h2);
+}
+@utility type-body {
+  font: var(--body);
+}
+@utility type-body-strong {
+  font: var(--body-strong);
+}
+@utility type-small {
+  font: var(--small);
+}
+@utility type-micro {
+  font: var(--micro);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+@utility type-data {
+  font: var(--data);
+  font-variant-numeric: tabular-nums;
+}
+@utility type-manuscript {
+  font: var(--manuscript);
+}
+
+/* The reading column. Full width is reserved for tables. */
+@utility reading-column {
+  max-width: var(--reading-column);
+  width: 100%;
+}
+
+/* --------------------------------------------------------------- motion -- */
+
+/*
+ * The only ambient animation in the product: the active pipeline stage.
+ * Everything else moves only in response to a user action.
+ */
+@keyframes stage-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@utility stage-pulse {
+  animation: stage-pulse 1.6s var(--ease) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbars that do not shout. */
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) transparent;
+  }
+}

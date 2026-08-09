@@ -1,0 +1,7 @@
+{
+  "text": "",
+  "error": {
+    "category": "network",
+    "message": "Could not reach the provider: simulated network failure."
+  }
+}

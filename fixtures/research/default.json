@@ -1,0 +1,7 @@
+{
+  "text": "{\"claims\":[{\"text\":\"Placeholder claim used by the component gallery.\",\"status\":\"partial\",\"sourceIds\":[]}]}",
+  "model": "sandbox-strong",
+  "tokensIn": 820,
+  "tokensOut": 96,
+  "latencyMs": 610
+}
