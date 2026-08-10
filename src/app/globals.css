@@ -70,7 +70,13 @@
  *     by value, and a px value sorts ahead of every rem one, which would emit
  *     `wide:` before `md:` and let the narrower rule win at 1440px.
  *
- * 68.75rem is 1100px at the default root size.
+ * rem in media queries resolves against the INITIAL root font-size (16px, the
+ * browser default), NOT our CSS-set 24px value. So 68.75rem × 16px = 1100px,
+ * which is the correct physical threshold regardless of html{font-size}.
+ *
+ * Keeping this above all Tailwind default breakpoints (sm:40, md:48, lg:64,
+ * xl:80, 2xl:96) is load-bearing: Tailwind sorts variants by value, so `wide:`
+ * must sort last to win the cascade over `md:w-(--sidebar-collapsed)`.
  */
 @theme {
   --breakpoint-wide: 68.75rem;
