@@ -69,11 +69,11 @@
 
 :root {
   /* OwlScope — Scope Interface: pure black sidebar / green / white */
-  --bg: #0D0F15;
-  --surface: #141720;
-  --surface-sunken: #09090E;
-  --rule: #1C2029;
-  --rule-strong: #2A3040;
+  --bg: #08090D;
+  --surface: #101318;
+  --surface-sunken: #050608;
+  --rule: #181C24;
+  --rule-strong: #252C38;
   --ink: #F4F6FA;
   --ink-2: #9BA3AE;
   --ink-3: #636B78;
@@ -140,8 +140,8 @@
 
   /* Layout */
   --reading-column: 680px;
-  --sidebar-width: 280px;
-  --sidebar-collapsed: 72px;
+  --sidebar-width: 320px;
+  --sidebar-collapsed: 80px;
   --drawer-width: 420px;
 }
 

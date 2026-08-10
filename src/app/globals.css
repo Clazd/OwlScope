@@ -105,6 +105,13 @@
     border-radius: 2px;
   }
 
+  /* Scope glow on form controls — signals focus without competing with content. */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    box-shadow: 0 0 0 1px rgba(46, 204, 113, 0.2), 0 0 16px rgba(46, 204, 113, 0.07);
+  }
+
   ::selection {
     background: var(--accent-tint);
     color: var(--ink);

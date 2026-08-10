@@ -256,7 +256,7 @@ export function Today({ persona, model, dateLabel, initial }: TodayProps) {
       <header className="flex flex-col gap-4 border-b border-rule pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="type-h1 text-ink">Good morning.</h1>
-          <p data-mono className="type-data mt-1 text-ink-3">{dateLabel} · {persona.name || "Nova"} · {model}</p>
+          <p data-mono className="type-data mt-1 text-ink-2">{dateLabel} · {persona.name || "Nova"} · {model}</p>
         </div>
         <Button
           variant="accent"

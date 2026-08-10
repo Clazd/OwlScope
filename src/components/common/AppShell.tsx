@@ -235,8 +235,8 @@ function OwlMark() {
     <div
       className="shrink-0 overflow-hidden"
       style={{
-        width: 52,
-        height: 52,
+        width: 60,
+        height: 60,
         borderRadius: 8,
         background: "#000000",
         boxShadow: "0 0 0 1px rgba(46,204,113,0.2)",
