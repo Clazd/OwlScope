@@ -23,8 +23,9 @@ export default function GlobalError({
           justifyContent: "center",
           fontFamily:
             '"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif',
-          background: "#fbfbf9",
-          color: "#14171a",
+          background: "#0A0C10",
+          color: "#E8E9EB",
+          colorScheme: "dark",
         }}
       >
         <div style={{ maxWidth: 480, padding: 24, textAlign: "center" }}>
@@ -34,16 +35,16 @@ export default function GlobalError({
               fontSize: "0.6875rem",
               textTransform: "uppercase",
               letterSpacing: "0.08em",
-              color: "#606872",
+              color: "#5C6370",
               marginBottom: 16,
             }}
           >
             Critical error
           </p>
           <h1 style={{ fontSize: "1.5rem", fontWeight: 600, marginBottom: 12 }}>
-            Grounded Voice could not start
+            OwlScope could not start
           </h1>
-          <p style={{ fontSize: "0.9375rem", color: "#4a5159", marginBottom: 24 }}>
+          <p style={{ fontSize: "0.9375rem", color: "#8B919A", marginBottom: 24 }}>
             The root layout failed to render. Your data is safe on disk.
           </p>
           {error.digest && (
@@ -51,7 +52,7 @@ export default function GlobalError({
               style={{
                 fontFamily: '"IBM Plex Mono", monospace',
                 fontSize: "0.8125rem",
-                color: "#606872",
+                color: "#5C6370",
                 marginBottom: 24,
               }}
             >
@@ -63,9 +64,9 @@ export default function GlobalError({
             onClick={reset}
             style={{
               padding: "8px 16px",
-              border: "1px solid #c9c9c1",
+              border: "1px solid #2C3038",
               borderRadius: 6,
-              background: "#ffffff",
+              background: "#12151A",
               cursor: "pointer",
               fontSize: "0.9375rem",
               fontWeight: 500,

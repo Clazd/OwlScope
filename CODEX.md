@@ -1,4 +1,4 @@
-# Grounded Voice - compact project context
+# OwlScope - compact project context
 
 ## Product
 
@@ -39,4 +39,4 @@ Private, local-only office for an AI writer. It researches, verifies, checks mem
 
 ## Verification target
 
-Full tests/typecheck/lint/build plus `npm run eval`. Verify Memory archive/filters/expansion/export, conditional Patterns, Brain evolution, Today autopsy, keyboard focus, both themes, and 390px layout.
+Full tests/typecheck/lint/build plus `npm run eval`. Verify Memory archive/filters/expansion/export, conditional Patterns, Brain evolution, Today autopsy, keyboard focus, dark theme, and 390px layout.

@@ -13,7 +13,12 @@ All notable changes will be documented here. The project follows [Semantic Versi
 
 ### Changed
 
-- Project identity changed from the demo-oriented Nova/Persona Studio naming to Grounded Voice. The bundled demo persona remains Nova.
+- Rebranded from Grounded Voice to OwlScope
+- Single permanent dark theme — removed light/dark/system switcher
+- UI accent color derived from OwlScope logo scope-green (#2ECC71)
+- Deeper background (#0A0C10) to blend with logo identity
+- Focus rings now use accent green for brand consistency
+- Active nav indicator uses accent green
 
 ## [0.1.0] - Unreleased
 

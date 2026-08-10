@@ -16,7 +16,7 @@ export default function ErrorPage({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[Grounded Voice] Unhandled error:", error);
+    console.error("[OwlScope] Unhandled error:", error);
   }, [error]);
 
   return (

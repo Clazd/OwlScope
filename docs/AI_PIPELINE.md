@@ -1,6 +1,6 @@
 # AI pipeline
 
-Grounded Voice separates discovery, research, writing, judgment, and publishing state. This is both a quality choice and a security boundary: each model stage receives only the context it needs and returns a narrow validated record.
+OwlScope separates discovery, research, writing, judgment, and publishing state. This is both a quality choice and a security boundary: each model stage receives only the context it needs and returns a narrow validated record.
 
 ## Shared invariants
 

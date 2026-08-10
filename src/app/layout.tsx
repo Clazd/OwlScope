@@ -5,11 +5,11 @@ import { readSettings, sandboxEnabled } from "@/domain/settings/store";
 import { resolveConfiguredModels } from "@/services/ai/provider";
 import "./globals.css";
 
-const APP_NAME = "Grounded Voice";
+const APP_NAME = "OwlScope";
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "A local-first writing office grounded in identity, evidence, and memory.",
+  description: "A local-first AI writing office. Research, verify, draft, critique.",
 };
 
 export const viewport: Viewport = {
@@ -32,7 +32,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // The theme is stamped server-side from settings, so there is no flash of
     // the wrong palette and no blocking inline script.
-    <html lang="en" data-theme={settings.appearance.theme}>
+    <html lang="en">
       <body>
         <AppShell
           brandName={APP_NAME}
@@ -40,7 +40,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           tokensUsed={budget.tokensUsed}
           tokensBudget={budget.tokensBudget}
           sandbox={sandbox}
-          theme={settings.appearance.theme}
         >
           {children}
         </AppShell>

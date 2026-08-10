@@ -12,7 +12,7 @@ export async function exportMemory(format: MemoryExportFormat): Promise<{ name: 
   const index = await rebuildMemoryIndex();
   const stamp = dateKey();
   if (format === "json") {
-    const name = `grounded-voice-memory-${stamp}.json`;
+    const name = `owlscope-memory-${stamp}.json`;
     const file = join(DIRS.exports, name);
     await atomicWriteJson(file, index.entries);
     return { name, body: `${JSON.stringify(index.entries, null, 2)}\n`, contentType: "application/json; charset=utf-8" };
@@ -35,7 +35,7 @@ export async function exportMemory(format: MemoryExportFormat): Promise<{ name: 
       "",
     ]),
   ].join("\n");
-  const name = `grounded-voice-published-${stamp}.md`;
+  const name = `owlscope-published-${stamp}.md`;
   const file = join(DIRS.exports, name);
   await atomicWriteText(file, `${body.trim()}\n`);
   return { name, body: `${body.trim()}\n`, contentType: "text/markdown; charset=utf-8" };

@@ -3,8 +3,7 @@
 
 /*
  * Map the tokens into the Tailwind theme. `inline` means the generated
- * utilities reference the CSS variables rather than copying their values, so
- * flipping `data-theme` on <html> retints the whole app with no re-render.
+ * utilities reference the CSS variables rather than copying their values.
  */
 @theme inline {
   --color-bg: var(--bg);
@@ -25,6 +24,10 @@
   --color-partial-tint: var(--partial-tint);
   --color-unsupported-tint: var(--unsupported-tint);
   --color-opinion-tint: var(--opinion-tint);
+
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-dim: var(--accent-dim);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -97,7 +100,7 @@
 
   /* Focus is always visible and never removed. */
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent);
     outline-offset: 2px;
     border-radius: 2px;
   }

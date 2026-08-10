@@ -18,7 +18,7 @@ interface PipelineRailProps {
 
 const MARK: Record<StageState, string> = {
   pending: "border-rule bg-transparent",
-  active: "border-ink bg-ink stage-pulse",
+  active: "border-accent bg-accent stage-pulse",
   done: "border-ink bg-ink",
   failed: "border-unsupported bg-unsupported",
   skipped: "border-rule-strong bg-transparent",

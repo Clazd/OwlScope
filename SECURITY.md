@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Grounded Voice is pre-release software. Security fixes currently target the latest commit on the default development branch; no older release line is maintained.
+OwlScope is pre-release software. Security fixes currently target the latest commit on the default development branch; no older release line is maintained.
 
 ## Reporting a vulnerability
 

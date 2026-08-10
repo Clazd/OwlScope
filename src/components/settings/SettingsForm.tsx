@@ -97,7 +97,7 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides
         fixtures={data.fixtures}
         forcedByEnv={sandboxForcedByEnv}
       />
-      <AppearanceSection settings={settings} update={update} />
+
       <MemorySection settings={settings} update={update} />
       <PersonaSection hasPersona={hasPersona} />
       <DataSection data={data} settings={settings} gitSyncEnabled={gitSyncEnabled} />

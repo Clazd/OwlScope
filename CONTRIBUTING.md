@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for considering a contribution to Grounded Voice. The project is pre-release and has not selected a license yet, so external contributions should wait until a `LICENSE` file is present.
+Thank you for considering a contribution to OwlScope. The project is pre-release and has not selected a license yet, so external contributions should wait until a `LICENSE` file is present.
 
 ## Before opening a change
 

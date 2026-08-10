@@ -15,7 +15,7 @@ interface StageSpinnerProps {
 export function StageSpinner({ stage, className }: StageSpinnerProps) {
   return (
     <p role="status" aria-live="polite" className={cn("flex items-center gap-3", className)}>
-      <span aria-hidden className="stage-pulse size-2 rounded-pill bg-ink" />
+      <span aria-hidden className="stage-pulse size-2 rounded-pill bg-accent" />
       <span className="type-body text-ink-2">{stage}</span>
     </p>
   );

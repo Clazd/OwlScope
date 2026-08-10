@@ -68,77 +68,33 @@
 /* --------------------------------------------------------------- colour -- */
 
 :root {
-  /* Light */
-  --bg: #fbfbf9;
-  --surface: #ffffff;
-  --surface-sunken: #f2f2ee;
-  --rule: #e2e2dc;
-  --rule-strong: #c9c9c1;
-  --ink: #14171a;
-  --ink-2: #4a5159;
-  --ink-3: #606872;
+  /* OwlScope — single permanent dark palette */
+  --bg: #0A0C10;
+  --surface: #12151A;
+  --surface-sunken: #080A0D;
+  --rule: #1E2228;
+  --rule-strong: #2C3038;
+  --ink: #E8E9EB;
+  --ink-2: #8B919A;
+  --ink-3: #5C6370;
 
-  /* Epistemic - the ONLY saturated colours in the product */
-  --supported: #1e6f5c;
-  --partial: #a97514;
-  --unsupported: #9e2f2f;
-  --opinion: #4b4fbf;
-
-  --supported-tint: rgb(30 111 92 / 0.1);
-  --partial-tint: rgb(169 117 20 / 0.1);
-  --unsupported-tint: rgb(158 47 47 / 0.1);
-  --opinion-tint: rgb(75 79 191 / 0.1);
-
-  color-scheme: light;
-}
-
-/* Explicit dark, and system-dark when no explicit choice has been made. */
-[data-theme="dark"] {
-  --bg: #0d0f12;
-  --surface: #141719;
-  --surface-sunken: #0a0c0e;
-  --rule: #24282c;
-  --rule-strong: #363b41;
-  --ink: #edeeea;
-  --ink-2: #a2a9b0;
-  --ink-3: #9299a1;
-
+  /* Epistemic — the ONLY saturated colours in the product */
   --supported: #4fb39a;
   --partial: #d9a441;
   --unsupported: #e0685f;
   --opinion: #8a8de8;
 
-  --supported-tint: rgb(79 179 154 / 0.1);
-  --partial-tint: rgb(217 164 65 / 0.1);
-  --unsupported-tint: rgb(224 104 95 / 0.1);
-  --opinion-tint: rgb(138 141 232 / 0.1);
+  --supported-tint: rgb(79 179 154 / 0.12);
+  --partial-tint: rgb(217 164 65 / 0.12);
+  --unsupported-tint: rgb(224 104 95 / 0.12);
+  --opinion-tint: rgb(138 141 232 / 0.12);
+
+  /* Brand accent — derived from the scope reticle */
+  --accent: #2ECC71;
+  --accent-tint: rgb(46 204 113 / 0.12);
+  --accent-dim: rgb(46 204 113 / 0.06);
 
   color-scheme: dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]):not([data-theme="dark"]) {
-    --bg: #0d0f12;
-    --surface: #141719;
-    --surface-sunken: #0a0c0e;
-    --rule: #24282c;
-    --rule-strong: #363b41;
-    --ink: #edeeea;
-    --ink-2: #a2a9b0;
-    --ink-3: #9299a1;
-
-    --supported: #4fb39a;
-    --partial: #d9a441;
-    --unsupported: #e0685f;
-    --opinion: #8a8de8;
-
-    --supported-tint: rgb(79 179 154 / 0.1);
-    --partial-tint: rgb(217 164 65 / 0.1);
-    --unsupported-tint: rgb(224 104 95 / 0.1);
-    --opinion-tint: rgb(138 141 232 / 0.1);
-
-    color-scheme: dark;
-  }
 }
 
 /* ----------------------------------------------------- type, space, misc -- */
@@ -165,7 +121,7 @@
   --radius-pill: 999px;
 
   /* One elevation, for popovers, dropdowns and toasts only. */
-  --shadow-pop: 0 4px 16px rgb(0 0 0 / 0.1);
+  --shadow-pop: 0 4px 20px rgb(0 0 0 / 0.45);
 
   /* Motion */
   --dur-state: 120ms;

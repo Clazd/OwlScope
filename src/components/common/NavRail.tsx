@@ -67,7 +67,7 @@ export function NavRail({ items, collapsed = false, className }: NavRailProps) {
           >
             <span
               aria-hidden
-              className={cn("absolute left-0 top-1 bottom-1 w-px", active ? "bg-ink" : "bg-transparent")}
+              className={cn("absolute left-0 top-1 bottom-1 w-px", active ? "bg-accent" : "bg-transparent")}
               style={active ? { width: "2px" } : undefined}
             />
             <Glyph name={item.glyph} className={active ? "text-ink" : "text-ink-3"} />

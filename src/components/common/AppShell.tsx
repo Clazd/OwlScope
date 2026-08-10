@@ -19,7 +19,6 @@ export interface ShellState {
   tokensUsed: number;
   tokensBudget: number;
   sandbox: boolean;
-  theme: "light" | "dark" | "system";
 }
 
 interface AppShellProps extends ShellState {
@@ -48,7 +47,7 @@ export function AppShell({ children, ...state }: AppShellProps) {
   return (
     <CommandProvider goTargets={goTargets}>
       <ToastProvider>
-        <ShellCommands theme={state.theme} sandbox={state.sandbox} />
+        <ShellCommands sandbox={state.sandbox} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-ink focus:px-4 focus:py-2 focus:text-bg focus:type-body-strong focus:shadow-pop"
@@ -69,15 +68,13 @@ export function AppShell({ children, ...state }: AppShellProps) {
 }
 
 /** Navigation and the two always-available commands. Later slices add theirs. */
-function ShellCommands({ theme, sandbox }: Pick<ShellState, "theme" | "sandbox">) {
+function ShellCommands({ sandbox }: { sandbox: boolean }) {
   const router = useRouter();
-  const updateSetting = async (kind: "theme" | "sandbox") => {
+  const updateSetting = async () => {
     const response = await fetch("/api/settings", { cache: "no-store" });
     if (!response.ok) return;
     const settings = await response.json();
-    const next = kind === "theme"
-      ? { ...settings, appearance: { ...settings.appearance, theme: theme === "dark" ? "light" : "dark" } }
-      : { ...settings, sandbox: { enabled: !sandbox } };
+    const next = { ...settings, sandbox: { enabled: !sandbox } };
     const saved = await fetch("/api/settings", {
       method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(next),
     });
@@ -113,21 +110,14 @@ function ShellCommands({ theme, sandbox }: Pick<ShellState, "theme" | "sandbox">
         run: () => router.push("/inspect/components"),
       },
       {
-        id: "settings:theme",
-        label: "Toggle theme",
-        group: "Settings",
-        keywords: "light dark appearance",
-        run: () => void updateSetting("theme"),
-      },
-      {
         id: "settings:sandbox",
         label: "Toggle sandbox",
         group: "Settings",
         keywords: "fixtures network cost",
-        run: () => void updateSetting("sandbox"),
+        run: () => void updateSetting(),
       },
     ],
-    [router, theme, sandbox],
+    [router, sandbox],
   );
   return null;
 }
@@ -144,7 +134,7 @@ function Sidebar(state: ShellState) {
         href="/today"
         className="flex min-w-0 items-center gap-2 border-b border-rule px-4 py-4 max-wide:justify-center max-wide:px-0"
       >
-        <NovaMark />
+        <OwlMark />
         <span className="type-body-strong truncate text-ink max-wide:hidden">{state.brandName}</span>
       </Link>
 
@@ -174,7 +164,7 @@ function MobileTopBar(state: ShellState) {
   return (
     <header className="flex items-center justify-between gap-4 border-b border-rule bg-surface px-4 py-3 md:hidden">
       <Link href="/today" className="flex min-w-0 items-center gap-2">
-        <NovaMark />
+        <OwlMark />
         <span className="type-body-strong truncate text-ink">{state.brandName}</span>
       </Link>
       <div className="flex shrink-0 items-center gap-3">
@@ -204,13 +194,13 @@ function SandboxLabel() {
   );
 }
 
-function NovaMark() {
+function OwlMark() {
   return (
-    <span
+    <img
+      src="/owlscope-logo.png"
+      alt=""
       aria-hidden
-      className="grid h-6 w-6 shrink-0 place-items-center rounded-pill border border-rule-strong bg-surface-sunken text-ink"
-    >
-      <span data-mono className="type-micro normal-case tracking-normal">N</span>
-    </span>
+      className="h-6 w-6 shrink-0 rounded-pill"
+    />
   );
 }

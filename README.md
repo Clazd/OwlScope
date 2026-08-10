@@ -1,14 +1,14 @@
-# Grounded Voice
+# OwlScope
 
 A local-first writing office that researches ideas, checks evidence and memory, drafts in a defined writing voice, critiques the result, and waits for human approval.
 
 > Release status: pre-release (`0.1.0`). The core local workflow is implemented. See [Known limitations](LIMITATIONS.md) before relying on it.
 
-![Grounded Voice Today screen](docs/screenshots/today.png)
+![OwlScope Today screen](docs/screenshots/today.png)
 
 ## Why it exists
 
-Most AI writing tools begin with “write me a post.” Grounded Voice begins earlier: *is there anything worth saying, does it fit this person, is it supported, and has it already been said?* It is built for writers who care more about a defensible point of view than publishing volume.
+Most AI writing tools begin with “write me a post.” OwlScope begins earlier: *is there anything worth saying, does it fit this person, is it supported, and has it already been said?* It is built for writers who care more about a defensible point of view than publishing volume.
 
 The project follows five rules:
 
@@ -18,7 +18,7 @@ The project follows five rules:
 4. Silence is a valid result.
 5. A person approves and publishes every final draft.
 
-Grounded Voice does not automatically publish to X or any other platform, and it does not autonomously “learn” a new identity from engagement.
+OwlScope does not automatically publish to X or any other platform, and it does not autonomously “learn” a new identity from engagement.
 
 ## What is implemented
 
@@ -63,7 +63,7 @@ The best surfaces to understand the product are Today, Brain, Radar, Studio’s 
 
 ## Architecture
 
-Grounded Voice is a Next.js application with no database or background service. Server-side domain code writes validated JSON under `data/`; React components and route handlers do not access the filesystem directly.
+OwlScope is a Next.js application with no database or background service. Server-side domain code writes validated JSON under `data/`; React components and route handlers do not access the filesystem directly.
 
 ```mermaid
 flowchart TB
@@ -103,7 +103,7 @@ See [Architecture](docs/ARCHITECTURE.md) for module boundaries, storage collecti
 
 ```bash
 git clone <your-fork-url>
-cd grounded-voice
+cd owlscope
 npm install
 cp .env.example .env
 ```
@@ -236,4 +236,4 @@ No license has been selected yet. Until a license file is added, the repository 
 
 ## Acknowledgements
 
-Grounded Voice uses IBM Plex Sans, IBM Plex Mono, and Newsreader. Radar integrates public interfaces from Hacker News, Reddit, arXiv, GitHub, DEV Community, Lobsters, and OpenAlex; each remains subject to its operator’s availability and terms.
+OwlScope uses IBM Plex Sans, IBM Plex Mono, and Newsreader. Radar integrates public interfaces from Hacker News, Reddit, arXiv, GitHub, DEV Community, Lobsters, and OpenAlex; each remains subject to its operator’s availability and terms.

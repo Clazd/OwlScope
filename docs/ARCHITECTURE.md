@@ -1,6 +1,6 @@
 # Architecture
 
-Grounded Voice is a single-user Next.js application designed to run on `127.0.0.1`. It has no authentication, database, worker process, queue, telemetry service, or automatic publisher.
+OwlScope is a single-user Next.js application designed to run on `127.0.0.1`. It has no authentication, database, worker process, queue, telemetry service, or automatic publisher.
 
 ## Module boundaries
 
