@@ -6,7 +6,7 @@ import { useMemo, type ReactNode } from "react";
 import { cn } from "@/lib/format/cn";
 import { CommandPalette } from "./CommandPalette";
 import { CommandProvider, useRegisterCommands } from "./command-registry";
-import { MicroLabel } from "./MicroLabel";
+
 import { NAV_ITEMS, NavRail, BottomBar, SETTINGS_ITEM } from "./NavRail";
 import { ShortcutSheet } from "./ShortcutSheet";
 import { TokenMeter } from "./TokenMeter";
@@ -28,8 +28,8 @@ interface AppShellProps extends ShellState {
 /**
  * Sidebar plus content region.
  *
- *   >= 1100px   280px labelled rail
- *   768-1100    72px icon rail
+ *   >= 1100px   480px labelled rail
+ *   768-1100    120px icon rail
  *   < 768px     top bar plus a five-item bottom bar
  *
  * Both rails are rendered and swapped in CSS rather than measured in JS, so

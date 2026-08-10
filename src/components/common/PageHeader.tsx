@@ -28,13 +28,13 @@ export function PageHeader({ title, subtitle, action, className }: PageHeaderPro
           <div
             aria-hidden
             style={{
-              width: 2,
+              width: 3,
               alignSelf: "stretch",
-              minHeight: 24,
+              minHeight: 36,
               background: "var(--accent)",
-              borderRadius: 2,
+              borderRadius: 3,
               flexShrink: 0,
-              marginTop: 3,
+              marginTop: 5,
             }}
           />
           <div>

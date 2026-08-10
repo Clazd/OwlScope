@@ -28,7 +28,7 @@ export default function GlobalError({
           colorScheme: "dark",
         }}
       >
-        <div style={{ maxWidth: 720, padding: 24, textAlign: "center" }}>
+        <div style={{ maxWidth: 720, padding: 36, textAlign: "center" }}>
           <p
             style={{
               fontFamily: '"IBM Plex Mono", monospace',
@@ -36,15 +36,15 @@ export default function GlobalError({
               textTransform: "uppercase",
               letterSpacing: "0.08em",
               color: "#5C6370",
-              marginBottom: 16,
+              marginBottom: 24,
             }}
           >
             Critical error
           </p>
-          <h1 style={{ fontSize: "1.5rem", fontWeight: 600, marginBottom: 12 }}>
+          <h1 style={{ fontSize: "1.5rem", fontWeight: 600, marginBottom: 18 }}>
             OwlScope could not start
           </h1>
-          <p style={{ fontSize: "0.9375rem", color: "#8B919A", marginBottom: 24 }}>
+          <p style={{ fontSize: "0.9375rem", color: "#8B919A", marginBottom: 36 }}>
             The root layout failed to render. Your data is safe on disk.
           </p>
           {error.digest && (
@@ -53,7 +53,7 @@ export default function GlobalError({
                 fontFamily: '"IBM Plex Mono", monospace',
                 fontSize: "0.8125rem",
                 color: "#5C6370",
-                marginBottom: 24,
+                marginBottom: 36,
               }}
             >
               Digest: {error.digest}
@@ -63,9 +63,9 @@ export default function GlobalError({
             type="button"
             onClick={reset}
             style={{
-              padding: "8px 16px",
+              padding: "12px 24px",
               border: "1px solid #2C3038",
-              borderRadius: 6,
+              borderRadius: 9,
               background: "#12151A",
               cursor: "pointer",
               fontSize: "0.9375rem",

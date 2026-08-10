@@ -58,9 +58,9 @@ export function Card({
             left: 0,
             top: 0,
             bottom: 0,
-            width: 2,
+            width: 3,
             background: "var(--accent)",
-            borderRadius: "10px 0 0 10px",
+            borderRadius: "15px 0 0 15px",
           }}
         />
       )}
