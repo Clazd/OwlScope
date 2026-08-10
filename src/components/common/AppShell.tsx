@@ -227,7 +227,7 @@ function SandboxLabel() {
 
 /**
  * Square logo mark, zoomed into the owl face.
- * 52×52px — prominent enough to anchor the brand block.
+ * 90×90px — scaled to match the 150%-equivalent layout.
  * The PNG's pure-black background bleeds seamlessly into the sidebar.
  */
 function OwlMark() {
@@ -235,9 +235,9 @@ function OwlMark() {
     <div
       className="shrink-0 overflow-hidden"
       style={{
-        width: 72,
-        height: 72,
-        borderRadius: 8,
+        width: 90,
+        height: 90,
+        borderRadius: 12,
         background: "#000000",
       }}
     >

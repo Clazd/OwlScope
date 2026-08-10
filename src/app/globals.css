@@ -41,14 +41,14 @@
   --spacing: initial;
   --spacing-0: 0px;
   --spacing-px: 1px;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
+  --spacing-1: 6px;
+  --spacing-2: 12px;
+  --spacing-3: 18px;
+  --spacing-4: 24px;
+  --spacing-6: 36px;
+  --spacing-8: 48px;
+  --spacing-12: 72px;
+  --spacing-16: 96px;
 
   --radius-control: var(--radius-control);
   --radius-card: var(--radius-card);
@@ -84,7 +84,7 @@
   }
 
   html {
-    font-size: 20px;
+    font-size: 24px;
     background: var(--bg);
     overflow-x: clip;
     -webkit-text-size-adjust: 100%;

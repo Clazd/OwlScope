@@ -116,12 +116,12 @@
   --manuscript: 400 1.1875rem/1.65 var(--font-serif);
 
   /* Shape */
-  --radius-control: 6px;
-  --radius-card: 10px;
+  --radius-control: 9px;
+  --radius-card: 15px;
   --radius-pill: 999px;
 
   /* One elevation, for popovers, dropdowns and toasts only. */
-  --shadow-pop: 0 4px 20px rgb(0 0 0 / 0.45);
+  --shadow-pop: 0 6px 30px rgb(0 0 0 / 0.45);
 
   /* Motion */
   --dur-state: 120ms;
@@ -138,11 +138,11 @@
   --z-modal: 400;
   --z-toast: 500;
 
-  /* Layout */
-  --reading-column: 680px;
-  --sidebar-width: 380px;
-  --sidebar-collapsed: 96px;
-  --drawer-width: 420px;
+  /* Layout — all px values scaled ×1.5 to match the 24px root font-size */
+  --reading-column: 1020px;
+  --sidebar-width: 480px;
+  --sidebar-collapsed: 120px;
+  --drawer-width: 630px;
 }
 
 @media (prefers-reduced-motion: reduce) {
