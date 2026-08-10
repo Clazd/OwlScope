@@ -156,23 +156,6 @@ export const DEFAULT_SETTINGS: Settings = {
     provider: "anthropic",
     strong: "claude-opus-4-6",
     fast: "claude-haiku-4-5-20251001",
-
-  updatedAt: z.string(),
-});
-
-export type Settings = z.infer<typeof SettingsSchema>;
-
-/**
- * Model names are deliberately not hard-coded anywhere else. These are only
- * the values a fresh install starts with; Settings edits them as free text.
- */
-export const DEFAULT_SETTINGS: Settings = {
-  id: "settings",
-  schemaVersion: 1,
-  model: {
-    provider: "anthropic",
-    strong: "claude-opus-4-6",
-    fast: "claude-haiku-4-5-20251001",
   },
   budget: {
     dailyTokenBudget: 200_000,
@@ -184,6 +167,9 @@ export const DEFAULT_SETTINGS: Settings = {
   memory: { patternConfidenceFloor: 0.2 },
   sync: { lastPullAt: null, lastPushAt: null },
   radar: DEFAULT_RADAR_SETTINGS,
+  updatedAt: new Date(0).toISOString(),
+};
+
 /** Everything the browser is allowed to know. Never includes the API key. */
 export const PublicSettingsSchema = SettingsSchema;
 export type PublicSettings = Settings;

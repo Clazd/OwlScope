@@ -7,7 +7,7 @@ import { useCommands } from "@/components/common/command-registry";
 import { DiffList } from "@/components/common/DiffList";
 import { EmptyState } from "@/components/common/EmptyState";
 import { EPISTEMIC_STATES, EpistemicChip } from "@/components/common/EpistemicChip";
-import { Field, RadioRow, TextInput, Toggle } from "@/components/common/Field";
+import { Field, TextInput, Toggle } from "@/components/common/Field";
 import { MicroLabel } from "@/components/common/MicroLabel";
 import { NAV_ITEMS, NavRail } from "@/components/common/NavRail";
 import { PipelineRail } from "@/components/common/PipelineRail";
@@ -184,7 +184,6 @@ function InteractiveSections() {
   const [reasons, setReasons] = useState<string[]>(["off-voice"]);
   const [slider, setSlider] = useState(35);
   const [toggle, setToggle] = useState(true);
-  const [radio, setRadio] = useState<"light" | "dark" | "system">("system");
   const [text, setText] = useState("");
 
   return (
@@ -217,24 +216,12 @@ function InteractiveSections() {
         <SliderRow name="Register" lowLabel="Plain" highLabel="Technical" value={slider} onChange={setSlider} />
       </Section>
 
-      <Section name="Field, TextInput, Toggle, RadioRow">
+      <Section name="Field, TextInput, Toggle">
         <Field label="Strong model" hint="Free text. Nothing here validates a model name for you.">
           <TextInput mono value={text} onChange={(e) => setText(e.target.value)} placeholder="claude-opus-4-6" />
         </Field>
         <Toggle label="Sandbox" description="Serve every model call from fixtures." checked={toggle} onChange={setToggle} />
         <Toggle label="Disabled toggle" checked disabled disabledReason="Pinned on by .env." onChange={() => {}} />
-        <Field label="Theme">
-          <RadioRow
-            name="Theme"
-            value={radio}
-            onChange={setRadio}
-            options={[
-              { value: "light", label: "Light" },
-              { value: "dark", label: "Dark" },
-              { value: "system", label: "System" },
-            ]}
-          />
-        </Field>
       </Section>
 
       <Section name="Toast" note="Bottom-left, three seconds, ink background.">

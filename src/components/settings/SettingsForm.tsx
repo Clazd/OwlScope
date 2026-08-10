@@ -1,16 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/common/Button";
 import { Card, CardSection } from "@/components/common/Card";
-import { Field, RadioRow, TextInput, Toggle } from "@/components/common/Field";
+import { Field, TextInput, Toggle } from "@/components/common/Field";
 import { MicroLabel } from "@/components/common/MicroLabel";
 import { useToast } from "@/components/common/Toast";
 import { formatBytes, formatMs, formatRelative } from "@/lib/format/display";
 import { formatCost } from "@/services/ai/pricing";
 import type { Pillar } from "@/domain/persona/schema";
-import { RADAR_SCORE_KEYS, type RadarSettings, type Settings, type Theme } from "@/domain/settings/schema";
+import { RADAR_SCORE_KEYS, type RadarSettings, type Settings } from "@/domain/settings/schema";
 import type { ProviderReport } from "@/domain/radar/schema";
 
 interface DataInfo {
@@ -55,12 +55,6 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides
     setSettings((current) => ({ ...current, ...changes }));
     setDirty(true);
   }, []);
-
-  // The theme applies the moment you pick it, before you save, because a
-  // preview you have to commit to is not a preview.
-  useEffect(() => {
-    document.documentElement.dataset.theme = settings.appearance.theme;
-  }, [settings.appearance.theme]);
 
   async function save() {
     setSaving(true);
@@ -414,27 +408,6 @@ function SandboxSection({
         disabledReason={forcedByEnv ? "SANDBOX_MODE=true in .env pins this on." : undefined}
         onChange={(enabled) => update({ sandbox: { enabled } })}
       />
-    </Card>
-  );
-}
-
-/* ------------------------------------------------------------- appearance -- */
-
-function AppearanceSection({ settings, update }: { settings: Settings; update: (c: Partial<Settings>) => void }) {
-  return (
-    <Card label="Appearance" padding="24">
-      <Field label="Theme">
-        <RadioRow<Theme>
-          name="Theme"
-          value={settings.appearance.theme}
-          onChange={(theme) => update({ appearance: { theme } })}
-          options={[
-            { value: "light", label: "Light" },
-            { value: "dark", label: "Dark" },
-            { value: "system", label: "System" },
-          ]}
-        />
-      </Field>
     </Card>
   );
 }

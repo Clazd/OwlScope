@@ -2,10 +2,6 @@ import { exportDataZip } from "@/services/storage/data-admin";
 import { dateKey } from "@/lib/ids";
 
 export const dynamic = "force-dynamic";
-import { exportDataZip } from "@/services/storage/data-admin";
-import { dateKey } from "@/lib/ids";
-
-export const dynamic = "force-dynamic";
 
 export async function GET() {
   const zip = await exportDataZip();

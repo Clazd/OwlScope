@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "A local-first writing office grounded in identity, evidence, and memory.",
-    "start": "next start -H 127.0.0.1 -p 3000",
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

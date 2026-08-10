@@ -5,7 +5,7 @@ import { readSnapshot } from "@/domain/persona/store";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Onboarding - Nova" };
+export const metadata = { title: "Onboarding - OwlScope" };
 
 /**
  * Not in the nav. Reached from Brain's empty state, from Settings, or directly.
