@@ -68,12 +68,12 @@
 /* --------------------------------------------------------------- colour -- */
 
 :root {
-  /* OwlScope — true black / green / white palette */
-  --bg: #06080C;
-  --surface: #0C0F14;
-  --surface-sunken: #030407;
-  --rule: #161A21;
-  --rule-strong: #222830;
+  /* OwlScope — pure black sidebar / green / white palette */
+  --bg: #0A0C11;
+  --surface: #111318;
+  --surface-sunken: #07090D;
+  --rule: #1A1E26;
+  --rule-strong: #272D38;
   --ink: #F4F6FA;
   --ink-2: #8B919A;
   --ink-3: #4E5562;
@@ -91,8 +91,8 @@
 
   /* Brand accent — derived from the scope reticle */
   --accent: #2ECC71;
-  --accent-tint: rgb(46 204 113 / 0.12);
-  --accent-dim: rgb(46 204 113 / 0.06);
+  --accent-tint: rgb(46 204 113 / 0.14);
+  --accent-dim: rgb(46 204 113 / 0.12);
 
   color-scheme: dark;
 }

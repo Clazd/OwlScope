@@ -129,7 +129,7 @@ function Sidebar(state: ShellState) {
         "hidden shrink-0 flex-col border-r border-rule md:flex",
         "md:w-(--sidebar-collapsed) wide:w-(--sidebar-width)",
       )}
-      style={{ background: "#0C0F14" }}
+      style={{ background: "#000000" }}
     >
       {/* Brand header — logo bg bleeds into sidebar so they read as one surface */}
       <Link
@@ -139,7 +139,7 @@ function Sidebar(state: ShellState) {
           "max-wide:justify-center max-wide:px-0 max-wide:py-3",
           "transition-opacity duration-(--dur-state) hover:opacity-80",
         )}
-        style={{ background: "#0C0F14" }}
+        style={{ background: "#000000" }}
       >
         <OwlMark />
         <span
@@ -228,7 +228,7 @@ function OwlMark() {
   return (
     <div
       className="shrink-0 overflow-hidden"
-      style={{ width: 44, height: 44, borderRadius: 6, background: "#0C0F14" }}
+      style={{ width: 44, height: 44, borderRadius: 6, background: "#000000" }}
     >
       <img
         src="/owlscope-logo.png"
