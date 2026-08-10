@@ -138,6 +138,18 @@ export const SettingsSchema = z.object({
     lastPushAt: z.string().nullable(),
   }),
 
+  cloudSync: z.object({
+    enabled: z.boolean(),
+    autoSync: z.boolean(),
+    lastPushAt: z.string().nullable(),
+    lastPullAt: z.string().nullable(),
+  }).default({
+    enabled: false,
+    autoSync: false,
+    lastPushAt: null,
+    lastPullAt: null,
+  }),
+
   radar: RadarSettingsSchema.default(DEFAULT_RADAR_SETTINGS),
 
   updatedAt: z.string(),
@@ -166,6 +178,7 @@ export const DEFAULT_SETTINGS: Settings = {
   appearance: { theme: "dark" },
   memory: { patternConfidenceFloor: 0.2 },
   sync: { lastPullAt: null, lastPushAt: null },
+  cloudSync: { enabled: false, autoSync: false, lastPushAt: null, lastPullAt: null },
   radar: DEFAULT_RADAR_SETTINGS,
   updatedAt: new Date(0).toISOString(),
 };

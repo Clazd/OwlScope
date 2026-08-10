@@ -1,8 +1,8 @@
 import "server-only";
-import { createJsonStore } from "@/services/storage/json-store";
+import { createDataStore } from "@/services/storage/store-factory";
 import { DIRS } from "@/services/storage/paths";
 import { MetricSchema, type Metric } from "./schema";
 
-export const metricStore = createJsonStore<Metric>(DIRS.metrics, MetricSchema, {
+export const metricStore = createDataStore<Metric>(DIRS.metrics, "metrics", MetricSchema, {
   fileName: (metric) => `${metric.contentId}.json`,
 });

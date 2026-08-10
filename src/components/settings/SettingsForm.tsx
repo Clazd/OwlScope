@@ -94,6 +94,7 @@ export function SettingsForm({ initial, data, sandboxForcedByEnv, modelOverrides
 
       <MemorySection settings={settings} update={update} />
       <PersonaSection hasPersona={hasPersona} />
+      <CloudSyncSection settings={settings} update={update} />
       <DataSection data={data} settings={settings} gitSyncEnabled={gitSyncEnabled} />
       <DangerZone />
 
@@ -611,6 +612,64 @@ function DataSection({ data, settings, gitSyncEnabled }: { data: DataInfo; setti
           <p className="type-small mt-2 text-ink-2">Resolve these in git, then pull again.</p>
         </div>
       )}
+    </Card>
+  );
+}
+
+function CloudSyncSection({ settings, update }: { settings: Settings; update: (c: Partial<Settings>) => void }) {
+  const toast = useToast();
+  const [busy, setBusy] = useState<string | null>(null);
+
+  async function sync(action: "pull" | "push") {
+    setBusy(action);
+    try {
+      const response = await fetch("/api/sync/cloud", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const body = await response.json();
+      toast.show(body.message ?? body.error ?? "Done.", response.ok ? "default" : "failure");
+    } catch (err) {
+      toast.show(`Cloud sync failed: ${(err as Error).message}`, "failure");
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return (
+    <Card label="Cloud Sync" padding="24">
+      <Toggle
+        label="Enable Cloud Sync"
+        description="Sync data with Supabase. Requires Supabase environment variables."
+        checked={settings.cloudSync.enabled}
+        onChange={(enabled) => update({ cloudSync: { ...settings.cloudSync, enabled } })}
+      />
+      <div className="mt-3">
+        <Toggle
+          label="Auto-sync"
+          description="Automatically sync data in the background."
+          checked={settings.cloudSync.autoSync}
+          disabled={!settings.cloudSync.enabled}
+          onChange={(autoSync) => update({ cloudSync: { ...settings.cloudSync, autoSync } })}
+        />
+      </div>
+
+      <dl data-mono className="type-data mt-4 grid grid-cols-[120px_1fr] gap-x-4 gap-y-1 text-ink-2">
+        <dt className="text-ink-3">last pull</dt>
+        <dd>{formatRelative(settings.cloudSync.lastPullAt)}</dd>
+        <dt className="text-ink-3">last push</dt>
+        <dd>{formatRelative(settings.cloudSync.lastPushAt)}</dd>
+      </dl>
+
+      <div className="mt-4 flex flex-wrap gap-2 border-t border-rule pt-4">
+        <Button onClick={() => sync("pull")} disabled={busy !== null || !settings.cloudSync.enabled}>
+          {busy === "pull" ? "Pulling" : "Pull from Cloud"}
+        </Button>
+        <Button onClick={() => sync("push")} disabled={busy !== null || !settings.cloudSync.enabled}>
+          {busy === "push" ? "Pushing" : "Push to Cloud"}
+        </Button>
+      </div>
     </Card>
   );
 }

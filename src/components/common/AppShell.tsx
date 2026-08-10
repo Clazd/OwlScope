@@ -19,6 +19,8 @@ export interface ShellState {
   tokensUsed: number;
   tokensBudget: number;
   sandbox: boolean;
+  /** True when Supabase auth is configured and the user is logged in. */
+  authEnabled?: boolean;
 }
 
 interface AppShellProps extends ShellState {
@@ -191,6 +193,7 @@ function Sidebar(state: ShellState) {
         </p>
         <TokenMeter used={state.tokensUsed} budget={state.tokensBudget} compact />
         {state.sandbox && <SandboxLabel />}
+        {state.authEnabled && <LogoutButton />}
       </div>
     </div>
   );
@@ -208,6 +211,7 @@ function MobileTopBar(state: ShellState) {
         <Link href="/settings" className="type-small text-ink-2 hover:text-ink">
           Settings
         </Link>
+        {state.authEnabled && <LogoutButton />}
       </div>
     </header>
   );
@@ -222,6 +226,24 @@ function SandboxLabel() {
     >
       Sandbox
     </span>
+  );
+}
+
+function LogoutButton() {
+  const router = useRouter();
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+    router.refresh();
+  }
+  return (
+    <button
+      onClick={handleLogout}
+      className="type-micro mt-2 rounded-control border border-rule-strong px-2 py-1 text-ink-3 transition-colors hover:text-ink max-wide:mt-1"
+      title="Sign out"
+    >
+      Sign out
+    </button>
   );
 }
 

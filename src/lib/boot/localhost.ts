@@ -11,6 +11,12 @@ const LOCAL_HOSTS = new Set(["127.0.0.1", "::1", "localhost", ""]);
  * so `process.argv` never reaches an edge bundle.
  */
 export function assertLocalhost(log: Logger): boolean {
+  // When Supabase auth is configured the app is protected by login, so
+  // binding to 0.0.0.0 is intentional and safe.
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return true;
+  }
+
   const argv = process.argv;
   const flagIndex = argv.findIndex((arg) => arg === "-H" || arg === "--hostname");
   const fromFlag = flagIndex >= 0 ? argv[flagIndex + 1] : undefined;

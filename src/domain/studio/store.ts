@@ -1,7 +1,7 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { dateKey, newId } from "@/lib/ids";
-import { createJsonStore } from "@/services/storage/json-store";
+import { createDataStore } from "@/services/storage/store-factory";
 import { DIRS } from "@/services/storage/paths";
 import {
   ContentItemSchema,
@@ -15,7 +15,7 @@ import {
 } from "./schema";
 
 /**
- * Four collections, all through `createJsonStore`, so all four inherit atomic
+ * Four collections, all through `createDataStore`, so all four inherit atomic
  * writes, validated reads and quarantine-on-corruption.
  *
  * Topics, sources and content are one file per item - they are listed, filtered
@@ -23,20 +23,20 @@ import {
  * more than one that shows a rewritten array.
  */
 
-export const topicStore = createJsonStore<Topic>(DIRS.topics, TopicSchema, {
+export const topicStore = createDataStore<Topic>(DIRS.topics, "topics", TopicSchema, {
   fileName: (topic) => `topic-${topic.id}.json`,
 });
 
-export const sourceStore = createJsonStore<Source>(DIRS.sources, SourceSchema, {
+export const sourceStore = createDataStore<Source>(DIRS.sources, "sources", SourceSchema, {
   fileName: (source) => `source-${source.id}.json`,
 });
 
 /** `/data/content/2026-08-09-<id>.json` - the date makes the directory readable. */
-export const contentStore = createJsonStore<ContentItem>(DIRS.content, ContentItemSchema, {
+export const contentStore = createDataStore<ContentItem>(DIRS.content, "content", ContentItemSchema, {
   fileName: (item) => `${dateKey(new Date(item.createdAt))}-${item.id}.json`,
 });
 
-export const sessionStore = createJsonStore<StudioSession>(DIRS.studio, StudioSessionSchema, {
+export const sessionStore = createDataStore<StudioSession>(DIRS.studio, "studio-sessions", StudioSessionSchema, {
   fileName: (session) => `session-${session.id}.json`,
 });
 

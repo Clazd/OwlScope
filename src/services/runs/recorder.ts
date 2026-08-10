@@ -2,7 +2,7 @@ import "server-only";
 import { createLogger } from "@/lib/logging/log";
 import { dateKey, newId } from "@/lib/ids";
 import { estimateCost } from "@/services/ai/pricing";
-import { createJsonStore } from "@/services/storage/json-store";
+import { createDataStore } from "@/services/storage/store-factory";
 import { DIRS } from "@/services/storage/paths";
 import { ProviderError, type ErrorCategory } from "@/services/ai/types";
 import { RunSchema, type Run, type RunKind, type RunStage } from "./schema";
@@ -10,7 +10,7 @@ import { RunSchema, type Run, type RunKind, type RunStage } from "./schema";
 const log = createLogger("runs");
 
 /** `/data/runs/2026-08-09/run-<id>.json` - one file per run, foldered by day. */
-export const runStore = createJsonStore<Run>(DIRS.runs, RunSchema, {
+export const runStore = createDataStore<Run>(DIRS.runs, "runs", RunSchema, {
   fileName: (run) => `run-${run.id}.json`,
   subdir: (run) => dateKey(new Date(run.startedAt)),
   recursive: true,

@@ -1,5 +1,5 @@
 import "server-only";
-import { createJsonStore } from "@/services/storage/json-store";
+import { createDataStore } from "@/services/storage/store-factory";
 import { DIRS } from "@/services/storage/paths";
 import { emptyPersona } from "./defaults";
 import {
@@ -19,7 +19,7 @@ import {
 } from "./schema";
 
 /**
- * Every persona file goes through `createJsonStore`, so all four inherit atomic
+ * Every persona file goes through `createDataStore`, so all four inherit atomic
  * writes, validated reads and quarantine-on-corruption without reimplementing
  * any of it.
  *
@@ -28,23 +28,23 @@ import {
  * them would make a save four writes that could half-apply.
  */
 
-const personaStore = createJsonStore<Persona>(DIRS.persona, PersonaSchema, {
+const personaStore = createDataStore<Persona>(DIRS.persona, "persona", PersonaSchema, {
   fileName: () => "persona.json",
 });
 
-const fingerprintStore = createJsonStore<Fingerprint>(DIRS.persona, FingerprintSchema, {
+const fingerprintStore = createDataStore<Fingerprint>(DIRS.persona, "fingerprint", FingerprintSchema, {
   fileName: () => "fingerprint.json",
 });
 
-const sampleStore = createJsonStore<SampleSet>(DIRS.persona, SampleSetSchema, {
+const sampleStore = createDataStore<SampleSet>(DIRS.persona, "samples", SampleSetSchema, {
   fileName: () => "samples.json",
 });
 
-const experienceStore = createJsonStore<ExperienceLog>(DIRS.persona, ExperienceLogSchema, {
+const experienceStore = createDataStore<ExperienceLog>(DIRS.persona, "experience", ExperienceLogSchema, {
   fileName: () => "experience.json",
 });
 
-export const versionStore = createJsonStore<PersonaVersion>(DIRS.personaVersions, PersonaVersionSchema);
+export const versionStore = createDataStore<PersonaVersion>(DIRS.personaVersions, "persona-versions", PersonaVersionSchema);
 
 /* ---------------------------------------------------------------- reads -- */
 

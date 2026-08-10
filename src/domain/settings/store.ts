@@ -1,5 +1,5 @@
 import "server-only";
-import { createJsonStore } from "@/services/storage/json-store";
+import { createDataStore } from "@/services/storage/store-factory";
 import { DATA_ROOT } from "@/services/storage/paths";
 import { DEFAULT_SETTINGS, SettingsSchema, type Settings } from "./schema";
 
@@ -7,7 +7,7 @@ import { DEFAULT_SETTINGS, SettingsSchema, type Settings } from "./schema";
  * Settings is a single document, but it goes through the same store as
  * everything else so it gets atomic writes, validation and quarantine for free.
  */
-const store = createJsonStore<Settings>(DATA_ROOT, SettingsSchema, {
+const store = createDataStore<Settings>(DATA_ROOT, "settings", SettingsSchema, {
   fileName: () => "settings.json",
 });
 

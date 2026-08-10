@@ -28,6 +28,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     sandboxEnabled(),
   ]);
   const models = resolveConfiguredModels(settings.model);
+  const authEnabled = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  );
 
   return (
     // The theme is stamped server-side from settings, so there is no flash of
@@ -40,6 +43,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           tokensUsed={budget.tokensUsed}
           tokensBudget={budget.tokensBudget}
           sandbox={sandbox}
+          authEnabled={authEnabled}
         >
           {children}
         </AppShell>
