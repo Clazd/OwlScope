@@ -259,7 +259,7 @@ export function Today({ persona, model, dateLabel, initial }: TodayProps) {
           <p data-mono className="type-data mt-1 text-ink-3">{dateLabel} · {persona.name || "Nova"} · {model}</p>
         </div>
         <Button
-          variant="primary"
+          variant="accent"
           disabled={busy || payload.record?.status === "running" || (overLimit && !payload.record)}
           title="Estimated daily run: ~12k–24k tokens"
           onClick={() => void generate("generate")}

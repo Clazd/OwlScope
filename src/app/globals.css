@@ -227,3 +227,26 @@
     scrollbar-color: var(--rule-strong) transparent;
   }
 }
+
+/* --------------------------------------------------------- dot grid ----- */
+
+/*
+ * A barely-perceptible dot grid on the main content area. Adds texture and
+ * depth to the dark background without competing with content.
+ * Applied via the `scope-grid` utility on the main content wrapper.
+ */
+@utility scope-grid {
+  background-image: radial-gradient(circle, rgba(46,204,113,0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* --------------------------------------------------------- glow ---------- */
+
+/*
+ * Subtle green ambient glow on focused inputs and active elements.
+ * The glow is purposely very low opacity — it signals focus without competing
+ * with content or adding visual noise.
+ */
+@utility scope-glow {
+  box-shadow: 0 0 0 1px rgba(46,204,113,0.2), 0 0 16px rgba(46,204,113,0.06);
+}

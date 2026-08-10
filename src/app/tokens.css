@@ -68,15 +68,15 @@
 /* --------------------------------------------------------------- colour -- */
 
 :root {
-  /* OwlScope — pure black sidebar / green / white palette */
-  --bg: #0A0C11;
-  --surface: #111318;
-  --surface-sunken: #07090D;
-  --rule: #1A1E26;
-  --rule-strong: #272D38;
+  /* OwlScope — Scope Interface: pure black sidebar / green / white */
+  --bg: #0D0F15;
+  --surface: #141720;
+  --surface-sunken: #09090E;
+  --rule: #1C2029;
+  --rule-strong: #2A3040;
   --ink: #F4F6FA;
-  --ink-2: #8B919A;
-  --ink-3: #4E5562;
+  --ink-2: #9BA3AE;
+  --ink-3: #636B78;
 
   /* Epistemic — the ONLY saturated colours in the product */
   --supported: #4fb39a;

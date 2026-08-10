@@ -43,6 +43,8 @@ interface NavRailProps {
 /**
  * Pill-based active state: the active item gets a subtle accent-tinted
  * background and an accent-coloured icon. Hover shows a surface-sunken pill.
+ *
+ * Inactive labels use text-ink-2 (readable on pure black) not text-ink-3.
  */
 export function NavRail({ items, collapsed = false, className }: NavRailProps) {
   const pathname = usePathname();
@@ -63,14 +65,14 @@ export function NavRail({ items, collapsed = false, className }: NavRailProps) {
               collapsed ? "justify-center" : "",
               active
                 ? "bg-accent-dim type-body-strong text-ink"
-                : "type-body text-ink-3 hover:bg-surface-sunken hover:text-ink-2",
+                : "type-body text-ink-2 hover:bg-surface-sunken hover:text-ink",
             )}
           >
             <Glyph
               name={item.glyph}
               className={cn(
                 "shrink-0 transition-colors duration-(--dur-state)",
-                active ? "text-accent" : "group-hover:text-ink-2",
+                active ? "text-accent" : "text-ink-3 group-hover:text-ink-2",
               )}
             />
             {!collapsed && <span className="truncate">{item.label}</span>}
@@ -101,7 +103,7 @@ export function BottomBar({ items }: { items: NavItem[] }) {
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex flex-col items-center gap-1 py-2",
-              active ? "text-accent" : "text-ink-3",
+              active ? "text-accent" : "text-ink-2",
             )}
           >
             <Glyph name={item.glyph} />

@@ -57,7 +57,7 @@ export function AppShell({ children, ...state }: AppShellProps) {
         <div className="min-h-dvh overflow-x-clip md:flex">
           <MobileTopBar {...state} />
           <Sidebar {...state} />
-          <main id="main-content" className="min-w-0 grow pb-16 md:pb-0">{children}</main>
+          <main id="main-content" className="min-w-0 grow pb-16 md:pb-0 scope-grid">{children}</main>
           <BottomBar items={NAV_ITEMS} />
         </div>
         <CommandPalette />
@@ -126,57 +126,68 @@ function Sidebar(state: ShellState) {
   return (
     <div
       className={cn(
-        "hidden shrink-0 flex-col border-r border-rule md:flex",
+        "hidden shrink-0 flex-col md:flex",
         "md:w-(--sidebar-collapsed) wide:w-(--sidebar-width)",
       )}
-      style={{ background: "#000000" }}
+      style={{
+        background: "#000000",
+        borderRight: "1px solid #1C2029",
+      }}
     >
-      {/* Brand header — logo bg bleeds into sidebar so they read as one surface */}
+      {/* ── Brand block ───────────────────────────────────────────────── */}
       <Link
         href="/today"
         className={cn(
-          "flex min-w-0 items-center gap-3 border-b border-rule px-3 py-3",
-          "max-wide:justify-center max-wide:px-0 max-wide:py-3",
+          "flex min-w-0 items-center gap-3 px-3 py-4",
+          "max-wide:justify-center max-wide:px-0 max-wide:py-4",
           "transition-opacity duration-(--dur-state) hover:opacity-80",
         )}
         style={{ background: "#000000" }}
       >
         <OwlMark />
-        <span
-          className="type-body-strong truncate max-wide:hidden"
-          style={{ color: "#F4F6FA", letterSpacing: "0.01em" }}
-        >
-          {state.brandName}
-        </span>
+        <div className="min-w-0 max-wide:hidden">
+          <p className="type-h2 truncate" style={{ color: "#F4F6FA", letterSpacing: "-0.01em" }}>
+            {state.brandName}
+          </p>
+          <p className="type-micro" style={{ color: "var(--accent)", marginTop: 2 }}>
+            AI WRITING SCOPE
+          </p>
+        </div>
       </Link>
 
-      {/* Thin accent rule below the logo — scope line */}
-      <div
-        className="h-px shrink-0"
-        style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 60%)" }}
-      />
+      {/* Green accent bar — the scope line */}
+      <div style={{ height: 2, background: "linear-gradient(90deg, var(--accent) 0%, rgba(46,204,113,0.15) 60%, transparent 100%)", flexShrink: 0 }} />
 
+      {/* ── Nav ───────────────────────────────────────────────────────── */}
       <div className="grow py-3">
         <NavRail items={NAV_ITEMS} className="wide:hidden" collapsed />
         <NavRail items={NAV_ITEMS} className="max-wide:hidden" />
       </div>
 
-      <div className="border-t border-rule py-3">
+      {/* ── Settings ──────────────────────────────────────────────────── */}
+      <div className="py-3" style={{ borderTop: "1px solid #1C2029" }}>
         <NavRail items={[SETTINGS_ITEM]} className="wide:hidden" collapsed />
         <NavRail items={[SETTINGS_ITEM]} className="max-wide:hidden" />
       </div>
 
+      {/* ── Model footer ──────────────────────────────────────────────── */}
       <div
-        className="overflow-hidden border-t border-rule px-4 py-3 max-wide:px-2"
-        style={{ background: "rgba(0,0,0,0.25)" }}
+        className="overflow-hidden px-4 py-3 max-wide:px-2"
+        style={{ borderTop: "1px solid #1C2029", background: "rgba(0,0,0,0.4)" }}
       >
         <p className="flex min-w-0 items-center gap-2 mb-2 max-wide:justify-center">
           <span
             aria-hidden
             className="h-1.5 w-1.5 shrink-0 rounded-pill stage-pulse"
-            style={{ background: "var(--accent)", opacity: 0.8 }}
+            style={{ background: "var(--accent)" }}
           />
-          <MicroLabel className="min-w-0 truncate max-wide:hidden">{state.model}</MicroLabel>
+          <span
+            data-mono
+            className="type-micro min-w-0 truncate max-wide:hidden"
+            style={{ color: "var(--accent)" }}
+          >
+            {state.model}
+          </span>
         </p>
         <TokenMeter used={state.tokensUsed} budget={state.tokensBudget} compact />
         {state.sandbox && <SandboxLabel />}
@@ -202,11 +213,6 @@ function MobileTopBar(state: ShellState) {
   );
 }
 
-/**
- * Sandbox state is always visible, so fixture output can never be mistaken for
- * real output. It is a mono label, not a badge - a badge would be colour, and
- * colour is reserved.
- */
 function SandboxLabel() {
   return (
     <span
@@ -221,14 +227,20 @@ function SandboxLabel() {
 
 /**
  * Square logo mark, zoomed into the owl face.
- * The dark background of the PNG matches the sidebar (#0C0F14) so the
- * logo bleeds seamlessly into the panel — no border, no gap.
+ * 52×52px — prominent enough to anchor the brand block.
+ * The PNG's pure-black background bleeds seamlessly into the sidebar.
  */
 function OwlMark() {
   return (
     <div
       className="shrink-0 overflow-hidden"
-      style={{ width: 44, height: 44, borderRadius: 6, background: "#000000" }}
+      style={{
+        width: 52,
+        height: 52,
+        borderRadius: 8,
+        background: "#000000",
+        boxShadow: "0 0 0 1px rgba(46,204,113,0.2)",
+      }}
     >
       <img
         src="/owlscope-logo.png"
@@ -246,3 +258,4 @@ function OwlMark() {
     </div>
   );
 }
+

@@ -3,7 +3,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/format/cn";
 
-type Variant = "primary" | "secondary" | "quiet" | "destructive";
+type Variant = "primary" | "secondary" | "quiet" | "destructive" | "accent";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -11,14 +11,23 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 /**
- * Buttons are ink. There are no coloured buttons in this product — colour means
- * epistemic status and nothing else.
+ * Scope Interface button system.
  *
- * Destructive actions are --unsupported as *text only*, never a filled red
- * button, because a filled red button reads as "status: unsupported" to a user
- * who has learned the four colours.
+ * `accent` — green bg / black text. Use for the single primary CTA on a page
+ *   (e.g. "Generate today's post"). Only one accent button per view.
+ *
+ * `primary` — white bg / dark text. Secondary emphasis.
+ *
+ * `secondary` — surface bg, subdued. Default variant for supporting actions.
+ *
+ * `quiet` — no bg, no border. For toolbar/icon actions.
+ *
+ * `destructive` — unsupported-coloured text only. Never a filled red button —
+ *   colour signals epistemic status, not danger.
  */
 const VARIANTS: Record<Variant, string> = {
+  accent:
+    "bg-accent text-bg border border-accent hover:opacity-90 hover:shadow-pop active:scale-[0.98]",
   primary:
     "bg-ink text-bg border border-ink hover:opacity-90 hover:shadow-pop active:scale-[0.98]",
   secondary:

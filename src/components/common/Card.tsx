@@ -12,14 +12,30 @@ interface CardProps {
   action?: ReactNode;
   padding?: "16" | "24";
   sunken?: boolean;
+  /**
+   * Featured cards carry a 2px accent left bar and a slightly sunken fill.
+   * Use for the primary piece of information on a page.
+   */
+  featured?: boolean;
   className?: string;
 }
 
 /**
- * A 1px rule and a 10px radius. Cards are defined by borders, never shadows.
- * Hover subtly brightens the border for a premium tactile feel.
+ * Scope Interface card.
+ *
+ * Always shows its border (not just on hover). Hover brightens border to
+ * rule-strong for a tactile feel. Featured variant gets a 2px green left bar.
  */
-export function Card({ children, id, label, action, padding = "16", sunken = false, className }: CardProps) {
+export function Card({
+  children,
+  id,
+  label,
+  action,
+  padding = "16",
+  sunken = false,
+  featured = false,
+  className,
+}: CardProps) {
   return (
     <section
       id={id}
@@ -27,11 +43,27 @@ export function Card({ children, id, label, action, padding = "16", sunken = fal
         "rounded-card border border-rule",
         "transition-colors duration-(--dur-state) ease-(--ease)",
         "hover:border-rule-strong",
-        sunken ? "bg-surface-sunken" : "bg-surface",
+        sunken || featured ? "bg-surface-sunken" : "bg-surface",
         padding === "24" ? "p-6" : "p-4",
+        featured ? "relative overflow-hidden" : "",
         className,
       )}
     >
+      {/* Featured accent bar */}
+      {featured && (
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 2,
+            background: "var(--accent)",
+            borderRadius: "10px 0 0 10px",
+          }}
+        />
+      )}
       {(label || action) && (
         <header className="mb-3 flex items-center justify-between gap-4">
           {label ? <MicroLabel>{label}</MicroLabel> : <span />}
