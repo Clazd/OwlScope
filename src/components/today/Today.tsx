@@ -252,7 +252,7 @@ export function Today({ persona, model, dateLabel, initial }: TodayProps) {
   const overLimit = payload.budget.overBudget || payload.budget.atRunLimit;
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-4 py-6 sm:px-6 lg:py-8">
+    <div className="mx-auto w-full max-w-[1680px] px-4 py-6 sm:px-6 lg:py-8">
       <header className="flex flex-col gap-4 border-b border-rule pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="type-h1 text-ink">Good morning.</h1>

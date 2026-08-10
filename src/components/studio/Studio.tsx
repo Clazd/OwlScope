@@ -402,7 +402,7 @@ export function Studio({ pillars, personaName, handle, initialSessionId = null }
 
   return (
     <div className={cn("flex min-h-0 min-w-0 grow flex-col", "lg:flex-row")}>
-      <aside className="min-w-0 max-w-full shrink-0 border-b border-rule px-4 py-4 lg:w-[200px] lg:border-b-0 lg:border-r">
+      <aside className="min-w-0 max-w-full shrink-0 border-b border-rule px-4 py-4 lg:w-[300px] lg:border-b-0 lg:border-r">
         {session ? (
           <>
             <StageRail session={session} onGoTo={goTo} busy={busy !== null} />
@@ -420,7 +420,7 @@ export function Studio({ pillars, personaName, handle, initialSessionId = null }
         {workspace}
       </main>
 
-      <aside className="shrink-0 border-t border-rule lg:w-[280px] lg:border-t-0 lg:border-l">
+      <aside className="shrink-0 border-t border-rule lg:w-[420px] lg:border-t-0 lg:border-l">
         <SourcePanel
           sources={sources}
           openSourceId={openSourceId}

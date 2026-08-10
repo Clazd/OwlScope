@@ -59,7 +59,7 @@ export function Memory({ entries, feedback, patterns }: Props) {
     <>
       {patterns && <MemoryTabs tab={tab} onTab={setTab} showPatterns />}
       <div className="space-y-4">
-        <div className="grid gap-2 md:grid-cols-[minmax(220px,1.5fr)_repeat(4,minmax(120px,1fr))]">
+        <div className="grid gap-2 md:grid-cols-[minmax(330px,1.5fr)_repeat(4,minmax(180px,1fr))]">
           <input id="memory-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search topic, thesis, or text…" aria-label="Search Memory" className={CONTROL} />
           <Filter label="Pillar" value={pillar} onChange={setPillar} options={pillars} />
           <Filter label="Status" value={status} onChange={setStatus} options={statuses.map((value) => [value, value])} />
@@ -127,7 +127,7 @@ function MemoryTableRow({ entry, expanded, onToggle, onSource }: RowProps) {
       <td data-mono className="type-micro px-3 py-3">{entry.status}</td>
       <td data-mono className="type-data px-3 py-3">{entry.characterCount ?? "-"}</td>
       <td data-mono className="type-data px-3 py-3">-</td>
-      <td className="max-w-[440px] px-3 py-3"><button type="button" aria-expanded={expanded} onClick={onToggle} className="type-body block w-full text-left text-ink hover:text-ink-2"><span className="block truncate">{entry.text}</span>{entry.feedbackLabels.length > 0 && <span className="type-small mt-1 block truncate text-ink-3">↳ {entry.feedbackLabels.join(", ")}</span>}</button></td>
+      <td className="max-w-[660px] px-3 py-3"><button type="button" aria-expanded={expanded} onClick={onToggle} className="type-body block w-full text-left text-ink hover:text-ink-2"><span className="block truncate">{entry.text}</span>{entry.feedbackLabels.length > 0 && <span className="type-small mt-1 block truncate text-ink-3">↳ {entry.feedbackLabels.join(", ")}</span>}</button></td>
     </tr>
     {expanded && <tr><td colSpan={7} className="border-b border-rule bg-surface px-6 py-6"><MemoryDetail entry={entry} onSource={onSource} /></td></tr>}
   </>;

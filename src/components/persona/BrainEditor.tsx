@@ -232,7 +232,7 @@ export function BrainEditor({ initial, versions: initialVersions }: Props) {
             aria-modal="true"
             aria-label="Confirm save"
             tabIndex={-1}
-            className="relative flex max-h-[80vh] w-full max-w-[560px] flex-col rounded-card border border-rule bg-surface shadow-pop"
+            className="relative flex max-h-[80vh] w-full max-w-[840px] flex-col rounded-card border border-rule bg-surface shadow-pop"
           >
             <header className="border-b border-rule px-6 py-4">
               <h2 className="type-h2 text-ink">

@@ -195,7 +195,7 @@ function SourcesSection({ settings, update, pillars }: {
           </Field>
         </div>
         <Field label="RSS and Atom URLs" hint="One URL per line.">
-          <textarea className="type-data min-h-[96px] w-full rounded-control border border-rule-strong bg-surface px-3 py-2" value={radar.rss.urls.join("\n")} onChange={(event) => setRadar({ ...radar, rss: { urls: list(event.target.value) } })} />
+          <textarea className="type-data min-h-[144px] w-full rounded-control border border-rule-strong bg-surface px-3 py-2" value={radar.rss.urls.join("\n")} onChange={(event) => setRadar({ ...radar, rss: { urls: list(event.target.value) } })} />
         </Field>
       </CardSection>
 
@@ -512,7 +512,7 @@ function PersonaSection({ hasPersona }: { hasPersona: boolean }) {
           <div className="mt-3 flex flex-wrap items-center gap-3">
             <TextInput
               mono
-              className="max-w-[240px]"
+              className="max-w-[360px]"
               placeholder={NEW_PERSON_PHRASE}
               aria-label={`Type ${NEW_PERSON_PHRASE} to confirm`}
               value={newPersonConfirm}
@@ -678,7 +678,7 @@ function DangerZone() {
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <TextInput
             mono
-            className="max-w-[240px]"
+            className="max-w-[360px]"
             placeholder={MEMORY_CONFIRM_PHRASE}
             aria-label={`Type ${MEMORY_CONFIRM_PHRASE} to confirm`}
             value={memoryConfirmText}
@@ -710,7 +710,7 @@ function DangerZone() {
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <TextInput
             mono
-            className="max-w-[240px]"
+            className="max-w-[360px]"
             placeholder={CONFIRM_PHRASE}
             aria-label={`Type ${CONFIRM_PHRASE} to confirm`}
             value={confirmText}

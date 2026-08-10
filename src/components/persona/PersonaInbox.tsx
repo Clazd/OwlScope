@@ -206,7 +206,7 @@ export function PersonaInbox({ snapshot, onUseProposal }: Props) {
     >
       <Card padding="24">
         <MicroLabel strong>Prompts to use in ChatGPT</MicroLabel>
-        <p className="type-small mt-2 max-w-[700px] text-ink-3">
+        <p className="type-small mt-2 max-w-[1050px] text-ink-3">
           ChatGPT may reference useful past context without retaining every detail. These prompts make it disclose what it could access and distinguish remembered facts from inference.
         </p>
         <div className="mt-4 divide-y divide-rule">
@@ -222,7 +222,7 @@ export function PersonaInbox({ snapshot, onUseProposal }: Props) {
                 </div>
               </summary>
               <div className="mt-3 rounded-control border border-rule bg-surface-sunken p-3">
-                <pre className="type-data max-h-[320px] overflow-auto whitespace-pre-wrap text-ink-2">{example.prompt}</pre>
+                <pre className="type-data max-h-[480px] overflow-auto whitespace-pre-wrap text-ink-2">{example.prompt}</pre>
                 <Button className="mt-3" onClick={() => copyPrompt(example.prompt, example.title)}>
                   Copy this prompt
                 </Button>
@@ -265,7 +265,7 @@ export function PersonaInbox({ snapshot, onUseProposal }: Props) {
             <div className="flex flex-wrap items-start justify-between gap-3 border-b border-rule pb-4">
               <div>
                 <MicroLabel strong>AI proposal</MicroLabel>
-                <p className="type-body mt-2 max-w-[680px] text-ink">{result.proposal.summary}</p>
+                <p className="type-body mt-2 max-w-[1020px] text-ink">{result.proposal.summary}</p>
               </div>
               <MicroLabel>{result.usage.model}{result.usage.sandbox ? " · sandbox" : ""}</MicroLabel>
             </div>
@@ -288,7 +288,7 @@ export function PersonaInbox({ snapshot, onUseProposal }: Props) {
               </p>
             </div>
 
-            <div className="max-h-[520px] overflow-y-auto py-4">
+            <div className="max-h-[780px] overflow-y-auto py-4">
               <DiffList entries={result.changes} />
             </div>
 

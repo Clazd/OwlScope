@@ -39,7 +39,7 @@ export function Section({ id, title, intro, action, children }: SectionProps) {
       <header className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h2 className="type-h2 text-ink">{title}</h2>
-          {intro && <p className="type-small mt-1 max-w-[520px] text-ink-3">{intro}</p>}
+          {intro && <p className="type-small mt-1 max-w-[780px] text-ink-3">{intro}</p>}
         </div>
         {action}
       </header>

@@ -68,7 +68,7 @@ export function StageRail({ session, onGoTo, busy }: StageRailProps) {
                 aria-current={current ? "step" : undefined}
                 onClick={() => onGoTo(stage)}
                 className={cn(
-                  "flex min-w-[132px] items-center gap-3 rounded-control px-2 py-2 text-left lg:w-full lg:min-w-0",
+                  "flex min-w-[198px] items-center gap-3 rounded-control px-2 py-2 text-left lg:w-full lg:min-w-0",
                   "transition-colors duration-(--dur-state) ease-(--ease)",
                   reachable ? "hover:bg-surface-sunken" : "cursor-default",
                   current && "bg-surface-sunken",

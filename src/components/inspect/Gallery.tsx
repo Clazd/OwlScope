@@ -84,7 +84,7 @@ export function Gallery() {
       </Section>
 
       <Section name="TokenMeter" note="Ink until 80%, then amber.">
-        <div className="max-w-[240px] space-y-4">
+        <div className="max-w-[360px] space-y-4">
           <TokenMeter used={0} budget={200_000} />
           <TokenMeter used={62_000} budget={200_000} />
           <TokenMeter used={168_000} budget={200_000} />

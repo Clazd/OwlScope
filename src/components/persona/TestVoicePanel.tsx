@@ -87,7 +87,7 @@ export function TestVoicePanel({ persona, fingerprint, dirty }: Props) {
             if (e.key === "Enter") run();
           }}
           placeholder="A topic to write about"
-          className="min-w-[220px] grow"
+          className="min-w-[330px] grow"
         />
         <Button variant="primary" onClick={run} disabled={running}>
           {running ? "Writing" : "Test voice"}

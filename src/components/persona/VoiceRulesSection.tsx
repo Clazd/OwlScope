@@ -53,7 +53,7 @@ export function VoiceRulesSection({ rules, onChange }: RuleProps) {
                 value={rule.rule}
                 onChange={(e) => update(rule.id, { rule: e.target.value })}
                 placeholder="Something this writer never does"
-                className="min-w-[240px] grow"
+                className="min-w-[360px] grow"
               />
             </div>
           </ListRow>
@@ -114,7 +114,7 @@ export function ExperienceSection({ experience, onChange }: ExperienceProps) {
                   value={item.occurredAt}
                   onChange={(e) => update(item.id, { occurredAt: e.target.value })}
                   placeholder="March 2026"
-                  className="max-w-[200px]"
+                  className="max-w-[300px]"
                 />
               </div>
               <TextInput

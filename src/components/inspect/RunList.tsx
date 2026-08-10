@@ -161,7 +161,7 @@ function Block({ label, children, tone }: { label: string; children: React.React
       <pre
         data-mono
         className={cn(
-          "type-data max-h-[280px] overflow-auto whitespace-pre-wrap break-words rounded-control bg-surface-sunken p-3",
+          "type-data max-h-[420px] overflow-auto whitespace-pre-wrap break-words rounded-control bg-surface-sunken p-3",
           tone === "failure" ? "text-unsupported" : "text-ink-2",
         )}
       >

@@ -65,7 +65,7 @@ function Palette() {
         aria-modal="true"
         aria-label="Command palette"
         tabIndex={-1}
-        className="relative w-full max-w-[560px] overflow-hidden rounded-card border border-rule bg-surface shadow-pop"
+        className="relative w-full max-w-[840px] overflow-hidden rounded-card border border-rule bg-surface shadow-pop"
       >
         <input
           ref={inputRef}
@@ -91,7 +91,7 @@ function Palette() {
           className="type-body w-full border-b border-rule bg-transparent px-4 py-3 text-ink placeholder:text-ink-3"
         />
 
-        <div className="max-h-[320px] overflow-y-auto py-2">
+        <div className="max-h-[480px] overflow-y-auto py-2">
           {matches.length === 0 && <p className="type-small px-4 py-3 text-ink-3">No command matches that.</p>}
 
           {Object.entries(groups).map(([group, groupCommands]) => (

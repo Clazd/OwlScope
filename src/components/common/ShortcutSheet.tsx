@@ -38,7 +38,7 @@ export function ShortcutSheet() {
         aria-modal="true"
         aria-label="Keyboard shortcuts"
         tabIndex={-1}
-        className="relative w-full max-w-[420px] rounded-card border border-rule bg-surface p-6 shadow-pop"
+        className="relative w-full max-w-[630px] rounded-card border border-rule bg-surface p-6 shadow-pop"
       >
         <h2 className="type-h2 mb-4 text-ink">Keyboard</h2>
         <dl className="divide-y divide-rule">

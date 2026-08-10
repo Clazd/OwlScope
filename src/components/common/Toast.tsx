@@ -76,7 +76,7 @@ export function Toast({ children, tone = "default", onDismiss, className }: Toas
       role="status"
       aria-live="polite"
       className={cn(
-        "pointer-events-auto flex max-w-[420px] items-start gap-3 rounded-control px-4 py-3 shadow-pop",
+        "pointer-events-auto flex max-w-[630px] items-start gap-3 rounded-control px-4 py-3 shadow-pop",
         "bg-ink text-bg",
         tone === "failure" && "border-l-2 border-unsupported",
         className,

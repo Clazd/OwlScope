@@ -28,7 +28,7 @@ export default function GlobalError({
           colorScheme: "dark",
         }}
       >
-        <div style={{ maxWidth: 480, padding: 24, textAlign: "center" }}>
+        <div style={{ maxWidth: 720, padding: 24, textAlign: "center" }}>
           <p
             style={{
               fontFamily: '"IBM Plex Mono", monospace',
