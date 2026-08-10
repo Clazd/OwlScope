@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0d0f12; }
+      .fg { fill: #edeeea; }
+      .ring { stroke: #363b41; }
+    }
+  </style>
+  <circle class="bg" cx="16" cy="16" r="16" fill="#fbfbf9"/>
+  <circle class="ring" cx="16" cy="16" r="14.5" fill="none" stroke="#c9c9c1" stroke-width="1"/>
+  <text class="fg" x="16" y="21.5" fill="#14171a" font-family="'IBM Plex Mono', ui-monospace, monospace" font-size="14" font-weight="500" text-anchor="middle">N</text>
+</svg>

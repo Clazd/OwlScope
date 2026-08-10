@@ -30,7 +30,7 @@ interface AppShellProps extends ShellState {
  * Sidebar plus content region.
  *
  *   >= 1100px   232px labelled rail
- *   768–1100    56px icon rail
+ *   768-1100    56px icon rail
  *   < 768px     top bar plus a five-item bottom bar
  *
  * Both rails are rendered and swapped in CSS rather than measured in JS, so
@@ -49,10 +49,16 @@ export function AppShell({ children, ...state }: AppShellProps) {
     <CommandProvider goTargets={goTargets}>
       <ToastProvider>
         <ShellCommands theme={state.theme} sandbox={state.sandbox} />
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-ink focus:px-4 focus:py-2 focus:text-bg focus:type-body-strong focus:shadow-pop"
+        >
+          Skip to content
+        </a>
         <div className="min-h-dvh overflow-x-clip md:flex">
           <MobileTopBar {...state} />
           <Sidebar {...state} />
-          <main className="min-w-0 grow pb-16 md:pb-0">{children}</main>
+          <main id="main-content" className="min-w-0 grow pb-16 md:pb-0">{children}</main>
           <BottomBar items={NAV_ITEMS} />
         </div>
         <CommandPalette />

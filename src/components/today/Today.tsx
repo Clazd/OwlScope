@@ -44,7 +44,7 @@ interface TodayProps {
   initial: TodayPayload;
 }
 
-type GenerateAction = "generate" | "alternative" | "search" | "evergreen" | "retry";
+type GenerateAction = "generate" | "alternative" | "search" | "evergreen" | "retry" | "reset";
 
 function optimisticRecord(previous: TodayRecord | null, action: GenerateAction): TodayRecord {
   if (action === "retry" && previous) {
@@ -304,7 +304,7 @@ export function Today({ persona, model, dateLabel, initial }: TodayProps) {
         ) : !payload.record ? (
           <EmptyState>One keypress is enough. Press Enter or generate today’s post.</EmptyState>
         ) : payload.record.status === "running" || payload.record.status === "failed" ? (
-          <PipelineCard record={payload.record} onRetry={() => void generate("retry")} />
+          <PipelineCard record={payload.record} onRetry={() => void generate("retry")} onReset={() => void generate("reset")} />
         ) : payload.record.status === "skip" ? (
           <SkipCard record={payload.record} onGenerate={generate} onBank={() => router.push("/radar?tab=bank")} onTopic={() => router.push("/radar?seed=1")} />
         ) : payload.record.status === "rejected" ? (
@@ -393,20 +393,23 @@ function AutopsyPrompt({ autopsy, onDone }: { autopsy: NonNullable<TodayPayload[
   );
 }
 
-function PipelineCard({ record, onRetry }: { record: TodayRecord; onRetry: () => void }) {
+function PipelineCard({ record, onRetry, onReset }: { record: TodayRecord; onRetry: () => void; onReset: () => void }) {
   return (
     <Card padding="24" label="Daily run">
       <PipelineRail stages={record.stages.map((stage) => ({ name: stage.name, state: stage.state, detail: stage.detail }))} />
       {record.failure && (
         <div className="mt-5 border-t border-rule pt-4">
-          <p className="type-body text-unsupported">{record.failure.message}</p>
+          <p className="type-body break-words text-unsupported">{record.failure.message}</p>
           {record.failure.detail && (
             <details className="mt-2">
               <summary className="type-small cursor-pointer text-ink-3">What came back</summary>
               <p className="type-data mt-2 whitespace-pre-wrap break-words text-ink-3">{record.failure.detail}</p>
             </details>
           )}
-          <Button variant="secondary" className="mt-3" onClick={onRetry}>Retry from {record.failure.stage}</Button>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button variant="secondary" onClick={onRetry}>Retry from {record.failure.stage}</Button>
+            <Button variant="quiet" onClick={onReset}>Start over</Button>
+          </div>
         </div>
       )}
     </Card>

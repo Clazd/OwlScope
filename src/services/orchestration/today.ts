@@ -409,7 +409,7 @@ async function execute(initial: TodayRecord, recorder: Recorder): Promise<void> 
     const detail = (error as { detail?: string }).detail ?? null;
     await recorder.recordFailure(`today:${failedStage}`, "none", "", error);
     await recorder.finish("failed");
-    const stages = record.stages.map((stage) => stage.id === failedStage ? { ...stage, state: "failed" as const, detail: message } : stage);
+    const stages = record.stages.map((stage) => stage.id === failedStage ? { ...stage, state: "failed" as const, detail: "Failed" } : stage);
     await todayStore.put({
       ...record,
       status: "failed",
@@ -435,7 +435,7 @@ export async function recoverInterruptedToday(now: Date = new Date()): Promise<T
   const failedStage = stageId(record);
   const message = "The previous run was interrupted. Retry from this stage.";
   const stages = record.stages.map((stage) => stage.id === failedStage
-    ? { ...stage, state: "failed" as const, detail: message }
+    ? { ...stage, state: "failed" as const, detail: "Failed" }
     : stage.state === "active" ? { ...stage, state: "pending" as const, detail: "" } : stage);
   if (record.runId) await finishInterruptedRun(record.runId);
   return todayStore.put({

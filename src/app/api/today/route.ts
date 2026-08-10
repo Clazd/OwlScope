@@ -14,7 +14,7 @@ import { metricStore } from "@/domain/metrics/store";
 export const dynamic = "force-dynamic";
 
 const Body = z.object({
-  action: z.enum(["generate", "alternative", "search", "evergreen", "retry"]).default("generate"),
+  action: z.enum(["generate", "alternative", "search", "evergreen", "retry", "reset"]).default("generate"),
   idempotencyKey: z.string().min(1),
   override: z.boolean().optional(),
 });
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   await startToday({
     idempotencyKey: parsed.data.idempotencyKey,
     mode,
-    replace: parsed.data.action !== "generate" && parsed.data.action !== "retry",
+    replace: parsed.data.action === "reset" || (parsed.data.action !== "generate" && parsed.data.action !== "retry"),
     retry: parsed.data.action === "retry" || (parsed.data.action === "generate" && existing?.status === "failed"),
   });
   const today = dateKey();

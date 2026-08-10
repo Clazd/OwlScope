@@ -24,6 +24,7 @@ function floor(): number {
 function emit(level: Level, scope: string, message: string, extra?: unknown) {
   if (ORDER[level] < floor()) return;
   const line = `${PREFIX} ${level.toUpperCase()} ${scope}: ${message}`;
+  // eslint-disable-next-line no-console -- the logging module is the one place console.log is correct
   const write = level === "error" ? console.error : level === "warn" ? console.warn : console.log;
   if (extra === undefined) write(line);
   else write(line, extra);

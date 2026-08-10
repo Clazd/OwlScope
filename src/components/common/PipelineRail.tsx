@@ -52,10 +52,10 @@ export function PipelineRail({ stages, className }: PipelineRailProps) {
               />
               {!last && <span aria-hidden className="mt-1 w-px grow bg-rule" />}
             </div>
-            <div className="flex min-w-0 grow items-baseline justify-between gap-4">
-              <span className={cn("type-body", TEXT[stage.state])}>{stage.name}</span>
+            <div className="flex min-w-0 grow flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+              <span className={cn("type-body shrink-0", TEXT[stage.state])}>{stage.name}</span>
               {detail && (
-                <span data-mono className="type-data text-ink-3 shrink-0">
+                <span data-mono className="type-data min-w-0 text-ink-3 sm:max-w-[55%] sm:text-right truncate" title={detail}>
                   {detail}
                 </span>
               )}

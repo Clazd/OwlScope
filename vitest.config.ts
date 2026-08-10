@@ -6,6 +6,11 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts"],
     globals: false,
+    coverage: {
+      provider: "v8",
+      include: ["src/domain/**", "src/services/**", "src/lib/**"],
+      reporter: ["text", "json-summary"],
+    },
   },
   resolve: {
     alias: {

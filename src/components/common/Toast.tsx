@@ -36,7 +36,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <div className="pointer-events-none fixed bottom-4 left-4 z-50 flex flex-col gap-2">
+      <div className="pointer-events-none fixed bottom-4 left-4 flex flex-col gap-2" style={{ zIndex: "var(--z-toast)" }}>
         {messages.map((message) => (
           <ToastItem
             key={message.id}

@@ -12,6 +12,9 @@
 node_modules
 .next
 
+# Fonts are copied from node_modules on postinstall; never commit them.
+/public/fonts
+
 # build + tooling noise
 /out
 *.tsbuildinfo
