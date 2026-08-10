@@ -35,21 +35,20 @@ export function isActive(pathname: string, href: string): boolean {
 
 interface NavRailProps {
   items: NavItem[];
-  /** 56px icon rail instead of the 232px labelled one. */
+  /** 72px icon rail instead of the 280px labelled one. */
   collapsed?: boolean;
   className?: string;
 }
 
 /**
- * Active state is a 2px left ink bar and a weight change from 400 to 500.
- * No filled pill, no background, no colour - the nav is chrome, and chrome does
- * not get to use the epistemic palette.
+ * Pill-based active state: the active item gets a subtle accent-tinted
+ * background and an accent-coloured icon. Hover shows a surface-sunken pill.
  */
 export function NavRail({ items, collapsed = false, className }: NavRailProps) {
   const pathname = usePathname();
 
   return (
-    <nav className={cn("flex flex-col", className)} aria-label="Areas">
+    <nav className={cn("flex flex-col gap-0.5 px-2", className)} aria-label="Areas">
       {items.map((item) => {
         const active = isActive(pathname, item.href);
         return (
@@ -59,18 +58,21 @@ export function NavRail({ items, collapsed = false, className }: NavRailProps) {
             aria-current={active ? "page" : undefined}
             title={collapsed ? item.label : undefined}
             className={cn(
-              "relative flex items-center gap-3 py-2 pr-3",
-              collapsed ? "justify-center pl-0" : "pl-4",
+              "group flex items-center gap-3 rounded-control px-3 py-2",
               "transition-colors duration-(--dur-state) ease-(--ease)",
-              active ? "type-body-strong text-ink" : "type-body text-ink-2 hover:text-ink",
+              collapsed ? "justify-center" : "",
+              active
+                ? "bg-accent-dim type-body-strong text-ink"
+                : "type-body text-ink-3 hover:bg-surface-sunken hover:text-ink-2",
             )}
           >
-            <span
-              aria-hidden
-              className={cn("absolute left-0 top-1 bottom-1 w-px", active ? "bg-accent" : "bg-transparent")}
-              style={active ? { width: "2px" } : undefined}
+            <Glyph
+              name={item.glyph}
+              className={cn(
+                "shrink-0 transition-colors duration-(--dur-state)",
+                active ? "text-accent" : "group-hover:text-ink-2",
+              )}
             />
-            <Glyph name={item.glyph} className={active ? "text-ink" : "text-ink-3"} />
             {!collapsed && <span className="truncate">{item.label}</span>}
             {collapsed && <span className="sr-only">{item.label}</span>}
           </Link>
@@ -99,11 +101,11 @@ export function BottomBar({ items }: { items: NavItem[] }) {
             aria-current={active ? "page" : undefined}
             className={cn(
               "flex flex-col items-center gap-1 py-2",
-              active ? "text-ink" : "text-ink-3",
+              active ? "text-accent" : "text-ink-3",
             )}
           >
             <Glyph name={item.glyph} />
-            <span className={cn("type-micro", active && "text-ink")}>{item.label}</span>
+            <span className={cn("type-micro", active ? "text-accent" : "")}>{item.label}</span>
           </Link>
         );
       })}

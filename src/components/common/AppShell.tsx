@@ -28,8 +28,8 @@ interface AppShellProps extends ShellState {
 /**
  * Sidebar plus content region.
  *
- *   >= 1100px   232px labelled rail
- *   768-1100    56px icon rail
+ *   >= 1100px   280px labelled rail
+ *   768-1100    72px icon rail
  *   < 768px     top bar plus a five-item bottom bar
  *
  * Both rails are rendered and swapped in CSS rather than measured in JS, so
@@ -126,13 +126,23 @@ function Sidebar(state: ShellState) {
   return (
     <div
       className={cn(
-        "hidden shrink-0 flex-col border-r border-rule bg-surface md:flex",
+        "hidden shrink-0 flex-col border-r border-rule md:flex",
         "md:w-(--sidebar-collapsed) wide:w-(--sidebar-width)",
       )}
+      style={{
+        background: "linear-gradient(180deg, #1A1D25 0%, #12151A 35%)",
+      }}
     >
+      {/* Accent top stripe — the scope is always on */}
+      <div className="h-px shrink-0" style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 70%)" }} />
+
       <Link
         href="/today"
-        className="flex min-w-0 items-center gap-2 border-b border-rule px-4 py-4 max-wide:justify-center max-wide:px-0"
+        className={cn(
+          "flex min-w-0 items-center gap-3 border-b border-rule px-4 py-4",
+          "max-wide:justify-center max-wide:px-0",
+          "transition-opacity duration-(--dur-state) hover:opacity-80",
+        )}
       >
         <OwlMark />
         <span className="type-body-strong truncate text-ink max-wide:hidden">{state.brandName}</span>
@@ -148,9 +158,17 @@ function Sidebar(state: ShellState) {
         <NavRail items={[SETTINGS_ITEM]} className="max-wide:hidden" />
       </div>
 
-      <div className="space-y-2 overflow-hidden border-t border-rule px-4 py-3 max-wide:px-2">
-        <p className="flex min-w-0 items-center gap-2 max-wide:justify-center">
-          <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-pill bg-ink-3" />
+      <div
+        className="overflow-hidden border-t border-rule px-4 py-3 max-wide:px-2"
+        style={{ background: "rgba(0,0,0,0.15)" }}
+      >
+        <p className="flex min-w-0 items-center gap-2 mb-2 max-wide:justify-center">
+          {/* Pulsing accent dot — the scope is active */}
+          <span
+            aria-hidden
+            className="h-1.5 w-1.5 shrink-0 rounded-pill stage-pulse"
+            style={{ background: "var(--accent)", opacity: 0.7 }}
+          />
           <MicroLabel className="min-w-0 truncate max-wide:hidden">{state.model}</MicroLabel>
         </p>
         <TokenMeter used={state.tokensUsed} budget={state.tokensBudget} compact />
@@ -200,7 +218,7 @@ function OwlMark() {
       src="/owlscope-logo.png"
       alt=""
       aria-hidden
-      className="h-6 w-6 shrink-0 rounded-pill"
+      className="h-8 w-8 shrink-0 rounded-pill"
     />
   );
 }

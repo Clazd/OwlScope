@@ -12,9 +12,10 @@ interface TokenMeterProps {
 /**
  * Today's spend against the daily budget. A thin bar and mono figures.
  *
- * The bar is ink until 80%, then --partial. That is the one place in the
- * product where a saturated colour is not describing a claim, and it earns the
- * exception by meaning the same thing it always means: proceed with care.
+ * The bar is an accent gradient until 80%, then --partial. That is the one
+ * place in the product where a saturated colour is not describing a claim, and
+ * it earns the exception by meaning the same thing it always means: proceed
+ * with care.
  */
 export function TokenMeter({ used, budget, className, compact = false }: TokenMeterProps) {
   const fraction = budget > 0 ? Math.min(1, used / budget) : 0;
@@ -32,8 +33,13 @@ export function TokenMeter({ used, budget, className, compact = false }: TokenMe
         className="h-1 w-full overflow-hidden rounded-pill bg-rule"
       >
         <div
-          className={cn("h-full transition-[width] duration-(--dur-panel) ease-(--ease)", warn ? "bg-partial" : "bg-ink")}
-          style={{ width: `${percent}%` }}
+          className={cn("h-full rounded-pill transition-[width] duration-(--dur-panel) ease-(--ease)")}
+          style={{
+            width: `${percent}%`,
+            background: warn
+              ? "var(--partial)"
+              : "linear-gradient(90deg, rgba(46,204,113,0.35) 0%, rgba(46,204,113,0.75) 100%)",
+          }}
         />
       </div>
       {!compact && (

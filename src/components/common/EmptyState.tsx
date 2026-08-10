@@ -11,12 +11,17 @@ interface EmptyStateProps {
 /**
  * No icon. No illustration. One sentence of direction plus one action.
  *
- * Empty states here are invitations, not error messages: "No topics yet. Run a
- * scan, or type an idea you have been sitting on."
+ * Empty states are invitations, not error messages.
  */
 export function EmptyState({ children, action, className }: EmptyStateProps) {
   return (
-    <div className={cn("rounded-card border border-dashed border-rule px-6 py-8", className)}>
+    <div
+      className={cn(
+        "rounded-card border border-dashed border-rule-strong bg-surface-sunken px-6 py-8",
+        "transition-colors duration-(--dur-state) hover:border-rule-strong",
+        className,
+      )}
+    >
       <p className="type-body text-ink-2 reading-column">{children}</p>
       {action && <div className="mt-4 flex flex-wrap gap-2">{action}</div>}
     </div>

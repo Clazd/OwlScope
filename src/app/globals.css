@@ -106,8 +106,8 @@
   }
 
   ::selection {
-    background: var(--ink);
-    color: var(--bg);
+    background: var(--accent-tint);
+    color: var(--ink);
   }
 
   input,
@@ -182,8 +182,32 @@
   }
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @utility stage-pulse {
   animation: stage-pulse 1.6s var(--ease) infinite;
+}
+
+@utility animate-fade-up {
+  animation: fade-up 220ms var(--ease-out) both;
+}
+
+@utility animate-fade-in {
+  animation: fade-in 180ms var(--ease-out) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
