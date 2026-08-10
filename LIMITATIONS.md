@@ -57,6 +57,35 @@ page. Both are in `components/common` and both appear in the gallery.
 fallback for models it has not seen. The figure in the token meter and the inspector is
 directionally right and is not a bill. Update the table when prices change.
 
+## Source images are somebody else's
+
+The image panel shows what a source page nominates for sharing in its `og:image`, with the
+domain and any declared credit attached. That is a **convenience, not a licence**. Almost
+every one of those images is copyrighted, and a publisher offering a social card so their
+own link previews well is not offering you a photograph for a post of your own. The panel
+proxies and downloads them because the alternative — hotlinking — is worse for both parties,
+not because reuse is cleared. When you need an image that is unambiguously yours, use the
+generated prompt.
+
+The harvest reads social-card metadata only. It never scrapes images out of a page body, so a
+chart that only appears inline will not be found.
+
+## Threads
+
+- A thread's first post is the finalised post, unchanged. Everything after it is written in
+  one call and checked by the validator in a second - so the continuation is held to the same
+  evidence standard as the post, but it is **not** critiqued, scored against the voice
+  fingerprint, or checked for similarity against your history. Those four stages ran on the
+  post; a thread does not re-run them.
+- Nothing blocks on a thread finding. A post that states a fact the sources do not carry says
+  so on the card and is still yours to copy. The Evidence Lock blocks finalisation, and the
+  thread happens after it.
+- Images are assigned from a post's own citations, one per post before any post gets two,
+  capped at four. It is a starting point, not a judgement about which picture is best: every
+  harvested image stays visible, including the ones no post claimed.
+- The character count is the same approximation used everywhere else - 280, URLs weighted at
+  23, no CJK weighting. It does not know about a premium account's longer limit.
+
 ## Sandbox
 
 - Sandbox mode covers **provider calls only**. Nothing else in the app reaches the network,

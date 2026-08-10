@@ -24,13 +24,26 @@ export class ProviderError extends Error {
   readonly category: ErrorCategory;
   readonly status?: number;
   readonly detail?: string;
+  /**
+   * Tokens already billed on the calls that led to this failure. A stage that
+   * dies still costs money, and a budget that pretends otherwise is a budget
+   * that under-reports exactly on the runs worth investigating.
+   */
+  readonly tokensIn: number;
+  readonly tokensOut: number;
 
-  constructor(category: ErrorCategory, message: string, opts?: { status?: number; detail?: string; cause?: unknown }) {
+  constructor(
+    category: ErrorCategory,
+    message: string,
+    opts?: { status?: number; detail?: string; cause?: unknown; tokensIn?: number; tokensOut?: number },
+  ) {
     super(message, { cause: opts?.cause });
     this.name = "ProviderError";
     this.category = category;
     this.status = opts?.status;
     this.detail = opts?.detail;
+    this.tokensIn = opts?.tokensIn ?? 0;
+    this.tokensOut = opts?.tokensOut ?? 0;
   }
 }
 
@@ -69,6 +82,12 @@ export interface CompletionResult extends Usage {
   /** The exact prompt sent, kept so the Inspector shows what actually ran. */
   prompt: string;
   system?: string;
+  /**
+   * Why the model stopped. `max_tokens` means the reply is truncated, which is
+   * the difference between "the model got it wrong" and "we cut it off" - and
+   * only the first of those is worth paying for a repair pass to fix.
+   */
+  stopReason?: string | null;
 }
 
 export interface StructuredResult<T> extends CompletionResult {

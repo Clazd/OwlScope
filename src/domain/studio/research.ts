@@ -11,11 +11,12 @@ import { assembleContext } from "./context";
 import { outputBlock, sourcesBlock, topicBlock, truthfulnessBlock } from "./prompts";
 import { ResearchOutputSchema, type ResearchRecord, type Source, type Topic } from "./schema";
 import { sourceIdFor, sourceStore, sourcesForTopic } from "./store";
-import { runStage } from "./stage";
+import { runStage, StageError } from "./stage";
 
 const log = createLogger("studio/research");
 
 const STAGE = "research";
+const RESEARCH_MAX_TOKENS = 3200;
 
 /**
  * Stage 2. The researcher outputs verified facts, explicit uncertainties,
@@ -184,12 +185,42 @@ function buildPrompt(topic: Topic, sources: Source[]) {
         "  - Prefer primary and official sources. Say when a claim rests only on a forum or an aggregator.",
         "  - If a source does not state a publication date, do not assume the claim is current.",
         "  - Set insufficient to true when the evidence will not carry a factual post, and say why.",
+        "  - Return every required field. Use empty arrays for facts or uncertainties when needed; never return {}.",
       ].join("\n"),
     },
     { section: "evidence", text: topicBlock(topic) },
     { section: "evidence", text: sourcesBlock(sources) },
     { section: "output", text: outputBlock("ResearchOutput", OUTPUT_SHAPE) },
   ]);
+}
+
+function isEmptyStructuredResearchFailure(err: unknown): boolean {
+  if (!(err instanceof StageError) || err.category !== "schema") return false;
+  const text = `${err.message}\n${err.detail ?? ""}`;
+  return /empty\s+(?:\{\}|\[\])|received:\s*(?:\{\}|\[\])/i.test(text) ||
+    /facts:.*received undefined.*uncertainties:.*received undefined.*freshness:.*received undefined.*insufficient:/is.test(text);
+}
+
+function failedResearchRecord(topic: Topic, sources: Source[], gathered: Gathered, err: unknown): ResearchRecord {
+  const detail = err instanceof Error ? err.message : String(err);
+  return {
+    facts: [],
+    uncertainties: [
+      "The research model did not return structured findings for the retrieved sources.",
+    ],
+    freshness: {
+      assessment: topic.freshness,
+      note: "Sources were retrieved, but the research read could not be serialized into the required shape.",
+    },
+    insufficient: true,
+    insufficientReason:
+      `Research found ${sources.length} source${sources.length === 1 ? "" : "s"}, but the model returned an empty structured result. ` +
+      `Retry the research step, paste fewer or more focused URLs, or use a stronger model. ${detail}`,
+    sourceIds: sources.map((source) => source.id),
+    droppedUrls: gathered.droppedUrls,
+    noProviders: gathered.usedProviders.length === 0,
+    completedAt: new Date().toISOString(),
+  };
 }
 
 /* ------------------------------------------------------------------- run -- */
@@ -235,18 +266,26 @@ export async function runResearch(input: ResearchInput): Promise<ResearchResult>
   }
 
   const { prompt, usage } = buildPrompt(input.topic, sources);
-  const result = await runStage({
-    stage: STAGE,
-    tier: "strong",
-    prompt,
-    schema: ResearchOutputSchema,
-    schemaName: "ResearchOutput",
-    maxTokens: 1600,
-    temperature: 0.3,
-    recorder: input.recorder,
-    usage,
-    fixtureCase: input.fixtureCase,
-  });
+  let result;
+  try {
+    result = await runStage({
+      stage: STAGE,
+      tier: "strong",
+      prompt,
+      schema: ResearchOutputSchema,
+      schemaName: "ResearchOutput",
+      maxTokens: RESEARCH_MAX_TOKENS,
+      temperature: 0.3,
+      recorder: input.recorder,
+      usage,
+      fixtureCase: input.fixtureCase,
+    });
+  } catch (err) {
+    if (isEmptyStructuredResearchFailure(err)) {
+      return { record: failedResearchRecord(input.topic, sources, gathered, err), sources };
+    }
+    throw err;
+  }
 
   // A citation the model made up is dropped the same way an invented URL is.
   const known = new Set(sources.map((source) => source.id));

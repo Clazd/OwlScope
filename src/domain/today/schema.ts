@@ -42,7 +42,14 @@ export const TodayRecordSchema = z.object({
   rejectedWeak: z.number().int().min(0),
   rejectedCandidates: z.number().int().min(0),
   skipReason: z.string(),
-  failure: z.object({ stage: TodayStageIdSchema, message: z.string() }).nullable(),
+  // `detail` is the diagnosable half of a failure - the schema issues, the head
+  // of what the model actually returned. Defaulted so records written before it
+  // existed still load.
+  failure: z.object({
+    stage: TodayStageIdSchema,
+    message: z.string(),
+    detail: z.string().nullable().default(null),
+  }).nullable(),
   copiedAt: z.string().nullable(),
   generatedAt: z.string(),
   updatedAt: z.string(),

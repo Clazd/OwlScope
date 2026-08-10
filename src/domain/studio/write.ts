@@ -129,6 +129,45 @@ function buildPrompt(input: WriteInput) {
 
 /* ------------------------------------------------------------- assembly -- */
 
+export interface LockedSentences {
+  sentences: Sentence[];
+  warnings: string[];
+}
+
+/**
+ * The Evidence Lock applied in code rather than asked for in a prompt.
+ *
+ * Two corrections, and both are corrections a model has an interest in not
+ * making itself: a citation to a source that does not exist is dropped, and a
+ * factual claim left citing nothing is unsupported whatever the writer said
+ * about it. The validator gets the last word on support, but not the first.
+ *
+ * Shared by the writer and the thread stage, because a thread post that skipped
+ * this would be the easy way round every check in the product.
+ */
+export function lockSentences(sentences: Sentence[], sources: Source[]): LockedSentences {
+  const warnings: string[] = [];
+  const known = new Set(sources.map((source) => source.id));
+
+  const locked = sentences.map((sentence) => {
+    const kept = sentence.sourceIds.filter((id) => known.has(id));
+    if (kept.length !== sentence.sourceIds.length) {
+      const dropped = sentence.sourceIds.filter((id) => !known.has(id));
+      warnings.push(`Dropped citation${dropped.length > 1 ? "s" : ""} to unknown source ${dropped.join(", ")}.`);
+      log.warn(`dropped unknown source id(s): ${dropped.join(", ")}`);
+    }
+    const support =
+      sentence.claimType === "fact" && kept.length === 0
+        ? ("unsupported" as const)
+        : sentence.claimType === "opinion" || sentence.claimType === "rhetorical"
+          ? ("n/a" as const)
+          : sentence.support;
+    return { ...sentence, text: removeForbiddenPunctuation(sentence.text), sourceIds: kept, support };
+  });
+
+  return { sentences: locked, warnings };
+}
+
 /**
  * Turns a validated model payload into a stored draft.
  *
@@ -143,27 +182,7 @@ export function assembleDraft(
   sources: Source[],
   fingerprint: Fingerprint | null,
 ): StudioDraft {
-  const warnings: string[] = [];
-  const known = new Set(sources.map((source) => source.id));
-
-  const cleaned: Sentence[] = payload.sentences.map((sentence) => {
-    const kept = sentence.sourceIds.filter((id) => known.has(id));
-    if (kept.length !== sentence.sourceIds.length) {
-      const dropped = sentence.sourceIds.filter((id) => !known.has(id));
-      warnings.push(`Dropped citation${dropped.length > 1 ? "s" : ""} to unknown source ${dropped.join(", ")}.`);
-      log.warn(`dropped unknown source id(s): ${dropped.join(", ")}`);
-    }
-    // A factual claim citing nothing cannot be "supported", whatever the writer
-    // said about it. The validator gets the last word, but not the first.
-    const support =
-      sentence.claimType === "fact" && kept.length === 0
-        ? ("unsupported" as const)
-        : sentence.claimType === "opinion" || sentence.claimType === "rhetorical"
-          ? ("n/a" as const)
-          : sentence.support;
-    return { ...sentence, text: removeForbiddenPunctuation(sentence.text), sourceIds: kept, support };
-  });
-
+  const { sentences: cleaned, warnings } = lockSentences(payload.sentences, sources);
   const { sentences } = renumber(cleaned);
   const text = reassemble(sentences);
   const characterCount = characterCountOf(sentences);

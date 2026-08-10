@@ -18,10 +18,11 @@ function deepSeekProvider() {
   });
 }
 
-function reply(text: string, tokensIn = 10, tokensOut = 5) {
+function reply(text: string, tokensIn = 10, tokensOut = 5, stopReason?: string) {
   return new Response(
     JSON.stringify({
       model: MODELS.fast,
+      ...(stopReason ? { stop_reason: stopReason } : {}),
       content: [{ type: "text", text }],
       usage: { input_tokens: tokensIn, output_tokens: tokensOut },
     }),
@@ -29,11 +30,11 @@ function reply(text: string, tokensIn = 10, tokensOut = 5) {
   );
 }
 
-function toolReply(input: unknown, tokensIn = 10, tokensOut = 5) {
+function toolReply(input: unknown, tokensIn = 10, tokensOut = 5, stopReason = "tool_use") {
   return new Response(
     JSON.stringify({
       model: "deepseek-v4-flash",
-      stop_reason: "tool_use",
+      stop_reason: stopReason,
       content: [{ type: "tool_use", name: "return_structured_output", input }],
       usage: { input_tokens: tokensIn, output_tokens: tokensOut },
     }),
@@ -284,6 +285,84 @@ describe("completeStructured", () => {
     expect(result.tokensIn).toBe(80);
     expect(result.tokensOut).toBe(21);
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not pay for a repair pass on a reply cut off at the token cap", async () => {
+    fetchMock.mockImplementation(async () => reply('{"verdict":"post","why":"the filing sa', 100, 64, "max_tokens"));
+
+    await expect(provider().completeStructured({ ...request, maxTokens: 64 })).rejects.toMatchObject({
+      category: "schema",
+      message: expect.stringContaining("64-token output cap"),
+    });
+    // One call, not two: re-asking would truncate at the same place for the same price.
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not pay for a repair pass on an empty reply", async () => {
+    fetchMock.mockImplementation(async () => reply("", 100, 0, "end_turn"));
+
+    await expect(provider().completeStructured(request)).rejects.toMatchObject({
+      category: "schema",
+      message: expect.stringContaining("returned nothing"),
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not repair an empty tool input, which repairs to the same empty value", async () => {
+    // What a truncated DeepSeek tool call actually looks like: `{}`, twice.
+    fetchMock.mockImplementation(async () => toolReply({}, 7700, 1600));
+
+    await expect(deepSeekProvider().completeStructured({ ...request, maxTokens: 1600 })).rejects.toMatchObject({
+      category: "schema",
+      message: expect.stringContaining("empty {}"),
+      tokensIn: 7700,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("carries the tokens a failed stage already spent, so the budget is not flattered", async () => {
+    fetchMock
+      .mockResolvedValueOnce(reply("not json at all", 100, 20))
+      .mockResolvedValueOnce(reply("still not json", 150, 25));
+
+    await expect(provider().completeStructured(request)).rejects.toMatchObject({
+      category: "schema",
+      tokensIn: 250,
+      tokensOut: 45,
+    });
+  });
+
+  it("names what came back in the failure detail, not just that it failed", async () => {
+    fetchMock.mockImplementation(async () => reply("Sorry, I cannot help with that."));
+
+    await expect(provider().completeStructured(request)).rejects.toMatchObject({
+      detail: expect.stringContaining("Sorry, I cannot help with that."),
+    });
+  });
+
+  it("bounds the rejected reply it echoes back into the repair prompt", async () => {
+    const bloated = `{"verdict":"maybe","why":"${"x".repeat(6000)}"}`;
+    fetchMock
+      .mockResolvedValueOnce(reply(bloated))
+      .mockResolvedValueOnce(reply('{"verdict":"skip","why":"ok"}'));
+
+    await provider().completeStructured(request);
+
+    const repairPrompt = JSON.parse((fetchMock.mock.calls[1] as [string, RequestInit])[1].body as string)
+      .messages[0].content as string;
+    expect(repairPrompt).toContain("did not validate");
+    expect(repairPrompt.length).toBeLessThan(bloated.length);
+  });
+
+  it("does not repair truncated DeepSeek tool input either", async () => {
+    fetchMock.mockImplementation(async () => toolReply({ verdict: "post" }, 40, 512, "max_tokens"));
+
+    await expect(deepSeekProvider().completeStructured({ ...request, maxTokens: 512 })).rejects.toMatchObject({
+      category: "schema",
+      message: expect.stringContaining("512-token output cap"),
+      tokensOut: 512,
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("accepts a valid DeepSeek payload nested under a compatibility wrapper", async () => {

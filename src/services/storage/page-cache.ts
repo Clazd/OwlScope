@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, rm, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
+import type { SourceImage } from "@/domain/studio/schema";
 import { createLogger } from "@/lib/logging/log";
 import { atomicWriteJson } from "./atomic-write";
 import { CACHE_ROOT } from "./paths";
@@ -25,6 +26,12 @@ export interface CachedPage {
   text: string;
   publishedAt: string | null;
   fetchedAt: string;
+  /**
+   * The page's social-card image. `null` means the page was read and offered
+   * none; `undefined` means it was cached before images were read at all, which
+   * is a miss rather than an absence.
+   */
+  image?: SourceImage | null;
 }
 
 /** Hash rather than a slug: URLs contain characters filenames should not. */

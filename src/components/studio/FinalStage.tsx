@@ -6,6 +6,7 @@ import { Card } from "@/components/common/Card";
 import { EmptyState } from "@/components/common/EmptyState";
 import { Field, RadioRow, TextInput } from "@/components/common/Field";
 import { MicroLabel } from "@/components/common/MicroLabel";
+import { PostVisual } from "@/components/common/PostVisual";
 import { ReasonChips } from "@/components/common/ReasonChips";
 import { SentenceManuscript, type ManuscriptSentence } from "@/components/common/SentenceManuscript";
 import { XPreviewCard } from "@/components/common/XPreviewCard";
@@ -187,6 +188,11 @@ export function FinalStage({
 
       <Card padding="24" label="Why this post">
         <p className="type-body reading-column text-ink-2">{reasoning || content.reasoning}</p>
+      </Card>
+
+      <Card padding="24">
+        {/* Keyed on the id so finalising a different draft harvests afresh. */}
+        <PostVisual key={content.id} contentId={content.id} />
       </Card>
 
       {content.override && (

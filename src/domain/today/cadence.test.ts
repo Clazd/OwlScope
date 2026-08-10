@@ -9,7 +9,7 @@ function item(id: string, angle = "explanation"): ContentItem {
   return {
     id, topicId: "t", personaVersion: 1, status: "published", angle, thesis: id, text: "Context is not memory.",
     sentences: [], characterCount: 180, fingerprintScore: 80, sourceIds: [], critique: null, validation: null,
-    similarity: null, reasoning: "", override: null, rejectionReasons: [], provider: "sandbox", model: "sandbox",
+    similarity: null, reasoning: "", override: null, visualPrompt: null, thread: null, rejectionReasons: [], provider: "sandbox", model: "sandbox",
     runId: id, createdAt: `2026-08-0${id}T00:00:00.000Z`, updatedAt: `2026-08-0${id}T00:00:00.000Z`,
     publishedAt: `2026-08-0${id}T00:00:00.000Z`, publicUrl: null,
   };

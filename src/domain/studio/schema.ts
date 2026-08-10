@@ -98,6 +98,25 @@ export type BoundaryCheck = z.infer<typeof BoundaryCheckSchema>;
 export const SourceQualitySchema = z.enum(["primary", "secondary", "aggregator", "forum", "unknown"]);
 export type SourceQuality = z.infer<typeof SourceQualitySchema>;
 
+/**
+ * The image a page nominates for sharing - its `og:image`, near enough.
+ *
+ * It is stored as a reference, never as pixels: the URL, what the page says it
+ * shows, and who the page says made it. A publisher's photograph is their
+ * photograph, and the credit travelling with it is what makes that visible at
+ * the moment of use rather than after it.
+ */
+export const SourceImageSchema = z.object({
+  url: z.string().min(1),
+  /** The page's own alt text. Empty when it declares none. */
+  alt: z.string(),
+  width: z.number().int().positive().nullable(),
+  height: z.number().int().positive().nullable(),
+  /** Site name or byline the page declares. Attribution, not a licence. */
+  credit: z.string(),
+});
+export type SourceImage = z.infer<typeof SourceImageSchema>;
+
 export const SourceSchema = z.object({
   id: z.string().min(1),
   topicId: z.string().min(1),
@@ -109,6 +128,12 @@ export const SourceSchema = z.object({
   excerpt: z.string(),
   sourceQuality: SourceQualitySchema,
   providerId: z.string(),
+  /**
+   * Null once looked at and nothing was found; undefined until then. The two
+   * are different states and the harvest depends on telling them apart.
+   */
+  image: SourceImageSchema.nullable().optional(),
+  imageCheckedAt: z.string().nullable().optional(),
 });
 export type Source = z.infer<typeof SourceSchema>;
 
@@ -358,6 +383,96 @@ export const GateReportSchema = z.object({
 });
 export type GateReport = z.infer<typeof GateReportSchema>;
 
+/* ----------------------------------------------------------------- visual -- */
+
+/**
+ * A brief for an image generator, for the days when no source carries a usable
+ * picture. It is a prompt and nothing else - this app does not generate images,
+ * and a stage that pretended to would be a stage nobody could inspect.
+ */
+export const VisualPromptOutputSchema = z.object({
+  /** One line naming the idea, so it can be judged before it is generated. */
+  concept: z.string().min(1),
+  prompt: z.string().min(1),
+  /** What the generator should avoid. Empty when nothing needs excluding. */
+  negativePrompt: z.string(),
+  /** Alt text for the eventual image. Accessibility is not an afterthought. */
+  altText: z.string(),
+  aspectRatio: z.enum(["1:1", "16:9", "4:5"]),
+});
+export type VisualPromptOutput = z.infer<typeof VisualPromptOutputSchema>;
+
+export const VisualPromptRecordSchema = VisualPromptOutputSchema.extend({
+  model: z.string(),
+  createdAt: z.string(),
+});
+export type VisualPromptRecord = z.infer<typeof VisualPromptRecordSchema>;
+
+/* ----------------------------------------------------------------- thread -- */
+
+/**
+ * A thread is a sequence of posts, and every one of them carries its own
+ * Evidence Lock.
+ *
+ * That is the whole reason this is not "split the post into chunks". A thread
+ * whose later posts inherited the first one's evidence record would be a way to
+ * say four unchecked things after one checked one - the exact failure the
+ * sentence array exists to prevent, with a bigger audience. So each post here is
+ * an array of typed, cited sentences, validated and counted on its own.
+ */
+export const ThreadPostPayloadSchema = z
+  .object({
+    text: z.string().min(1),
+    sentences: z.array(SentenceSchema).min(1),
+  })
+  .superRefine((post, ctx) => {
+    const check = checkReassembly(post.text, post.sentences);
+    if (check.ok) return;
+    ctx.addIssue({ code: "custom", path: ["text"], message: check.detail });
+  });
+export type ThreadPostPayload = z.infer<typeof ThreadPostPayloadSchema>;
+
+/**
+ * What the model returns: the posts that come *after* the one already written.
+ *
+ * There is nowhere in this schema to put a rewritten first post, which is how
+ * "the model never touches the post that passed the gates" is enforced rather
+ * than requested.
+ */
+export const ThreadOutputSchema = z.object({
+  continuation: z.array(ThreadPostPayloadSchema).min(1),
+});
+export type ThreadOutput = z.infer<typeof ThreadOutputSchema>;
+
+export const ThreadPostSchema = z.object({
+  /** 1-based. Post 1 is the finalised post itself. */
+  index: z.number().int().min(1),
+  text: z.string().min(1),
+  sentences: z.array(SentenceSchema),
+  characterCount: z.number().int().min(0),
+  /**
+   * Sources whose harvested image belongs beside this post, at most four
+   * because four is what X accepts. Assigned from the post's own citations, so
+   * a picture sits next to the claim it illustrates rather than next to
+   * whichever claim came first.
+   */
+  imageSourceIds: z.array(z.string()),
+  visualPrompt: VisualPromptRecordSchema.nullable(),
+  /** Everything wrong with this post, in plain language, computed in code. */
+  warnings: z.array(z.string()),
+});
+export type ThreadPost = z.infer<typeof ThreadPostSchema>;
+
+export const ThreadRecordSchema = z.object({
+  posts: z.array(ThreadPostSchema).min(1),
+  /** Verdicts over the continuation only: post 1 was validated as the post. */
+  validation: ValidationOutputSchema.nullable(),
+  model: z.string(),
+  runId: z.string(),
+  createdAt: z.string(),
+});
+export type ThreadRecord = z.infer<typeof ThreadRecordSchema>;
+
 /* ----------------------------------------------------------- content item -- */
 
 export const ContentStatusSchema = z.enum([
@@ -399,6 +514,10 @@ export const ContentItemSchema = z.object({
   similarity: SimilarityRecordSchema.nullable(),
   reasoning: z.string(),
   override: OverrideSchema.nullable(),
+  /** Written on demand, never during a run. Null until the user asks for one. */
+  visualPrompt: VisualPromptRecordSchema.nullable().default(null),
+  /** The same, for the thread this post can be expanded into. */
+  thread: ThreadRecordSchema.nullable().default(null),
   /** Free-text reasons from the reject flow. Tunes selection, never identity. */
   rejectionReasons: z.array(z.string()),
   provider: z.string(),

@@ -406,6 +406,7 @@ async function execute(initial: TodayRecord, recorder: Recorder): Promise<void> 
     record = await todayStore.get(record.id) ?? record;
     const failedStage = stageId(record);
     const message = error instanceof Error ? error.message : String(error);
+    const detail = (error as { detail?: string }).detail ?? null;
     await recorder.recordFailure(`today:${failedStage}`, "none", "", error);
     await recorder.finish("failed");
     const stages = record.stages.map((stage) => stage.id === failedStage ? { ...stage, state: "failed" as const, detail: message } : stage);
@@ -413,7 +414,7 @@ async function execute(initial: TodayRecord, recorder: Recorder): Promise<void> 
       ...record,
       status: "failed",
       stages,
-      failure: { stage: failedStage, message },
+      failure: { stage: failedStage, message, detail },
       updatedAt: new Date().toISOString(),
     });
   }
@@ -441,7 +442,7 @@ export async function recoverInterruptedToday(now: Date = new Date()): Promise<T
     ...record,
     status: "failed",
     stages,
-    failure: { stage: failedStage, message },
+    failure: { stage: failedStage, message, detail: null },
     updatedAt: new Date().toISOString(),
   });
 }

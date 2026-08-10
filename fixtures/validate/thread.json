@@ -1,0 +1,7 @@
+{
+  "text": "{\"sentences\":[{\"id\":\"p2s1\",\"support\":\"supported\",\"sourceIds\":[\"src_83a6b4\"],\"notes\":\"The cited source states this.\"},{\"id\":\"p2s2\",\"support\":\"supported\",\"sourceIds\":[],\"notes\":\"A judgement offered as one. It asserts nothing checkable.\"},{\"id\":\"p2s3\",\"support\":\"supported\",\"sourceIds\":[],\"notes\":\"A judgement offered as one. It asserts nothing checkable.\"},{\"id\":\"p3s1\",\"support\":\"supported\",\"sourceIds\":[\"src_ca5dcd\"],\"notes\":\"The cited source states this.\"},{\"id\":\"p3s2\",\"support\":\"supported\",\"sourceIds\":[\"src_ca5dcd\"],\"notes\":\"The cited source states this.\"},{\"id\":\"p3s3\",\"support\":\"supported\",\"sourceIds\":[],\"notes\":\"A judgement offered as one. It asserts nothing checkable.\"},{\"id\":\"p4s1\",\"support\":\"supported\",\"sourceIds\":[\"src_e05b60\"],\"notes\":\"The cited source states this.\"},{\"id\":\"p4s2\",\"support\":\"supported\",\"sourceIds\":[],\"notes\":\"A judgement offered as one. It asserts nothing checkable.\"},{\"id\":\"p4s3\",\"support\":\"supported\",\"sourceIds\":[],\"notes\":\"A judgement offered as one. It asserts nothing checkable.\"}],\"canPublish\":true,\"blockingReasons\":[]}",
+  "model": "sandbox-fast",
+  "tokensIn": 2400,
+  "tokensOut": 340,
+  "latencyMs": 3900
+}

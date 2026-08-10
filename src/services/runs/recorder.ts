@@ -48,11 +48,29 @@ export interface StartRunOptions {
 }
 
 /** Errors are recorded with a category so the Inspector never says "unknown". */
-export function categoriseError(err: unknown): { category: ErrorCategory; message: string; detail?: string } {
+export function categoriseError(err: unknown): {
+  category: ErrorCategory;
+  message: string;
+  detail?: string;
+  tokensIn: number;
+  tokensOut: number;
+} {
   if (err instanceof ProviderError) {
-    return { category: err.category, message: err.message, detail: err.detail };
+    return {
+      category: err.category,
+      message: err.message,
+      detail: err.detail,
+      tokensIn: err.tokensIn,
+      tokensOut: err.tokensOut,
+    };
   }
-  return { category: "unknown", message: err instanceof Error ? err.message : String(err) };
+  const nested = (err as { tokensIn?: number; tokensOut?: number } | null) ?? {};
+  return {
+    category: "unknown",
+    message: err instanceof Error ? err.message : String(err),
+    tokensIn: nested.tokensIn ?? 0,
+    tokensOut: nested.tokensOut ?? 0,
+  };
 }
 
 /**
@@ -121,8 +139,12 @@ export async function startRun(options: StartRunOptions): Promise<Recorder> {
   }
 
   async function recordFailure(stage: string, model: string, prompt: string, err: unknown): Promise<Run> {
-    const { category, message, detail } = categoriseError(err);
+    const { category, message, detail, tokensIn, tokensOut } = categoriseError(err);
     log.error(`run ${run.id} stage ${stage} failed (${category}): ${message}`);
+    // The detail is the whole point of the Inspector on a failed run: the schema
+    // issues and the head of what came back, not just "it did not validate".
+    if (detail) log.error(`run ${run.id} stage ${stage} detail: ${detail}`);
+    if (tokensIn || tokensOut) log.info(`run ${run.id} stage ${stage} spent ${tokensIn} in / ${tokensOut} out before failing`);
     return record({
       stage,
       model,
@@ -130,8 +152,10 @@ export async function startRun(options: StartRunOptions): Promise<Recorder> {
       rawResponse: detail ?? "",
       validationError: message,
       latencyMs: 0,
-      tokensIn: 0,
-      tokensOut: 0,
+      // Billed whether or not the stage produced anything usable. Recording zero
+      // here would hide the most expensive runs from the budget.
+      tokensIn,
+      tokensOut,
       status: "failed",
       errorCategory: category,
     });

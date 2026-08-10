@@ -1,0 +1,7 @@
+{
+  "text": "{\"concept\":\"A single overloaded desk lamp lighting one page of a very long ledger\",\"prompt\":\"Editorial photograph of a small brass desk lamp throwing a tight circle of warm light onto one page of an enormous open ledger that runs off both edges of the frame; the lit page is crisp and legible as texture, the rest of the ledger falls into cool blue shadow; shallow depth of field, single hard key light from the lamp itself, muted palette of brass, paper cream and slate blue; shot slightly from above at a three-quarter angle; quiet, precise, unstaged\",\"negativePrompt\":\"text, words, numbers, logos, watermarks, people, faces, hands, cartoon style, neon, lens flare, cluttered desk props\",\"altText\":\"A desk lamp lighting one page of a ledger that extends beyond the frame into darkness\",\"aspectRatio\":\"16:9\"}",
+  "model": "sandbox-fast",
+  "tokensIn": 980,
+  "tokensOut": 210,
+  "latencyMs": 640
+}

@@ -118,6 +118,81 @@ export interface SafeFetchOptions {
 }
 
 export async function safeFetch(rawUrl: string, options: SafeFetchOptions = {}): Promise<SafeFetchResult> {
+  const { response, url } = await walkRedirects(rawUrl, options, "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5");
+  const { body, truncated } = await readCapped(response);
+  return {
+    url,
+    status: response.status,
+    contentType: response.headers.get("content-type"),
+    body,
+    truncated,
+  };
+}
+
+export interface SafeFetchBytesResult {
+  url: string;
+  status: number;
+  contentType: string | null;
+  bytes: Uint8Array;
+}
+
+/**
+ * The same guard, for a body that is not text.
+ *
+ * Bytes get their own cap and their own refusal: an over-cap image is an error
+ * rather than a truncation, because half a JPEG is not a smaller JPEG. Callers
+ * pass their own `maxBytes` since the 2MB text limit is generous for prose and
+ * mean for a photograph.
+ */
+export async function safeFetchBytes(
+  rawUrl: string,
+  options: SafeFetchOptions & { maxBytes?: number } = {},
+): Promise<SafeFetchBytesResult> {
+  const cap = options.maxBytes ?? SAFE_FETCH_LIMITS.maxBytes;
+  const { response, url } = await walkRedirects(rawUrl, options, "*/*");
+
+  const declared = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > cap) {
+    throw new UnsafeUrlError(`${url} declares ${declared} bytes, over the ${cap}-byte cap`);
+  }
+
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  if (response.body) {
+    const reader = response.body.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      // Streamed rather than trusting content-length, which a server may lie
+      // about or omit entirely.
+      if (total > cap) {
+        await reader.cancel().catch(() => {});
+        throw new UnsafeUrlError(`${url} is larger than the ${cap}-byte cap`);
+      }
+      chunks.push(value);
+    }
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  return { url, status: response.status, contentType: response.headers.get("content-type"), bytes };
+}
+
+/**
+ * Follows redirects by hand, re-validating every hop. Shared by both readers so
+ * there is exactly one place where a URL becomes a request.
+ */
+async function walkRedirects(
+  rawUrl: string,
+  options: SafeFetchOptions,
+  defaultAccept: string,
+): Promise<{ response: Response; url: string }> {
   let target = await assertPublicUrl(rawUrl);
   const credentialOrigin = target.origin;
 
@@ -134,7 +209,7 @@ export async function safeFetch(rawUrl: string, options: SafeFetchOptions = {}):
       headers: {
         ...extraHeaders,
         "user-agent": options.userAgent ?? SAFE_FETCH_LIMITS.userAgent,
-        accept: options.accept ?? "text/html,application/xhtml+xml,application/xml;q=0.9,text/plain;q=0.8,*/*;q=0.5",
+        accept: options.accept ?? defaultAccept,
       },
       signal: AbortSignal.timeout(SAFE_FETCH_LIMITS.timeoutMs),
     });
@@ -149,14 +224,7 @@ export async function safeFetch(rawUrl: string, options: SafeFetchOptions = {}):
       continue;
     }
 
-    const { body, truncated } = await readCapped(response);
-    return {
-      url: target.toString(),
-      status: response.status,
-      contentType: response.headers.get("content-type"),
-      body,
-      truncated,
-    };
+    return { response, url: target.toString() };
   }
 
   throw new UnsafeUrlError(`Too many redirects from ${rawUrl}`);

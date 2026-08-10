@@ -152,6 +152,8 @@ export async function createContentItem(input: CreateContentInput): Promise<Cont
     similarity: input.similarity,
     reasoning: input.reasoning,
     override: input.override ? { ...input.override, at: now } : null,
+    visualPrompt: null,
+    thread: null,
     rejectionReasons: [],
     provider: input.provider,
     model: input.model,

@@ -25,6 +25,18 @@ const DEFAULT_MAX_TOKENS = 1024;
 const MAX_ATTEMPTS = 3;
 /** How many times a paused server-tool turn may be resumed before giving up. */
 const MAX_SEARCH_CONTINUATIONS = 3;
+/**
+ * How much of a rejected reply is echoed back in the repair prompt. A broken
+ * 1600-token reply quoted in full doubles the input bill of the repair pass and
+ * adds nothing - the schema error names the problem, and the head of the reply
+ * is enough for the model to see the shape it produced.
+ */
+const ECHO_LIMIT = 1200;
+/** How much of a rejected reply is carried in the error text and the log line. */
+const PREVIEW_LIMIT = 400;
+
+const preview = (text: string, limit = PREVIEW_LIMIT) =>
+  text.length > limit ? `${text.slice(0, limit)}… (${text.length} chars total)` : text || "(empty response)";
 
 export interface AnthropicConfig {
   apiKey: string;
@@ -194,6 +206,11 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     const tokensOut = payload.usage?.output_tokens ?? 0;
     const usedModel = payload.model ?? model;
 
+    log.debug(
+      `${req.stage} ${usedModel} stop=${payload.stop_reason ?? "none"} ` +
+      `in=${tokensIn} out=${tokensOut}/${req.maxTokens ?? DEFAULT_MAX_TOKENS} ${Date.now() - started}ms`,
+    );
+
     return {
       result: {
         text,
@@ -205,6 +222,7 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
         model: usedModel,
         costEstimate: estimateCost(usedModel, tokensIn, tokensOut),
         sandbox: false,
+        stopReason: payload.stop_reason ?? null,
       },
       payload,
     };
@@ -259,13 +277,27 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
       return { ...first, data: firstAttempt.data, repaired: false };
     }
 
+    logRejected(req, 1, first, firstAttempt.error, first.text);
+
+    // Some failures a second call cannot fix. Paying for one anyway is how a
+    // truncated reply costs twice as much as it should before failing.
+    const futile = futileRepair(first.stopReason, first.text, req.maxTokens ?? DEFAULT_MAX_TOKENS);
+    if (futile) {
+      log.warn(`${req.stage} skipping the repair pass: ${futile}`);
+      throw new ProviderError("schema", `${req.stage} did not return valid ${req.schemaName}. ${futile}`, {
+        detail: `${firstAttempt.error}; received: ${preview(first.text)}`,
+        tokensIn: first.tokensIn,
+        tokensOut: first.tokensOut,
+      });
+    }
+
     // Exactly one repair pass, with the validation error fed back, then a clean
     // loud failure. Two repair passes is how a cheap app becomes an expensive one.
     log.warn(`${req.stage} failed validation; attempting one repair`);
     const repairPrompt =
       `${instruction}\n\n` +
       `Your previous reply did not validate against ${req.schemaName}.\n` +
-      `Previous reply:\n${first.text}\n\n` +
+      `Previous reply:\n${preview(first.text, ECHO_LIMIT)}\n\n` +
       `Problems: ${firstAttempt.error}\n\n` +
       `Return only corrected JSON.`;
 
@@ -282,8 +314,11 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     };
 
     if (!secondAttempt.ok) {
+      logRejected(req, 2, second, secondAttempt.error, second.text);
       throw new ProviderError("schema", `${req.stage} did not return valid ${req.schemaName}.`, {
-        detail: secondAttempt.error,
+        detail: `${secondAttempt.error}; received: ${preview(second.text)}`,
+        tokensIn: merged.tokensIn,
+        tokensOut: merged.tokensOut,
       });
     }
     return { ...merged, data: secondAttempt.data, repaired: true };
@@ -316,11 +351,26 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
       };
     }
 
+    logRejected(req, 1, first.result, firstAttempt.validated.error, firstAttempt.text);
+
+    // Forced tool input truncates the same way text does, and DeepSeek's
+    // reasoning models reach the output cap more often than most. Naming that
+    // beats a second identical bill and a "did not return valid" with no cause.
+    const futile = futileRepair(first.result.stopReason, firstAttempt.text, req.maxTokens ?? DEFAULT_MAX_TOKENS);
+    if (futile) {
+      log.warn(`${req.stage} skipping the repair pass: ${futile}`);
+      throw new ProviderError("schema", `${req.stage} did not return valid ${req.schemaName}. ${futile}`, {
+        detail: `${firstAttempt.validated.error}; received: ${preview(firstAttempt.text)}`,
+        tokensIn: first.result.tokensIn,
+        tokensOut: first.result.tokensOut,
+      });
+    }
+
     log.warn(`${req.stage} failed validation; attempting one repair`);
     const repairPrompt =
       `${instruction}\n\n` +
       `Your previous reply did not validate against ${req.schemaName}.\n` +
-      `Previous reply:\n${firstAttempt.text}\n\n` +
+      `Previous reply:\n${preview(firstAttempt.text, ECHO_LIMIT)}\n\n` +
       `Problems: ${firstAttempt.validated.error}\n\n` +
       `Call ${toolName} once with corrected input.`;
     const second = await callWithRetry({ ...req, prompt: repairPrompt }, model, options);
@@ -336,8 +386,11 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     };
 
     if (!secondAttempt.validated.ok) {
+      logRejected(req, 2, second.result, secondAttempt.validated.error, secondAttempt.text);
       throw new ProviderError("schema", `${req.stage} did not return valid ${req.schemaName}.`, {
-        detail: `${secondAttempt.validated.error}; received: ${secondAttempt.text.slice(0, 1000)}`,
+        detail: `${secondAttempt.validated.error}; received: ${preview(secondAttempt.text)}`,
+        tokensIn: merged.tokensIn,
+        tokensOut: merged.tokensOut,
       });
     }
     return { ...merged, data: secondAttempt.validated.data, repaired: true };
@@ -477,6 +530,53 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
     webSearch,
     searchCapability: () => ({ supported: true }),
   };
+}
+
+/**
+ * Why a repair pass cannot help, or null when it can.
+ *
+ * Three failures look like a model that got the schema wrong and are not: a
+ * reply cut off at the output cap, a reply with nothing in it, and a reply that
+ * is an empty container with none of the required fields. Asking again buys the
+ * same truncation or the same emptiness at the same price - the repair is
+ * skipped and the real cause named instead.
+ *
+ * The third case is what a truncated forced tool call looks like on providers
+ * that drop a half-serialised input rather than returning the fragment: the
+ * whole reply arrives as `{}`, and so does the repair.
+ */
+export function futileRepair(stopReason: string | null | undefined, text: string, maxTokens: number): string | null {
+  const capped = `Raise maxTokens for this stage (currently ${maxTokens}), or give it less to produce in one call.`;
+  if (stopReason === "max_tokens") {
+    return `The reply was cut off at the ${maxTokens}-token output cap, so it was never going to be complete. ${capped}`;
+  }
+  if (text.trim() === "") {
+    return `The model returned nothing${stopReason ? ` (it stopped for "${stopReason}")` : ""}.`;
+  }
+  if (text.trim() === "{}" || text.trim() === "[]") {
+    return `The model returned an empty ${text.trim()} with none of the required fields, and repairing that ` +
+      `returns the same empty value. Usually the output ran out before any content was serialised. ${capped}`;
+  }
+  return null;
+}
+
+/**
+ * One line per rejected reply, carrying everything needed to tell a schema
+ * mismatch from a truncation from a refusal without opening the run file.
+ */
+function logRejected(
+  req: { stage: string; schemaName: string; maxTokens?: number },
+  attempt: number,
+  result: CompletionResult,
+  error: string,
+  text: string,
+): void {
+  log.warn(
+    `${req.stage} attempt ${attempt} rejected against ${req.schemaName} ` +
+    `(model ${result.model}, stop "${result.stopReason ?? "none"}", ` +
+    `${result.tokensOut}/${req.maxTokens ?? DEFAULT_MAX_TOKENS} output tokens): ${error}`,
+  );
+  log.debug(`${req.stage} attempt ${attempt} returned: ${preview(text, ECHO_LIMIT)}`);
 }
 
 type Validated<T> = { ok: true; data: T } | { ok: false; error: string };

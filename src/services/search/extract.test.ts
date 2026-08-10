@@ -6,6 +6,7 @@ import {
   excerptOf,
   extractPublishedAt,
   extractReadableText,
+  extractSocialImage,
   extractTitle,
 } from "./extract";
 
@@ -125,5 +126,71 @@ describe("source quality", () => {
 
   it("matches a subdomain of a known domain", () => {
     expect(classifyQuality("https://old.reddit.com/r/x")).toBe("forum");
+  });
+});
+
+describe("social image extraction", () => {
+  const PAGE = "https://example.com/articles/one";
+
+  it("reads og:image with its alt, size and credit", () => {
+    const html = `
+      <meta property="og:image" content="https://cdn.example.com/card.jpg">
+      <meta property="og:image:alt" content="A chart of latency over time">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+      <meta property="og:site_name" content="Example Journal">`;
+    expect(extractSocialImage(html, PAGE)).toEqual({
+      url: "https://cdn.example.com/card.jpg",
+      alt: "A chart of latency over time",
+      width: 1200,
+      height: 630,
+      credit: "Example Journal",
+    });
+  });
+
+  it("reads the attributes in the other order, which half the web emits", () => {
+    const html = `<meta content="https://cdn.example.com/card.png" property="og:image">`;
+    expect(extractSocialImage(html, PAGE)?.url).toBe("https://cdn.example.com/card.png");
+  });
+
+  it("falls back to the twitter card when there is no og:image", () => {
+    const html = `<meta name="twitter:image" content="/media/card.webp">`;
+    expect(extractSocialImage(html, PAGE)?.url).toBe("https://example.com/media/card.webp");
+  });
+
+  it("resolves a relative image against the page it came from", () => {
+    const html = `<meta property="og:image" content="../shared/hero.jpg">`;
+    expect(extractSocialImage(html, PAGE)?.url).toBe("https://example.com/shared/hero.jpg");
+  });
+
+  it("returns null when the page nominates nothing", () => {
+    expect(extractSocialImage("<html><body><img src='/inline.png'></body></html>", PAGE)).toBeNull();
+  });
+
+  it("refuses a data URI, which is not something to save or credit", () => {
+    const html = `<meta property="og:image" content="data:image/png;base64,iVBORw0KGgo=">`;
+    expect(extractSocialImage(html, PAGE)).toBeNull();
+  });
+
+  it("drops an image the page itself declares too small to be a card", () => {
+    const html = `
+      <meta property="og:image" content="https://cdn.example.com/pixel.gif">
+      <meta property="og:image:width" content="1">
+      <meta property="og:image:height" content="1">`;
+    expect(extractSocialImage(html, PAGE)).toBeNull();
+  });
+
+  it("keeps an image whose size the page never declares", () => {
+    const html = `<meta property="og:image" content="https://cdn.example.com/card.jpg">`;
+    expect(extractSocialImage(html, PAGE)).toMatchObject({ width: null, height: null });
+  });
+
+  it("decodes entities in the values it reads", () => {
+    const html = `
+      <meta property="og:image" content="https://cdn.example.com/a.jpg?w=1&amp;h=2">
+      <meta property="og:image:alt" content="Tom &amp; Jerry">`;
+    const image = extractSocialImage(html, PAGE);
+    expect(image?.alt).toBe("Tom & Jerry");
+    expect(image?.url).toContain("h=2");
   });
 });

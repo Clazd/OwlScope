@@ -97,6 +97,8 @@ node -e 'console.log("src_"+require("crypto").createHash("sha256").update(proces
 | `drafts` | `default` | Three drafts; the third deliberately claims an uncited fact |
 | `revise` | `default` | One revised draft, for every revision action |
 | `validate` | `default` | Per-sentence verdicts that clear the first draft |
+| `validate` | `thread` | Verdicts over the thread continuation, whose ids are `p2s1`, not `s1` |
+| `thread` | `default` | Three posts continuing the first draft, citing the same source ids |
 | `critique` | `default` | One warn and one note, recommendation `accept` |
 | `similarity` | `default` | An empty L3 judgement |
 | `reasoning` | `default` | The first-person reasoning block |

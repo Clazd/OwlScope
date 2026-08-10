@@ -7,11 +7,12 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME !== "nodejs") return;
 
-  const [{ createLogger }, { assertLocalhost }, { rebuildIndex }, { pruneCachedPages }] = await Promise.all([
+  const [{ createLogger }, { assertLocalhost }, { rebuildIndex }, { pruneCachedPages }, { pruneCachedImages }] = await Promise.all([
     import("@/lib/logging/log"),
     import("@/lib/boot/localhost"),
     import("@/services/storage/index-cache"),
     import("@/services/storage/page-cache"),
+    import("@/services/storage/image-cache"),
   ]);
 
   const log = createLogger("boot");
@@ -34,5 +35,15 @@ export async function register() {
     if (dropped > 0) log.info(`dropped ${dropped} expired cached page(s)`);
   } catch (err) {
     log.warn(`could not prune the page cache: ${(err as Error).message}`);
+  }
+
+  // Downloaded source images last a week. They are somebody else's bytes held
+  // only so the browser never has to ask a publisher for them directly, so the
+  // shortest lifetime that still makes the panel feel instant is the right one.
+  try {
+    const dropped = await pruneCachedImages();
+    if (dropped > 0) log.info(`dropped ${dropped} expired cached image(s)`);
+  } catch (err) {
+    log.warn(`could not prune the image cache: ${(err as Error).message}`);
   }
 }

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { SAFE_FETCH_LIMITS, assertPublicUrl, isBlockedAddress, safeFetch } from "./safe-fetch";
+import { SAFE_FETCH_LIMITS, assertPublicUrl, isBlockedAddress, safeFetch, safeFetchBytes } from "./safe-fetch";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -70,5 +70,40 @@ describe("SSRF guard", () => {
     expect(request.mock.calls[0]?.[1]?.headers.authorization).toBe("Bearer secret");
     expect(request.mock.calls[1]?.[1]?.headers.authorization).toBeUndefined();
     expect(request.mock.calls[1]?.[1]?.headers["x-test"]).toBe("kept");
+  });
+});
+
+describe("binary fetch", () => {
+  it("returns the bytes and the content type", async () => {
+    const bytes = new Uint8Array([0xff, 0xd8, 0xff, 0xe0]);
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+      new Response(bytes, { status: 200, headers: { "content-type": "image/jpeg" } }),
+    ));
+    const result = await safeFetchBytes("https://93.184.216.34/card.jpg");
+    expect(result.contentType).toBe("image/jpeg");
+    expect(Array.from(result.bytes)).toEqual([0xff, 0xd8, 0xff, 0xe0]);
+  });
+
+  it("refuses a body that declares itself over the cap before reading it", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+      new Response(new Uint8Array([1]), { status: 200, headers: { "content-type": "image/png", "content-length": "9999" } }),
+    ));
+    await expect(safeFetchBytes("https://93.184.216.34/big.png", { maxBytes: 100 })).rejects.toThrow(/over the 100-byte cap/);
+  });
+
+  it("refuses a body that goes over the cap while streaming, content-length or not", async () => {
+    // A server that lies about or omits content-length must not get a free pass.
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(
+      new Response(new Uint8Array(500), { status: 200, headers: { "content-type": "image/png" } }),
+    ));
+    await expect(safeFetchBytes("https://93.184.216.34/big.png", { maxBytes: 100 })).rejects.toThrow(/larger than the 100-byte cap/);
+  });
+
+  it("re-validates every redirect hop, same as the text reader", async () => {
+    const request = vi.fn().mockResolvedValue(
+      new Response(null, { status: 302, headers: { location: "http://169.254.169.254/latest/meta-data/" } }),
+    );
+    vi.stubGlobal("fetch", request);
+    await expect(safeFetchBytes("https://93.184.216.34/start.png")).rejects.toThrow(/private or loopback/);
   });
 });

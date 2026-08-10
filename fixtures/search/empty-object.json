@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "title": "A source that needs a structured research read",
+      "url": "https://example.com/research/source",
+      "snippet": "A concise source excerpt with enough detail to be stored before the research model fails.",
+      "publishedAt": "2026-08-08T06:00:00.000Z"
+    }
+  ]
+}

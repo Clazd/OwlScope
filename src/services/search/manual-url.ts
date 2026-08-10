@@ -7,6 +7,7 @@ import {
   excerptOf,
   extractPublishedAt,
   extractReadableText,
+  extractSocialImage,
   extractTitle,
 } from "./extract";
 import type { SearchOptions, SearchProvider, SearchResult } from "./provider";
@@ -70,6 +71,7 @@ export async function fetchPage(url: string): Promise<FetchedPage> {
     text,
     publishedAt: extractPublishedAt(html),
     fetchedAt: new Date().toISOString(),
+    image: extractSocialImage(html, response.url),
   };
   await writeCachedPage(page);
   if (response.truncated) log.warn(`body from ${page.url} was truncated at the 2MB cap`);

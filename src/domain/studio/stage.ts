@@ -102,7 +102,12 @@ export async function runStage<T>(req: StageRequest<T>): Promise<StageResult<T>>
     await req.recorder.recordFailure(req.stage, resolved.models[req.tier], req.prompt, err);
     const message = err instanceof Error ? err.message : String(err);
     const category = (err as { category?: string }).category ?? "unknown";
-    throw new StageError(req.stage, message, category, (err as { detail?: string }).detail);
+    const detail = (err as { detail?: string }).detail;
+    log.error(
+      `${req.stage} failed (${category}) on ${resolved.models[req.tier]}` +
+      ` with a ${req.prompt.length}-char prompt and a ${req.maxTokens ?? "default"}-token cap: ${message}`,
+    );
+    throw new StageError(req.stage, message, category, detail);
   }
 }
 

@@ -1,4 +1,4 @@
-import type { SourceQuality } from "@/domain/studio/schema";
+import type { SourceImage, SourceQuality } from "@/domain/studio/schema";
 
 /**
  * Turning a fetched page into something a prompt can carry, and classifying
@@ -68,6 +68,79 @@ export function extractPublishedAt(html: string): string | null {
     if (!Number.isNaN(date.getTime())) return date.toISOString();
   }
   return null;
+}
+
+/* ----------------------------------------------------------------- images -- */
+
+/**
+ * A `<meta>` value, in either attribute order. Publishers emit both
+ * `property=… content=…` and `content=… property=…`, and a reader that only
+ * knows one of them silently finds nothing on half the web.
+ */
+function metaContent(html: string, names: string[]): string {
+  for (const name of names) {
+    const key = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const attribute = `(?:property|name|itemprop)=["']${key}["']`;
+    const forward = html.match(new RegExp(`<meta[^>]+${attribute}[^>]+content=["']([^"']*)["']`, "i"));
+    if (forward?.[1]?.trim()) return decodeEntities(forward[1]).trim();
+    const reverse = html.match(new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+${attribute}`, "i"));
+    if (reverse?.[1]?.trim()) return decodeEntities(reverse[1]).trim();
+  }
+  return "";
+}
+
+/** Tracking pixels and spacers declare themselves by size. Nothing else does. */
+const MIN_SHAREABLE_EDGE = 200;
+
+function positiveInt(value: string): number | null {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
+/**
+ * The image a page nominates for sharing, resolved against the page URL.
+ *
+ * Only the social-card metadata is read - `og:image` and its Twitter
+ * equivalent. That is a deliberate limit: those are the images a publisher
+ * chose to be reproduced when their page is shared, which is a far better
+ * signal than the largest `<img>` in the body, and it means this never goes
+ * hunting through a page for pictures nobody offered.
+ */
+export function extractSocialImage(html: string, pageUrl: string): SourceImage | null {
+  const raw = metaContent(html, [
+    "og:image:secure_url",
+    "og:image:url",
+    "og:image",
+    "twitter:image",
+    "twitter:image:src",
+  ]);
+  if (!raw) return null;
+
+  let url: URL;
+  try {
+    // Relative `og:image` values are common and legal. Resolve, then insist on
+    // a real remote http(s) URL - a data: URI is not something to save or credit.
+    url = new URL(raw, pageUrl);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+
+  const width = positiveInt(metaContent(html, ["og:image:width", "twitter:image:width"]));
+  const height = positiveInt(metaContent(html, ["og:image:height", "twitter:image:height"]));
+  // Only reject on a size the page itself declares. An undeclared size is
+  // unknown, not small, and dropping those would discard most of the web.
+  if ((width !== null && width < MIN_SHAREABLE_EDGE) || (height !== null && height < MIN_SHAREABLE_EDGE)) {
+    return null;
+  }
+
+  return {
+    url: url.toString(),
+    alt: metaContent(html, ["og:image:alt", "twitter:image:alt"]),
+    width,
+    height,
+    credit: metaContent(html, ["article:author", "author", "og:site_name", "twitter:site"]),
+  };
 }
 
 export function extractReadableText(html: string): string {

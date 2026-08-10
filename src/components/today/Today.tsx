@@ -7,6 +7,7 @@ import { Card } from "@/components/common/Card";
 import { EmptyState } from "@/components/common/EmptyState";
 import { MicroLabel } from "@/components/common/MicroLabel";
 import { PipelineRail } from "@/components/common/PipelineRail";
+import { PostVisual } from "@/components/common/PostVisual";
 import { ReasonChips } from "@/components/common/ReasonChips";
 import { SentenceManuscript, type ManuscriptSentence } from "@/components/common/SentenceManuscript";
 import { SourceDrawer } from "@/components/common/SourceDrawer";
@@ -399,6 +400,12 @@ function PipelineCard({ record, onRetry }: { record: TodayRecord; onRetry: () =>
       {record.failure && (
         <div className="mt-5 border-t border-rule pt-4">
           <p className="type-body text-unsupported">{record.failure.message}</p>
+          {record.failure.detail && (
+            <details className="mt-2">
+              <summary className="type-small cursor-pointer text-ink-3">What came back</summary>
+              <p className="type-data mt-2 whitespace-pre-wrap break-words text-ink-3">{record.failure.detail}</p>
+            </details>
+          )}
           <Button variant="secondary" className="mt-3" onClick={onRetry}>Retry from {record.failure.stage}</Button>
         </div>
       )}
@@ -506,6 +513,9 @@ function Recommendation(props: {
         <ReasonRow label="Why this angle" text={session?.anglePick?.reasoning || record.cadence.missionLine} />
         <ReasonRow label="Similarity" text={similarity} />
       </dl>
+
+      {/* Keyed so an alternative gets a fresh harvest instead of the last post's images. */}
+      <PostVisual key={content.id} contentId={content.id} className="border-t border-rule py-4" />
 
       <div className="flex flex-col gap-3 border-t border-rule pt-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="flex flex-wrap gap-2">
