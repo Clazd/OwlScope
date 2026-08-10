@@ -129,24 +129,32 @@ function Sidebar(state: ShellState) {
         "hidden shrink-0 flex-col border-r border-rule md:flex",
         "md:w-(--sidebar-collapsed) wide:w-(--sidebar-width)",
       )}
-      style={{
-        background: "linear-gradient(180deg, #1A1D25 0%, #12151A 35%)",
-      }}
+      style={{ background: "#0C0F14" }}
     >
-      {/* Accent top stripe — the scope is always on */}
-      <div className="h-px shrink-0" style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 70%)" }} />
-
+      {/* Brand header — logo bg bleeds into sidebar so they read as one surface */}
       <Link
         href="/today"
         className={cn(
-          "flex min-w-0 items-center gap-3 border-b border-rule px-4 py-4",
-          "max-wide:justify-center max-wide:px-0",
+          "flex min-w-0 items-center gap-3 border-b border-rule px-3 py-3",
+          "max-wide:justify-center max-wide:px-0 max-wide:py-3",
           "transition-opacity duration-(--dur-state) hover:opacity-80",
         )}
+        style={{ background: "#0C0F14" }}
       >
         <OwlMark />
-        <span className="type-body-strong truncate text-ink max-wide:hidden">{state.brandName}</span>
+        <span
+          className="type-body-strong truncate max-wide:hidden"
+          style={{ color: "#F4F6FA", letterSpacing: "0.01em" }}
+        >
+          {state.brandName}
+        </span>
       </Link>
+
+      {/* Thin accent rule below the logo — scope line */}
+      <div
+        className="h-px shrink-0"
+        style={{ background: "linear-gradient(90deg, var(--accent) 0%, transparent 60%)" }}
+      />
 
       <div className="grow py-3">
         <NavRail items={NAV_ITEMS} className="wide:hidden" collapsed />
@@ -160,14 +168,13 @@ function Sidebar(state: ShellState) {
 
       <div
         className="overflow-hidden border-t border-rule px-4 py-3 max-wide:px-2"
-        style={{ background: "rgba(0,0,0,0.15)" }}
+        style={{ background: "rgba(0,0,0,0.25)" }}
       >
         <p className="flex min-w-0 items-center gap-2 mb-2 max-wide:justify-center">
-          {/* Pulsing accent dot — the scope is active */}
           <span
             aria-hidden
             className="h-1.5 w-1.5 shrink-0 rounded-pill stage-pulse"
-            style={{ background: "var(--accent)", opacity: 0.7 }}
+            style={{ background: "var(--accent)", opacity: 0.8 }}
           />
           <MicroLabel className="min-w-0 truncate max-wide:hidden">{state.model}</MicroLabel>
         </p>
@@ -212,13 +219,30 @@ function SandboxLabel() {
   );
 }
 
+/**
+ * Square logo mark, zoomed into the owl face.
+ * The dark background of the PNG matches the sidebar (#0C0F14) so the
+ * logo bleeds seamlessly into the panel — no border, no gap.
+ */
 function OwlMark() {
   return (
-    <img
-      src="/owlscope-logo.png"
-      alt=""
-      aria-hidden
-      className="h-8 w-8 shrink-0 rounded-pill"
-    />
+    <div
+      className="shrink-0 overflow-hidden"
+      style={{ width: 44, height: 44, borderRadius: 6, background: "#0C0F14" }}
+    >
+      <img
+        src="/owlscope-logo.png"
+        alt=""
+        aria-hidden
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center 18%",
+          transform: "scale(1.35)",
+          transformOrigin: "center 30%",
+        }}
+      />
+    </div>
   );
 }

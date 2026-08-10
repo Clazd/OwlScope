@@ -68,15 +68,15 @@
 /* --------------------------------------------------------------- colour -- */
 
 :root {
-  /* OwlScope — single permanent dark palette */
-  --bg: #0A0C10;
-  --surface: #12151A;
-  --surface-sunken: #080A0D;
-  --rule: #1E2228;
-  --rule-strong: #2C3038;
-  --ink: #E8E9EB;
+  /* OwlScope — true black / green / white palette */
+  --bg: #06080C;
+  --surface: #0C0F14;
+  --surface-sunken: #030407;
+  --rule: #161A21;
+  --rule-strong: #222830;
+  --ink: #F4F6FA;
   --ink-2: #8B919A;
-  --ink-3: #5C6370;
+  --ink-3: #4E5562;
 
   /* Epistemic — the ONLY saturated colours in the product */
   --supported: #4fb39a;
