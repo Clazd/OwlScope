@@ -4,7 +4,7 @@ A local-first writing office that researches ideas, checks evidence and memory, 
 
 > Release status: pre-release (`0.1.0`). The core local workflow is implemented. See [Known limitations](LIMITATIONS.md) before relying on it.
 
-![OwlScope Today screen](docs/logo1.png)
+<img src="docs/logo1.png" alt="OwlScope Today screen" width="500">
 
 ## Why it exists
 
