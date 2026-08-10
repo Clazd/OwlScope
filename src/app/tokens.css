@@ -140,8 +140,8 @@
 
   /* Layout */
   --reading-column: 680px;
-  --sidebar-width: 320px;
-  --sidebar-collapsed: 80px;
+  --sidebar-width: 380px;
+  --sidebar-collapsed: 96px;
   --drawer-width: 420px;
 }
 

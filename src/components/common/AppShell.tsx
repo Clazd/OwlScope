@@ -235,11 +235,10 @@ function OwlMark() {
     <div
       className="shrink-0 overflow-hidden"
       style={{
-        width: 60,
-        height: 60,
+        width: 72,
+        height: 72,
         borderRadius: 8,
         background: "#000000",
-        boxShadow: "0 0 0 1px rgba(46,204,113,0.2)",
       }}
     >
       <img

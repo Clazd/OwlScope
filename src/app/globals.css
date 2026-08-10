@@ -84,6 +84,7 @@
   }
 
   html {
+    font-size: 20px;
     background: var(--bg);
     overflow-x: clip;
     -webkit-text-size-adjust: 100%;
