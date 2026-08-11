@@ -293,6 +293,8 @@ describe("completeStructured", () => {
     await expect(provider().completeStructured({ ...request, maxTokens: 64 })).rejects.toMatchObject({
       category: "schema",
       message: expect.stringContaining("64-token output cap"),
+      // The caller can tell "we cut it off" from "the model got it wrong".
+      truncated: true,
     });
     // One call, not two: re-asking would truncate at the same place for the same price.
     expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -316,6 +318,7 @@ describe("completeStructured", () => {
       category: "schema",
       message: expect.stringContaining("empty {}"),
       tokensIn: 7700,
+      truncated: true,
     });
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });

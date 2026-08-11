@@ -17,6 +17,7 @@ describe("analysePersonaImport", () => {
 
   afterEach(async () => {
     vi.unstubAllEnvs();
+    vi.doUnmock("@/services/ai/provider");
     await rm(dataDir, { recursive: true, force: true });
   });
 
@@ -45,6 +46,75 @@ describe("analysePersonaImport", () => {
     expect(result.snapshot.experience[0]?.item).toBe("Built local-first software tools");
     expect(result.changes.length).toBeGreaterThan(0);
     expect(result.runId).toBeTruthy();
+  });
+
+  it("tells the person to split a paste that no longer fits in one reply", async () => {
+    const { ProviderError } = await import("@/services/ai/types");
+    vi.doMock("@/services/ai/provider", () => ({
+      getProvider: async () => ({
+        sandbox: false,
+        sandboxForcedByEnv: false,
+        models: { strong: "test-strong", fast: "test-fast" },
+        provider: {
+          name: "test",
+          complete: async () => {
+            throw new Error("this stage only calls completeStructured");
+          },
+          completeStructured: async () => {
+            throw new ProviderError(
+              "schema",
+              "persona-import did not return valid PersonaImportProposal. The reply was cut off at the 8000-token output cap.",
+              { truncated: true, tokensIn: 14_000, tokensOut: 8_000 },
+            );
+          },
+          searchCapability: () => ({ supported: false }),
+        },
+      }),
+    }));
+
+    const snapshot: PersonaSnapshot = {
+      persona: emptyPersona("2026-08-09T00:00:00.000Z"),
+      fingerprint: null,
+      samples: [],
+      experience: [],
+    };
+
+    const { analysePersonaImport } = await import("./import");
+    // Long enough that the budget is already at its ceiling, so there is no
+    // larger request left to make.
+    const paste = "I write about local-first tooling. ".repeat(1_200);
+
+    await expect(analysePersonaImport(paste, snapshot)).rejects.toMatchObject({
+      category: "schema",
+      truncated: true,
+      message: expect.stringContaining("smaller pieces"),
+      tokensOut: 8_000,
+    });
+  });
+});
+
+describe("importOutputBudget", () => {
+  it("keeps a short paste on the floor", async () => {
+    const { importOutputBudget } = await import("./import");
+
+    expect(importOutputBudget(0)).toBe(2_800);
+    expect(importOutputBudget(400)).toBe(2_800);
+  });
+
+  it("grows with the paste, so a long profile is not cut off mid-JSON", async () => {
+    const { importOutputBudget } = await import("./import");
+
+    // The paste that failed at the old fixed 2,800-token cap.
+    expect(importOutputBudget(24_079)).toBeGreaterThan(6_000);
+    expect(importOutputBudget(12_000)).toBeLessThan(importOutputBudget(24_000));
+  });
+
+  it("stops at a cap every configured model accepts", async () => {
+    const { importOutputBudget } = await import("./import");
+
+    // The route's own input limit, and anything a caller could pass beyond it.
+    expect(importOutputBudget(50_000)).toBe(8_000);
+    expect(importOutputBudget(5_000_000)).toBe(8_000);
   });
 });
 

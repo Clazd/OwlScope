@@ -288,6 +288,7 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
         detail: `${firstAttempt.error}; received: ${preview(first.text)}`,
         tokensIn: first.tokensIn,
         tokensOut: first.tokensOut,
+        truncated: first.stopReason === "max_tokens",
       });
     }
 
@@ -363,6 +364,9 @@ export function createAnthropicProvider(config: AnthropicConfig): AIProvider {
         detail: `${firstAttempt.validated.error}; received: ${preview(firstAttempt.text)}`,
         tokensIn: first.result.tokensIn,
         tokensOut: first.result.tokensOut,
+        // A forced tool call that ran out mid-serialisation arrives as `{}` with
+        // an ordinary stop reason, so an empty payload counts as cut off too.
+        truncated: first.result.stopReason === "max_tokens" || firstAttempt.text.trim() === "{}",
       });
     }
 

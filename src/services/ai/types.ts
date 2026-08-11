@@ -31,11 +31,24 @@ export class ProviderError extends Error {
    */
   readonly tokensIn: number;
   readonly tokensOut: number;
+  /**
+   * True when the reply was cut off at the output cap rather than being wrong.
+   * A stage that knows its own budget can answer that case with advice the
+   * person pasting can act on, instead of passing on a note about maxTokens.
+   */
+  readonly truncated: boolean;
 
   constructor(
     category: ErrorCategory,
     message: string,
-    opts?: { status?: number; detail?: string; cause?: unknown; tokensIn?: number; tokensOut?: number },
+    opts?: {
+      status?: number;
+      detail?: string;
+      cause?: unknown;
+      tokensIn?: number;
+      tokensOut?: number;
+      truncated?: boolean;
+    },
   ) {
     super(message, { cause: opts?.cause });
     this.name = "ProviderError";
@@ -44,6 +57,7 @@ export class ProviderError extends Error {
     this.detail = opts?.detail;
     this.tokensIn = opts?.tokensIn ?? 0;
     this.tokensOut = opts?.tokensOut ?? 0;
+    this.truncated = opts?.truncated ?? false;
   }
 }
 

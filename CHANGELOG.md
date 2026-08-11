@@ -20,6 +20,10 @@ All notable changes will be documented here. The project follows [Semantic Versi
 - Focus rings now use accent green for brand consistency
 - Active nav indicator uses accent green
 
+### Fixed
+
+- Persona Inbox: a long paste no longer fails with a truncated proposal. The import stage sized its reply against a fixed 2,800-token cap while the paste it had to restate could run to 50,000 characters, so large profiles were cut off mid-JSON and rejected as invalid. The output budget now scales with the paste, up to a ceiling every configured model accepts. A paste beyond even that ceiling is answered with a request to import it in smaller pieces rather than with a note about a token setting.
+
 ## [0.1.0] - Unreleased
 
 Initial pre-release implementation: versioned Brain, multi-source Radar, evidence-locked Studio, cadence-aware Today, indexed Memory, sandbox fixtures, deterministic evals, and local JSON storage.
