@@ -36,14 +36,22 @@ export async function createSupabaseServerClient() {
 }
 
 /**
- * Admin client using the service-role key. Never exposed to the browser.
- * Used by the storage layer for reads/writes that bypass RLS.
+ * Admin / Storage client.
+ * Uses the service_role key when available to bypass RLS, or falls back to
+ * the anon key.
  */
 export function createSupabaseAdminClient() {
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  
+  // Use service_role key if it's a valid Supabase JWT, otherwise fallback to anon key
+  const authKey = (serviceKey && serviceKey.startsWith("ey")) ? serviceKey : (anonKey || serviceKey || "");
+
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    authKey,
     { auth: { autoRefreshToken: false, persistSession: false } },
   );
 }
+
 
