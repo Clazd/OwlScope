@@ -60,8 +60,8 @@ export async function POST(request: Request) {
     let totalSynced = 0;
 
     for (const map of mappings) {
-      const localStore = createJsonStore(map.dir, map.schema, map.options);
-      const cloudStore = createSupabaseStore(map.name, map.schema);
+      const localStore = createJsonStore(map.dir, map.schema as any, map.options as any);
+      const cloudStore = createSupabaseStore(map.name, map.schema as any);
 
       if (action === "push") {
         // Push: Local JSON -> Supabase
